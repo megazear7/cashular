@@ -7,5 +7,13 @@
 }
 
 .transaction {
-    min-height: 0;
+    min-height: 0 !important;
+}
+
+.gain .mdl-card__title {
+    background-color: #81c784;
+}
+
+.loss .mdl-card__title {
+    background-color: #ffca28;
 }

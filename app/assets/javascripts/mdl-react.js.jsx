@@ -93,7 +93,7 @@ class H6 extends React.Component {
 class Button extends React.Component {
     render() {
         return (
-            <a onClick={this.props.action} className="mdl-button mdl-button--colored">
+            <a onClick={this.props.action} className={"mdl-button mdl-button--colored " + (this.props.center ? "centered" : "")}>
                 {this.props.children}
             </a>
         );
@@ -101,14 +101,6 @@ class Button extends React.Component {
 }
 
 class BackButton extends React.Component {
-    componentDidMount() {
-        componentHandler.upgradeDom();
-    }
-
-    componentDidUpdate() {
-        componentHandler.upgradeDom();
-    }
-
     render() {
         return (
             <button className="mdl-button mdl-js-button mdl-button--icon back">
@@ -145,7 +137,7 @@ class Cell extends React.Component {
 
     render() {
         return (
-            <div className={this.cellClass()}>
+            <div className={this.cellClass() + " " + this.props.className}>
                 {this.props.children}
             </div>
         );
@@ -226,14 +218,6 @@ class Drawer extends React.Component {
 }
 
 class TabBar extends React.Component {
-    componentDidMount() {
-        componentHandler.upgradeDom();
-    }
-
-    componentDidUpdate() {
-        componentHandler.upgradeDom();
-    }
-
     render() {
         return (
             <div className="mdl-layout__tab-bar">
@@ -281,14 +265,6 @@ class TabPanel extends React.Component {
 }
 
 class Content extends React.Component {
-    componentDidMount() {
-        componentHandler.upgradeDom();
-    }
-
-    componentDidUpdate() {
-        componentHandler.upgradeDom();
-    }
-
     render() {
         return(
             <main className="mdl-layout__content">
@@ -299,14 +275,6 @@ class Content extends React.Component {
 }
 
 class Layout extends React.Component {
-    componentDidMount() {
-        componentHandler.upgradeDom();
-    }
-
-    componentDidUpdate() {
-        componentHandler.upgradeDom();
-    }
-
     render() {
         return (
             <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color-text--grey-600 main-layout">
