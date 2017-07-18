@@ -1,0 +1,19 @@
+development:
+  adapter: postgresql
+  database: cashular_development
+  pool: 5
+  timeout: 5000
+  host: localhost
+
+test:
+  adapter: postgresql
+  database: cashular_test
+  pool: 5
+  timeout: 5000
+  host: localhost
+
+production:
+  adapter: postgresql
+  database: cashular_production
+  pool: 5
+  timeout: 5000
