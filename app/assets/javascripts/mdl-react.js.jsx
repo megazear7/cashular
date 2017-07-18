@@ -101,6 +101,14 @@ class Button extends React.Component {
 }
 
 class BackButton extends React.Component {
+    componentDidMount() {
+        componentHandler.upgradeDom();
+    }
+
+    componentDidUpdate() {
+        componentHandler.upgradeDom();
+    }
+
     render() {
         return (
             <button className="mdl-button mdl-js-button mdl-button--icon back">
@@ -146,8 +154,9 @@ class Cell extends React.Component {
 
 class Card extends React.Component {
     render() {
+        var classes = this.props.className + " mdl-card full-card mdl-shadow--2dp";
         return (
-            <div className="mdl-card full-card mdl-shadow--2dp">
+            <div className={classes}>
                 {this.props.children}
             </div>
         );
@@ -156,14 +165,10 @@ class Card extends React.Component {
 
 class Grid extends React.Component {
     render() {
-        var className = "mdl-grid";
-
-        if (this.props.nested === true) {
-            className += " mdl-grid--nesting";
-        }
+        const classes = this.props.className + " mdl-grid";
 
         return (
-            <div className={className}>
+            <div className={classes}>
                 {this.props.children}
             </div>
         );
@@ -220,6 +225,34 @@ class Drawer extends React.Component {
     }
 }
 
+class TabBar extends React.Component {
+    componentDidMount() {
+        componentHandler.upgradeDom();
+    }
+
+    componentDidUpdate() {
+        componentHandler.upgradeDom();
+    }
+
+    render() {
+        return (
+            <div className="mdl-layout__tab-bar">
+                {this.props.children}
+            </div>
+         );
+    }
+}
+
+class Tab extends React.Component {
+    render() {
+        var classes = this.props.className + " mdl-layout__tab";
+
+        return (
+            <a href={this.props.href} className={classes}>{this.props.children}</a>
+        );
+    }
+}
+
 class Header extends React.Component {
     render() {
         return (
@@ -229,32 +262,55 @@ class Header extends React.Component {
                 {this.props.title}
               </span>
             </div>
+            {this.props.children}
           </header>
         )
     }
 }
 
+class TabPanel extends React.Component {
+    render() {
+        var classes = this.props.className + " mdl-layout__tab-panel";
+
+        return (
+            <section className={classes} id={this.props.id}>
+                {this.props.children}
+            </section>
+        );
+    }
+}
+
 class Content extends React.Component {
+    componentDidMount() {
+        componentHandler.upgradeDom();
+    }
+
+    componentDidUpdate() {
+        componentHandler.upgradeDom();
+    }
+
     render() {
         return(
             <main className="mdl-layout__content">
-                <Grid>
-                    {this.props.children}
-                </Grid>
+                {this.props.children}
             </main>
         );
     }
 }
 
 class Layout extends React.Component {
+    componentDidMount() {
+        componentHandler.upgradeDom();
+    }
+
+    componentDidUpdate() {
+        componentHandler.upgradeDom();
+    }
+
     render() {
         return (
-            <div className="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header mdl-color-text--grey-600 main-layout">
-                <Header title={this.props.title} />
-                <Drawer title={this.props.title} />
-                <Content>
-                    {this.props.cells}
-                </Content>
+            <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color-text--grey-600 main-layout">
+                {this.props.children}
             </div>
         )
     }

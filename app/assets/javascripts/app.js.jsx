@@ -2,25 +2,32 @@ console.log("app.js.jsx");
 
 class App extends React.Component {
     render() {
-        var cells = (
-            <Cell desktop="3" tablet="4" phone="4">
-                <Card>
-                    <CardTitle>
-                        Hello
-                    </CardTitle>
-                    <CardText>
-                        This is cashular
-                    </CardText>
-                </Card>
-            </Cell>
-        );
-
         return(
-            <Layout title="Cashular" cells={cells} />
+            <Layout title="Cashular">
+                <Header title={this.props.title}>
+                    <TabBar>
+                        <Tab href="#scroll-tab-1" className="is-active">Spending</Tab>
+                        <Tab href="#scroll-tab-2">Transactions</Tab>
+                        <Tab href="#scroll-tab-3">Envelopes</Tab>
+                    </TabBar>
+                </Header>
+                <Drawer title={this.props.title} />
+                <Content>
+                    <TabPanel className="is-active" id="scroll-tab-1">
+                        <Spending />
+                    </TabPanel>
+                    <TabPanel id="scroll-tab-2">
+                        <Transactions />
+                    </TabPanel>
+                    <TabPanel id="scroll-tab-3">
+                        <Envelopes />
+                    </TabPanel>
+                </Content>
+            </Layout>
         );
     }
 }
 
 $(document).ready(function() {
-    ReactDOM.render(<App />, document.getElementById('react-root'));
+    ReactDOM.render(<App title="Cashular" />, document.getElementById('react-root'));
 });
