@@ -5,6 +5,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+gem 'material_design_lite-rails', '~> 1.3'
 gem "react-rails"
 gem 'composite_primary_keys', '>= 5.0.0'
 gem 'spreadsheet', '~> 1.1', '>= 1.1.4'
