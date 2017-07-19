@@ -100,6 +100,16 @@ class H6 extends React.Component {
     }
 }
 
+class Icon extends React.Component {
+    render() {
+        return (
+            <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" onClick={this.props.action}>
+                <i className="material-icons">{this.props.icon}</i>
+            </button>
+        );
+    }
+}
+
 class LesserIcon extends React.Component {
     render() {
         return (

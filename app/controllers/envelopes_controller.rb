@@ -5,7 +5,7 @@ class EnvelopesController < ApplicationController
   protect_from_forgery prepend: true
 
   before_action :set_envelopes, only: [ :index ]
-  before_action :set_envelope, only: [ :add_phrase, :destroy ]
+  before_action :set_envelope, only: [ :add_transaction, :destroy ]
 
   def index
     json_response(@envelopes)
@@ -17,8 +17,11 @@ class EnvelopesController < ApplicationController
     json_response(@envelope)
   end
 
-  def add_phrase
-    @envelope.phrases.add(params[:phrase])
+  def add_transaction
+    @transaction = Transaction.find(params[:transaction_id])
+    @envelope.transactions << @transaction
+
+    json_response(@transaction)
   end
 
   def destroy

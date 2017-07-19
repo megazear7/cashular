@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170718202838) do
+ActiveRecord::Schema.define(version: 20170718202814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,21 +22,15 @@ ActiveRecord::Schema.define(version: 20170718202838) do
     t.datetime "updated_at",               null: false
   end
 
-  create_table "phrases", force: :cascade do |t|
-    t.string   "phrase"
+  create_table "transactions", force: :cascade do |t|
+    t.string   "details"
+    t.date     "post_date"
+    t.string   "description"
+    t.float    "amount"
+    t.string   "t_type"
+    t.float    "balance"
+    t.integer  "check_number"
     t.integer  "envelope_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  create_table "transactions", primary_key: ["details", "post_date", "description", "amount", "t_type", "balance", "check_number"], force: :cascade do |t|
-    t.string   "details",      null: false
-    t.date     "post_date",    null: false
-    t.string   "description",  null: false
-    t.float    "amount",       null: false
-    t.string   "t_type",       null: false
-    t.float    "balance",      null: false
-    t.integer  "check_number", null: false
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end

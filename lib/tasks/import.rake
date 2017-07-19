@@ -15,7 +15,8 @@ namespace :import do
 
     sheet.each do |row|
         if is_present(row[1]) and is_present(row[3]) and is_present(row[5])
-          Transaction.find_or_create_by(
+          puts(row[2]);
+          Transaction.find_or_create_by!(
             details: row[0].nil? ? "No Details Available" : row[0],
             post_date: row[1],
             description: row[2].nil? ? "No Description Available" : row[2],
