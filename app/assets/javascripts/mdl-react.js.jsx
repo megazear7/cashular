@@ -372,7 +372,7 @@ class Tab extends React.Component {
 class Header extends React.Component {
     render() {
         return (
-          <header className="mdl-layout__header">
+          <header className="mdl-layout__header  mdl-layout__header--scroll mdl-layout--fixed-header">
             <div className="mdl-layout__header-row">
               <span className="mdl-layout__title">
                 {this.props.title}
@@ -409,7 +409,7 @@ class Content extends React.Component {
 class Layout extends React.Component {
     render() {
         return (
-            <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color-text--grey-600 main-layout">
+            <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color-text--grey-600 main-layout mdl-layout--no-drawer-button">
                 {this.props.children}
             </div>
         )
