@@ -14,7 +14,9 @@ class Envelopes extends React.Component {
         var self = this;
 
         Cashular.Envelopes().all(function(envelopes) {
-            self.setState({envelopes: envelopes});
+            self.setState({envelopes: envelopes}, function() {
+                self.props.newEnvelope();
+            });
         });
     }
 

@@ -1,4 +1,16 @@
 class App extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.reloadTransactions = this.reloadTransactions.bind(this);
+    }
+
+    reloadTransactions() {
+        // TODO This is meant to update the envelope list inside the transactions
+        // but it doesn't work
+        this.forceUpdate();
+    }
+
     render() {
         return(
             <Layout title="Cashular">
@@ -12,7 +24,7 @@ class App extends React.Component {
                 <Drawer title={this.props.title} />
                 <Content>
                     <TabPanel className="is-active" id="scroll-tab-1">
-                        <Envelopes />
+                        <Envelopes newEnvelope={this.reloadTransactions} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-2">
                         <Transactions />

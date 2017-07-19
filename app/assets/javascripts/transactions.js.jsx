@@ -25,6 +25,8 @@ class Transactions extends React.Component {
     load() {
         var self = this;
 
+        console.log("B");
+
         Cashular.Envelopes().all(function(envelopes) {
             var transactions = Cashular.Transactions().daysAgo(self.state.daysAgo);
 
@@ -33,6 +35,8 @@ class Transactions extends React.Component {
             }
 
             transactions.all(function(transactions) {
+                console.log("C");
+
                 self.setState({transactions: transactions,
                                envelopes: envelopes});
             });
@@ -45,7 +49,7 @@ class Transactions extends React.Component {
             <Grid className="transaction-list">
                 {self.state.transactions.map(function(transaction, index) {
                     return <Transaction cost={transaction.amount} description={transaction.description}
-                                        key={index} id={transaction.id} envelope_id={transaction.envelope_id}
+                                        key={transaction.id} id={transaction.id} envelope_id={transaction.envelope_id}
                                         envelopes={self.state.envelopes} afterOrganize={self.load} />
                 })}
                 <LoadMore action={self.loadMore} />
@@ -109,7 +113,7 @@ class Transaction extends React.Component {
             <Cell desktop="12">
                 <Card className={"min-card " + type}>
                     <CardTitle>
-                        {"$" + self.props.cost}
+                        {"$" + Math.abs(self.props.cost)}
                     </CardTitle>
                     <CardText>
                         {self.props.description}
