@@ -104,6 +104,12 @@
             return self;
         };
 
+        self.pageSize = function(count) {
+            self.data.pageSize = count;
+
+            return self;
+        }
+
         self.create = function(fields, success, failure, always) {
             var data = {};
             data[singular] = fields;

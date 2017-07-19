@@ -6,7 +6,7 @@ class Transactions extends React.Component {
         this.loadMore = this.loadMore.bind(this);
         this.load = this.load.bind(this);
 
-        this.state.daysAgo = 7;
+        this.state.pageSize = 10;
         this.state.transactions = [ ];
 
         this.load();
@@ -16,7 +16,7 @@ class Transactions extends React.Component {
         var self = this;
 
         self.setState(function(prevState) {
-            return { daysAgo: prevState.daysAgo + 7 };
+            return { pageSize: prevState.pageSize + 10 };
         }, function() {
             self.load();
         });
@@ -25,18 +25,14 @@ class Transactions extends React.Component {
     load() {
         var self = this;
 
-        console.log("B");
-
         Cashular.Envelopes().all(function(envelopes) {
-            var transactions = Cashular.Transactions().daysAgo(self.state.daysAgo);
+            var transactions = Cashular.Transactions().pageSize(self.state.pageSize);
 
             if (self.props.onlyUnorganized) {
                 transactions.onlyUnorganized();
             }
 
             transactions.all(function(transactions) {
-                console.log("C");
-
                 self.setState({transactions: transactions,
                                envelopes: envelopes});
             });
