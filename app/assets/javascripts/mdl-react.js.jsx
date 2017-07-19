@@ -144,6 +144,57 @@ class Cell extends React.Component {
     }
 }
 
+class TextField extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {text: ""};
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        componentHandler.upgradeElement(this.textInput);
+    }
+
+    handleChange(e) {
+        var self = this;
+
+        self.setState({text: e.target.value}, function() {
+            if (typeof self.props.onChange === "function") {
+                self.props.onChange(this.state.text);
+            }
+        });
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        if (typeof this.props.onSubmit === "function") {
+            this.props.onSubmit(this.state.text);
+            this.setState({text: ""});
+        }
+    }
+
+    render() {
+        return (
+            <form action="#" onSubmit={this.handleSubmit}>
+              <div className="mdl-textfield mdl-js-textfield mdl-textfield--expandable" ref={(input) => { this.textInput = input; }}>
+                <label className="mdl-button mdl-js-button mdl-button--icon" htmlFor={this.props.name}>
+                  <i className="material-icons">add</i>
+                </label>
+                <div className="mdl-textfield__expandable-holder">
+                  <input className="mdl-textfield__input" type="text" id={this.props.name}
+                         name={this.props.name} placeholder={this.props.placeholder}
+                         onChange={this.handleChange} value={this.state.text} />
+                  <label className="mdl-textfield__label" htmlFor="sample-expandable"></label>
+                </div>
+              </div>
+            </form>
+        )
+    }
+}
+
 class Card extends React.Component {
     render() {
         var classes = this.props.className + " mdl-card full-card mdl-shadow--2dp";

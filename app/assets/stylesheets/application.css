@@ -19,6 +19,10 @@
     width: 100% !important;
 }
 
+.min-card {
+    min-height: 0 !important;
+}
+
 .mdl-grid .mdl-grid {
     padding: 0;
     margin: 0 -8px;
@@ -26,4 +30,12 @@
 
 .centered {
     text-align: center;
+}
+
+.green .mdl-card__title {
+    background-color: #81c784;
+}
+
+.orange .mdl-card__title {
+    background-color: #ffca28;
 }

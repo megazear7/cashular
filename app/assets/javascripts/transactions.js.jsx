@@ -1,16 +1,15 @@
 class Transactions extends React.Component {
     constructor(props) {
         super(props);
-        var self = this;
-        self.state = { };
+        this.state = { };
 
         this.loadMore = this.loadMore.bind(this);
         this.load = this.load.bind(this);
 
-        self.state.daysAgo = 7;
-        self.state.transactions = [ ];
+        this.state.daysAgo = 7;
+        this.state.transactions = [ ];
 
-        self.load();
+        this.load();
     }
 
     loadMore() {
@@ -45,14 +44,14 @@ class Transactions extends React.Component {
 class Transaction extends React.Component {
     render() {
         if (this.props.cost < 0) {
-            type = "loss";
+            type = "orange";
         } else {
-            type = "gain";
+            type = "green";
         }
 
         return (
             <Cell desktop="12">
-                <Card className={"transaction " + type}>
+                <Card className={"min-card " + type}>
                     <CardTitle>
                         {"$" + this.props.cost}
                     </CardTitle>

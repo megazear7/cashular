@@ -10,10 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170718145430) do
+ActiveRecord::Schema.define(version: 20170718202838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "envelopes", force: :cascade do |t|
+    t.string   "title"
+    t.float    "total",      default: 0.0
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  create_table "phrases", force: :cascade do |t|
+    t.string   "phrase"
+    t.integer  "envelope_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
 
   create_table "transactions", primary_key: ["details", "post_date", "description", "amount", "t_type", "balance", "check_number"], force: :cascade do |t|
     t.string   "details",      null: false

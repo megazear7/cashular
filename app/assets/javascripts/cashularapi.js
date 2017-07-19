@@ -1,5 +1,5 @@
 (function() {
-    CashularRequest = function(path, from, to) {
+    CashularRequest = function(plural, singular) {
         var self = this;
 
         self.requestMade = false;
@@ -9,7 +9,7 @@
             if (! self.requestMade) {
                 self.requestMade = true;
 
-                $.get(path, self.data)
+                $.get("/"+plural, self.data)
                 .done(function(response) {
                     $.each(response, function() {
                         if (typeof self.eachCallback === "function") {
@@ -97,11 +97,37 @@
 
             return self;
         };
+
+        self.create = function(fields, success, failure, always) {
+            var data = {};
+            data[singular] = fields;
+
+            $.post("/"+plural, data)
+            .done(function(response) {
+                if (typeof success === "function") {
+                    success(response);
+                }
+            })
+            .fail(function(error) {
+                if (typeof failure === "function") {
+                    failure(error);
+                }
+            })
+            .always(function() {
+                if (typeof always === "function") {
+                    always();
+                }
+            });
+        };
     };
 
     window.Cashular = { };
 
     window.Cashular.Transactions = function() {
-        return new CashularRequest("/transactions");
+        return new CashularRequest("transactions", "transaction");
+    };
+
+    window.Cashular.Envelopes = function() {
+        return new CashularRequest("envelopes", "envelope");
     };
 })();
