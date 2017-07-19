@@ -48,11 +48,19 @@ class Envelope extends React.Component {
     }
 
     render() {
+        var color;
+
+        if (this.props.amount < 0) {
+            color = "orange";
+        } else {
+            color = "green";
+        }
+
         return (
             <Cell desktop="3" tablet="4" phone="4">
-                <Card className="min-card orange">
+                <Card className={"min-card " + color}>
                     <CardTitle>
-                        {this.props.amount}
+                        {Math.abs(this.props.amount)}
                     </CardTitle>
                     <CardText>
                         {this.props.title}

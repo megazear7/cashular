@@ -21,6 +21,8 @@ class EnvelopesController < ApplicationController
     @transaction = Transaction.find(params[:transaction_id])
     @envelope.transactions << @transaction
 
+    @envelope.sum
+
     json_response(@transaction)
   end
 

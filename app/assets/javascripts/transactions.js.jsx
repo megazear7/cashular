@@ -90,10 +90,11 @@ class Transaction extends React.Component {
     render() {
         var self = this;
 
+        var color;
         if (self.props.cost < 0) {
-            type = "orange";
+            color = "orange";
         } else {
-            type = "green";
+            color = "green";
         }
 
         var icon;
@@ -107,7 +108,7 @@ class Transaction extends React.Component {
 
         return (
             <Cell desktop="12">
-                <Card className={"min-card " + type}>
+                <Card className={"min-card " + color}>
                     <CardTitle>
                         {"$" + Math.abs(self.props.cost)}
                     </CardTitle>
