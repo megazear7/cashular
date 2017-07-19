@@ -6,19 +6,19 @@ class App extends React.Component {
                     <TabBar>
                         <Tab href="#scroll-tab-1" className="is-active">Spending</Tab>
                         <Tab href="#scroll-tab-2">Transactions</Tab>
-                        <Tab href="#scroll-tab-3">Envelopes</Tab>
+                        <Tab href="#scroll-tab-3">Organizer</Tab>
                     </TabBar>
                 </Header>
                 <Drawer title={this.props.title} />
                 <Content>
                     <TabPanel className="is-active" id="scroll-tab-1">
-                        <Buckets />
+                        <Envelopes />
                     </TabPanel>
                     <TabPanel id="scroll-tab-2">
                         <Transactions />
                     </TabPanel>
                     <TabPanel id="scroll-tab-3">
-                        <Envelopes />
+                        <Transactions onlyUnorganized={true} />
                     </TabPanel>
                 </Content>
             </Layout>

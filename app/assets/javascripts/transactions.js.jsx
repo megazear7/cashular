@@ -26,7 +26,13 @@ class Transactions extends React.Component {
         var self = this;
 
         Cashular.Envelopes().all(function(envelopes) {
-            Cashular.Transactions().daysAgo(self.state.daysAgo).all(function(transactions) {
+            var transactions = Cashular.Transactions().daysAgo(self.state.daysAgo);
+
+            if (self.props.onlyUnorganized) {
+                transactions.onlyUnorganized();
+            }
+
+            transactions.all(function(transactions) {
                 self.setState({transactions: transactions,
                                envelopes: envelopes});
             });
@@ -40,7 +46,7 @@ class Transactions extends React.Component {
                 {self.state.transactions.map(function(transaction, index) {
                     return <Transaction cost={transaction.amount} description={transaction.description}
                                         key={index} id={transaction.id} envelope_id={transaction.envelope_id}
-                                        envelopes={self.state.envelopes} />
+                                        envelopes={self.state.envelopes} afterOrganize={self.load} />
                 })}
                 <LoadMore action={self.loadMore} />
             </Grid>
@@ -72,7 +78,9 @@ class Transaction extends React.Component {
         return function() {
             $.post("/envelopes/"+envelopeId+"/add_transaction/"+self.props.id)
             .success(function(transaction) {
-                self.setState({envelope_id: transaction.envelope_id});
+                self.setState({envelope_id: transaction.envelope_id}, function() {
+                    self.props.afterOrganize();
+                });
             });
 
             self.setState({showEnvelopes: false});

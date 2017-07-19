@@ -1,4 +1,4 @@
-class Buckets extends React.Component {
+class Envelopes extends React.Component {
     constructor(props) {
         super(props);
 
@@ -23,15 +23,15 @@ class Buckets extends React.Component {
         return (
             <Grid>
                 {self.state.envelopes.map(function(envelope, index) {
-                    return <Bucket amount={envelope.total} title={envelope.title}
+                    return <Envelope amount={envelope.total} title={envelope.title}
                                    key={index} onRemove={self.load} id={envelope.id} /> })}
-                <NewBucket onCreate={self.load} />
+                <NewEnvelope onCreate={self.load} />
             </Grid>
         );
     }
 }
 
-class Bucket extends React.Component {
+class Envelope extends React.Component {
     constructor(props) {
         super(props);
 
@@ -64,14 +64,14 @@ class Bucket extends React.Component {
     }
 }
 
-class NewBucket extends React.Component {
+class NewEnvelope extends React.Component {
     constructor(props) {
         super(props);
 
-        this.createBucket = this.createBucket.bind(this);
+        this.createEnvelope = this.createEnvelope.bind(this);
     }
 
-    createBucket(title) {
+    createEnvelope(title) {
         var self = this;
         Cashular.Envelopes().create({title: title}, function() {
             self.props.onCreate();
@@ -81,27 +81,8 @@ class NewBucket extends React.Component {
     render() {
         return (
             <Cell desktop="3" tablet="4" phone="4">
-                <TextField placeholder="Title of new Envelope" onSubmit={this.createBucket} name="newbucket" />
+                <TextField placeholder="Title of new Envelope" onSubmit={this.createEnvelope} name="newEnvelope" />
             </Cell>
         )
-    }
-}
-
-class Envelopes extends React.Component {
-    render() {
-        return (
-            <Grid>
-                <Cell desktop="3" tablet="4" phone="4">
-                    <Card>
-                        <CardTitle>
-                            Hello
-                        </CardTitle>
-                        <CardText>
-                            Envelopes
-                        </CardText>
-                    </Card>
-                </Cell>
-            </Grid>
-        );
     }
 }

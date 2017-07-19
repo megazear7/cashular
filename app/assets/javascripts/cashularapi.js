@@ -42,6 +42,12 @@
             return self;
         };
 
+        self.onlyUnorganized = function() {
+            self.data.onlyUnorganized = true;
+
+            return self;
+        };
+
         self.all = function(callback) {
             self.allCallback = callback;
 
