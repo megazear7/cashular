@@ -23,6 +23,8 @@ class EnvelopesController < ApplicationController
 
   def destroy
     @envelope.destroy
+
+    json_response(@envelope)
   end
 
   private
@@ -32,7 +34,7 @@ class EnvelopesController < ApplicationController
   end
 
   def set_envelope
-    @envelope = Envelope.find(params[:envelope_id])
+    @envelope = Envelope.find(params[:id])
   end
 
   def envelope_params

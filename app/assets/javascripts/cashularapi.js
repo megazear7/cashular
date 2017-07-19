@@ -119,6 +119,25 @@
                 }
             });
         };
+
+        self.destroy = function(id, success, failure, always) {
+            $.ajax({url: "/"+plural+"/"+id, type: "DELETE"})
+            .done(function(removedItem) {
+                if (typeof success === "function") {
+                    success(removedItem);
+                }
+            })
+            .fail(function(error) {
+                if (typeof failure === "function") {
+                    failure(error);
+                }
+            })
+            .always(function() {
+                if (typeof always === "function") {
+                    always();
+                }
+            });
+        };
     };
 
     window.Cashular = { };

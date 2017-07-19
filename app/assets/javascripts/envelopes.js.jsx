@@ -19,17 +19,32 @@ class Buckets extends React.Component {
     }
 
     render() {
+        var self = this;
         return (
             <Grid>
-                {this.state.envelopes.map(function(envelope, index) {
-                    return <Bucket amount={envelope.total} title={envelope.title} key={index} /> })}
-                <NewBucket onCreate={this.load} />
+                {self.state.envelopes.map(function(envelope, index) {
+                    return <Bucket amount={envelope.total} title={envelope.title}
+                                   key={index} onRemove={self.load} id={envelope.id} /> })}
+                <NewBucket onCreate={self.load} />
             </Grid>
         );
     }
 }
 
 class Bucket extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.remove = this.remove.bind(this);
+    }
+
+    remove() {
+        var self = this;
+        Cashular.Envelopes().destroy(this.props.id, function(destroyedItem) {
+            self.props.onRemove();
+        });
+    }
+
     render() {
         return (
             <Cell desktop="3" tablet="4" phone="4">
@@ -40,6 +55,9 @@ class Bucket extends React.Component {
                     <CardText>
                         {this.props.title}
                     </CardText>
+                    <CardMenu>
+                        <LesserIcon icon="delete" action={this.remove} />
+                    </CardMenu>
                 </Card>
             </Cell>
         )

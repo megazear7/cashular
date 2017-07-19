@@ -1,3 +1,13 @@
+class CardMenu extends React.Component {
+    render() {
+        return (
+            <div className="mdl-card__menu">
+                {this.props.children}
+            </div>
+        )
+    }
+}
+
 class CardTitle extends React.Component {
     render() {
         return (
@@ -86,6 +96,16 @@ class H6 extends React.Component {
             <h6 className="mdl-typography--title">
                 {this.props.children}
             </h6>
+        );
+    }
+}
+
+class LesserIcon extends React.Component {
+    render() {
+        return (
+            <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" onClick={this.props.action}>
+                <i className="material-icons lesser-icon">{this.props.icon}</i>
+            </button>
         );
     }
 }

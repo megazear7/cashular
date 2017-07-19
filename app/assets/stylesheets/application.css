@@ -23,6 +23,18 @@
     min-height: 0 !important;
 }
 
+.lesser-icon {
+    font-size: 18px !important;
+    line-height: 18px !important;
+    width: 18px !important;
+    transform: translate(-9px,-9px) !important;
+    color: rgba(0,0,0,0.3);
+}
+
+.lesser-icon:hover {
+    color: #757575;
+}
+
 .mdl-grid .mdl-grid {
     padding: 0;
     margin: 0 -8px;
