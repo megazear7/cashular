@@ -72,7 +72,6 @@ class Transaction extends React.Component {
         return function() {
             $.post("/envelopes/"+envelopeId+"/add_transaction/"+self.props.id)
             .success(function(transaction) {
-                console.log(transaction);
                 self.setState({envelope_id: transaction.envelope_id});
             });
 
@@ -90,13 +89,12 @@ class Transaction extends React.Component {
         }
 
         var icon;
-        if (self.state.envelope_id) {
-            icon = "check";
-        } else if (self.state.showEnvelopes) {
+        if (self.state.showEnvelopes) {
             icon = "remove";
+        } else if (self.state.envelope_id) {
+            icon = "check";
         } else {
             icon = "archive";
-
         }
 
         return (
@@ -113,23 +111,12 @@ class Transaction extends React.Component {
                     </CardMenu>
                 </Card>
                 {self.state.showEnvelopes &&
-                    <ul className="demo-list-control mdl-list">
+                    <List>
                         {self.props.envelopes.map(function(envelope, index) {
-                            return <li className="mdl-list__item" key={index}>
-                                       <span className="mdl-list__item-primary-content">
-                                           <i className="material-icons  mdl-list__item-avatar">person</i>
-                                           {envelope.title}
-                                       </span>
-                                       <span className="mdl-list__item-secondary-action">
-                                           <label className="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" htmlFor={"list-option-"+envelope.id}>
-                                               <input type="radio" id={"list-option-"+envelope.id} className="mdl-radio__button"
-                                                      name="options" value={envelope.id} onChange={self.organize(envelope.id)}
-                                                      checked={self.state.envelope_id === envelope.id} />
-                                           </label>
-                                       </span>
-                                   </li>
+                            return <ListItem className="mdl-list__item" key={index} name={envelope.id} onChange={self.organize(envelope.id)}
+                                             checked={self.state.envelope_id === envelope.id} title={envelope.title} icon="label" />
                         })}
-                    </ul>
+                    </List>
                 }
             </Cell>
         );

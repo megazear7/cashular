@@ -1,3 +1,34 @@
+                    
+class List extends React.Component {
+    render() {
+        return (
+            <ul className="mdl-list">
+                {this.props.children}
+            </ul>
+        )
+    }
+}
+              
+class ListItem extends React.Component {
+    render() {
+        return (
+            <li className="mdl-list__item">
+               <span className="mdl-list__item-primary-content">
+                   <i className="material-icons  mdl-list__item-avatar">{this.props.icon}</i>
+                   {this.props.title}
+               </span>
+               <span className="mdl-list__item-secondary-action">
+                   <label className="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" htmlFor={"list-option-"+this.props.name}>
+                       <input type="radio" id={"list-option-"+this.props.name} className="mdl-radio__button"
+                              name="options" value={this.props.name} onChange={this.props.onChange}
+                              checked={this.props.checked} />
+                   </label>
+               </span>
+            </li>
+        )
+    }
+}
+
 class CardMenu extends React.Component {
     render() {
         return (
