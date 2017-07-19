@@ -122,7 +122,7 @@ class Transaction extends React.Component {
                 {self.state.showEnvelopes &&
                     <List>
                         {self.props.envelopes.map(function(envelope, index) {
-                            return <ListItem className="mdl-list__item" key={index} name={envelope.id} onChange={self.organize(envelope.id)}
+                            return <ListItem key={index} name={envelope.id} onChange={self.organize(envelope.id)}
                                              checked={self.state.envelope_id === envelope.id} title={envelope.title} icon="label" />
                         })}
                     </List>

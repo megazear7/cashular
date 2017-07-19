@@ -10,6 +10,10 @@ class List extends React.Component {
 }
               
 class ListItem extends React.Component {
+    componentDidMount() {
+        componentHandler.upgradeElement(this.checkbox);
+    }
+
     render() {
         return (
             <li className="mdl-list__item">
@@ -18,7 +22,9 @@ class ListItem extends React.Component {
                    {this.props.title}
                </span>
                <span className="mdl-list__item-secondary-action">
-                   <label className="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" htmlFor={"list-option-"+this.props.name}>
+                   <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect"
+                          htmlFor={"list-option-"+this.props.name}
+                          ref={(el) => { this.checkbox = el; }}>
                        <input type="radio" id={"list-option-"+this.props.name} className="mdl-radio__button"
                               name="options" value={this.props.name} onChange={this.props.onChange}
                               checked={this.props.checked} />
@@ -240,7 +246,7 @@ class TextField extends React.Component {
     render() {
         return (
             <form action="#" onSubmit={this.handleSubmit}>
-              <div className="mdl-textfield mdl-js-textfield mdl-textfield--expandable" ref={(input) => { this.textInput = input; }}>
+              <div className="mdl-textfield mdl-js-textfield mdl-textfield--expandable" ref={(el) => { this.textInput = el; }}>
                 <label className="mdl-button mdl-js-button mdl-button--icon" htmlFor={this.props.name}>
                   <i className="material-icons">add</i>
                 </label>
@@ -269,7 +275,11 @@ class Card extends React.Component {
 
 class Grid extends React.Component {
     render() {
-        const classes = this.props.className + " mdl-grid";
+        var classes = " mdl-grid";
+
+        if (this.props.className) {
+            classes = classes + " " + this.props.className;
+        }
 
         return (
             <div className={classes}>

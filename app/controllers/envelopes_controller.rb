@@ -4,6 +4,8 @@ class EnvelopesController < ApplicationController
 
   protect_from_forgery prepend: true
 
+  before_action :set_from
+  before_action :set_to
   before_action :set_envelopes, only: [ :index ]
   before_action :set_envelope, only: [ :add_transaction, :destroy ]
 
@@ -32,17 +34,24 @@ class EnvelopesController < ApplicationController
 
   private
 
+  def set_from
+    @from = params[:from]
+  end
+
+  def set_to
+    @to = params[:to]
+  end
+
   def set_envelopes
     @envelopes = [ ]
     Envelope.all.each do |envelope|
       @envelopes << {
         id: envelope.id,
         title: envelope.title,
-        sum: envelope.sum
+        sum: envelope.sum(@from, @to)
       }
     end
-
-
+    @envelopes
   end
 
   def set_envelope
