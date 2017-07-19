@@ -18,7 +18,7 @@ class ListItem extends React.Component {
         return (
             <li className="mdl-list__item">
                <span className="mdl-list__item-primary-content">
-                   <i className="material-icons  mdl-list__item-avatar">{this.props.icon}</i>
+                   <i className="material-icons  mdl-list__item-icon">{this.props.icon}</i>
                    {this.props.title}
                </span>
                <span className="mdl-list__item-secondary-action">
@@ -133,6 +133,16 @@ class H6 extends React.Component {
             <h6 className="mdl-typography--title">
                 {this.props.children}
             </h6>
+        );
+    }
+}
+
+class BasicIcon extends React.Component {
+    render() {
+        return (
+            <button className="mdl-button mdl-button--icon" disabled>
+                <i className="material-icons">{this.props.icon}</i>
+            </button>
         );
     }
 }

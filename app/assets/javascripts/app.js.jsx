@@ -16,9 +16,18 @@ class App extends React.Component {
             <Layout title="Cashular">
                 <Header title={this.props.title}>
                     <TabBar>
-                        <Tab href="#scroll-tab-1" className="is-active">Spending</Tab>
-                        <Tab href="#scroll-tab-2">Organizer</Tab>
-                        <Tab href="#scroll-tab-3">Transactions</Tab>
+                        <Tab href="#scroll-tab-1" className="is-active">
+                            <BasicIcon icon="pie_chart" />
+                            Spending
+                        </Tab>
+                        <Tab href="#scroll-tab-2">
+                            <BasicIcon icon="view_quilt" />
+                            Organizer
+                        </Tab>
+                        <Tab href="#scroll-tab-3">
+                            <BasicIcon icon="toc" />
+                            Transactions
+                        </Tab>
                     </TabBar>
                 </Header>
                 <Drawer title={this.props.title} />

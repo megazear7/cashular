@@ -56,7 +56,7 @@ class Envelopes extends React.Component {
                     <List>
                         {self.types().map(function(type, index) {
                             return <ListItem key={type.key} name={type.key} onChange={self.changeType(type.key)}
-                                             checked={self.state.type === type.key} title={type.title} icon="label" />
+                                             checked={self.state.type === type.key} title={type.title} icon="restore" />
                         })}
                     </List>
                 </Cell>

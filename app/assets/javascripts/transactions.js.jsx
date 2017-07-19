@@ -62,6 +62,13 @@ class Transaction extends React.Component {
         this.iconAction = this.iconAction.bind(this);
  
         this.state = { showEnvelopes: false, envelope_id: this.props.envelope_id };
+
+        var self = this;
+        $.each(this.props.envelopes, function() {
+            if (self.props.envelope_id === this.id) {
+                self.state.envelope_title = this.title;
+            }
+        });
     }
 
     iconAction() {
@@ -101,9 +108,9 @@ class Transaction extends React.Component {
         if (self.state.showEnvelopes) {
             icon = "remove";
         } else if (self.state.envelope_id) {
-            icon = "check";
+            icon = "playlist_add_check";
         } else {
-            icon = "archive";
+            icon = "playlist_add";
         }
 
         return (
@@ -116,6 +123,7 @@ class Transaction extends React.Component {
                         {self.props.description}
                     </CardText>
                     <CardMenu>
+                        {icon === "playlist_add_check" && this.state.envelope_title}
                         <Icon icon={icon} action={self.iconAction} />
                     </CardMenu>
                 </Card>
@@ -123,7 +131,7 @@ class Transaction extends React.Component {
                     <List>
                         {self.props.envelopes.map(function(envelope, index) {
                             return <ListItem key={index} name={envelope.id} onChange={self.organize(envelope.id)}
-                                             checked={self.state.envelope_id === envelope.id} title={envelope.title} icon="label" />
+                                             checked={self.state.envelope_id === envelope.id} title={envelope.title} icon="email" />
                         })}
                     </List>
                 }
