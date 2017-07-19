@@ -3,7 +3,6 @@ class Envelope < ApplicationRecord
   has_many :transactions
 
   def sum
-    self.total = self.transactions.sum(:amount)
-    self.save
+    self.transactions.sum(:amount)
   end
 end

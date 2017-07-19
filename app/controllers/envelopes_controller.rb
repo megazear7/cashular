@@ -21,8 +21,6 @@ class EnvelopesController < ApplicationController
     @transaction = Transaction.find(params[:transaction_id])
     @envelope.transactions << @transaction
 
-    @envelope.sum
-
     json_response(@transaction)
   end
 
@@ -35,7 +33,16 @@ class EnvelopesController < ApplicationController
   private
 
   def set_envelopes
-    @envelopes = Envelope.all
+    @envelopes = [ ]
+    Envelope.all.each do |envelope|
+      @envelopes << {
+        id: envelope.id,
+        title: envelope.title,
+        sum: envelope.sum
+      }
+    end
+
+
   end
 
   def set_envelope

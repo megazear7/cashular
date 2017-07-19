@@ -17,8 +17,8 @@ class App extends React.Component {
                 <Header title={this.props.title}>
                     <TabBar>
                         <Tab href="#scroll-tab-1" className="is-active">Spending</Tab>
-                        <Tab href="#scroll-tab-2">Transactions</Tab>
-                        <Tab href="#scroll-tab-3">Organizer</Tab>
+                        <Tab href="#scroll-tab-2">Organizer</Tab>
+                        <Tab href="#scroll-tab-3">Transactions</Tab>
                     </TabBar>
                 </Header>
                 <Drawer title={this.props.title} />
@@ -27,10 +27,10 @@ class App extends React.Component {
                         <Envelopes newEnvelope={this.reloadTransactions} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-2">
-                        <Transactions />
+                        <Transactions onlyUnorganized={true} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-3">
-                        <Transactions onlyUnorganized={true} />
+                        <Transactions />
                     </TabPanel>
                 </Content>
             </Layout>

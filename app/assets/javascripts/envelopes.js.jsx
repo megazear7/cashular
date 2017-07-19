@@ -25,7 +25,7 @@ class Envelopes extends React.Component {
         return (
             <Grid>
                 {self.state.envelopes.map(function(envelope, index) {
-                    return <Envelope amount={envelope.total} title={envelope.title}
+                    return <Envelope amount={envelope.sum} title={envelope.title}
                                    key={index} onRemove={self.load} id={envelope.id} /> })}
                 <NewEnvelope onCreate={self.load} />
             </Grid>
