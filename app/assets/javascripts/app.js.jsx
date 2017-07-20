@@ -60,4 +60,5 @@ $(document).ready(function() {
         ReactDOM.render(<App title="Cashular" envelopes={envelopes} />, document.getElementById('react-root'));
         componentHandler.upgradeDom();
     });
+
 });

@@ -9,13 +9,29 @@ class List extends React.Component {
 }
               
 class ListItem extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.toggle = this.toggle.bind(this);
+    }
+
     componentDidMount() {
-        componentHandler.upgradeElement(this.checkbox);
+        componentHandler.upgradeElement(this.radio);
+    }
+
+    toggle(e) {
+        $(this.radio).click();
     }
 
     render() {
+        var className = "mdl-list__item";
+
+        if (this.props.checked) {
+            className += " selected";
+        }
+
         return (
-            <li className="mdl-list__item">
+            <li className={className} onClick={this.toggle}>
                <span className="mdl-list__item-primary-content">
                    <i className="material-icons  mdl-list__item-icon">{this.props.icon}</i>
                    {this.props.title}
@@ -23,7 +39,7 @@ class ListItem extends React.Component {
                <span className="mdl-list__item-secondary-action">
                    <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect"
                           htmlFor={"list-option-"+this.props.name}
-                          ref={(el) => { this.checkbox = el; }}>
+                          ref={(el) => { this.radio = el; }}>
                        <input type="radio"
                               id={"list-option-"+this.props.name}
                               className="mdl-radio__button"
