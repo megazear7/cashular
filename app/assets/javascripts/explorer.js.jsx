@@ -5,6 +5,7 @@ class Explorer extends React.Component {
         this.loadMore = this.loadMore.bind(this);
         this.load = this.load.bind(this);
         this.setEnvelope = this.setEnvelope.bind(this);
+        this.resetAndLoad = this.resetAndLoad.bind(this);
 
         this.state = { transactions: [ ],
                        pageSize: 10,
@@ -26,32 +27,37 @@ class Explorer extends React.Component {
         });
     }
 
-    load(dateRange) {
+    load() {
         var self = this;
-        self.setState({dateRange: dateRange});
 
-        var transactions = Cashular.Transactions();
+        var transactions = Cashular.Transactions().pageSize(self.state.pageSize);
 
-        if (typeof dateRange !== "undefined") {
-            if (typeof dateRange.daysAgo !== "undefined") {
-                transactions.daysAgo(dateRange.daysAgo);
-            } else if (dateRange.from !== "undefined") {
-                transactions.from(dateRange.from).to(dateRange.to);
+        if (typeof this.state.dateRange !== "undefined") {
+            if (typeof this.state.dateRange.daysAgo !== "undefined") {
+                transactions.daysAgo(this.state.dateRange.daysAgo);
+            } else if (this.state.dateRange.from !== "undefined") {
+                transactions.from(this.state.dateRange.from).to(this.state.dateRange.to);
             }
-        } else {
-            transactions.pageSize(self.state.pageSize)
         }
 
         transactions.fromEnvelope(self.state.envelope.id).all(function(response) {
             self.setState({transactions: response.transactions,
+                           count: response.count,
                            total: response.total});
+        });
+    }
+
+    resetAndLoad(dateRange) {
+        var self = this;
+        self.setState({dateRange: dateRange, pageSize: 10}, function() {
+            self.load();
         });
     }
 
     setEnvelope(envelope) {
         var self = this;
-        self.setState({envelope: envelope}, function() {
-            self.load(self.state.dateRange);
+        self.setState({envelope: envelope, pageSize: 10}, function() {
+            self.load();
         });
     }
 
@@ -62,7 +68,7 @@ class Explorer extends React.Component {
                 <Cell desktop={3}>
                     <Grid>
                         {self.state.envelope &&
-                            <TimeSelector onChange={this.load} />}
+                            <TimeSelector onChange={self.resetAndLoad} />}
                     </Grid>
                 </Cell>
                 <Cell desktop={1} />
@@ -71,11 +77,15 @@ class Explorer extends React.Component {
                         <H6>Total: {self.state.total}</H6>}
                     <Grid className="transaction-list">
                         {self.state.transactions.map(function(transaction, index) {
-                            return <Transaction cost={transaction.amount} description={transaction.description}
-                                                key={transaction.id} id={transaction.id} envelope_id={transaction.envelope_id}
-                                                envelopes={self.props.envelopes} afterOrganize={self.load} />
+                            return <Transaction cost={transaction.amount}
+                                                description={transaction.description}
+                                                key={transaction.id}
+                                                id={transaction.id}
+                                                envelope_id={transaction.envelope_id}
+                                                envelopes={self.props.envelopes}
+                                                afterOrganize={self.resetAndLoad} />
                         })}
-                        {self.state.envelope &&
+                        {self.state.envelope && self.state.count > self.state.pageSize &&
                             <LoadMore action={self.loadMore} />}
                     </Grid>
                 </Cell>

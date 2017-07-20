@@ -26,7 +26,7 @@ class Transactions extends React.Component {
     load() {
         var self = this;
 
-        var transactions = Cashular.Transactions();
+        var transactions = Cashular.Transactions().pageSize(self.state.pageSize);
 
         if (self.props.onlyUnorganized) {
             transactions.onlyUnorganized();
@@ -39,8 +39,6 @@ class Transactions extends React.Component {
                 transactions.from(self.state.dateRange.from).to(self.state.dateRange.to);
             }
         }
-
-        transactions.pageSize(self.state.pageSize)
 
         transactions.all(function(response) {
             self.setState({transactions: response.transactions,
