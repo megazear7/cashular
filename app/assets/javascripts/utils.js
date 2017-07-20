@@ -61,8 +61,15 @@ window.Cashular.Utils.monthsAgo = function(months) {
 
     var lastDay = new Date(monthsAgo.getFullYear(), monthsAgo.getMonth()+1, 0);
 
+    var monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+
     return {from: Cashular.Utils.formatDate(firstDay),
-            to:   Cashular.Utils.formatDate(lastDay)}
+            to:   Cashular.Utils.formatDate(lastDay),
+            title: monthNames[firstDay.getMonth()],
+            year: firstDay.getFullYear()}
 };
 
 })();

@@ -37,14 +37,14 @@ class Envelopes extends React.Component {
         });
     }
 
-    typesA() {
+    previousTimePeriods() {
         return [{title: "Previous Week", key: "previous_week", daysAgo: 7},
                 {title: "Previous Month", key: "previous_month", daysAgo: 30},
                 {title: "Previous Year", key: "previous_year", daysAgo: 365},
                 {title: "All Time", key: "all_time"}];
     }
 
-    typesB() {
+    weeks() {
         var OneWeekAgo = Cashular.Utils.weeksAgo(1);
         var TwoWeeksAgo = Cashular.Utils.weeksAgo(2);
         var ThreeWeeksAgo = Cashular.Utils.weeksAgo(3);
@@ -56,16 +56,26 @@ class Envelopes extends React.Component {
                 {title: "Four Weeks Ago", key: "four_week_ago", from: FourWeeksAgo.from, to: FourWeeksAgo.to}];
     }
 
-    typesC() {
-        var OneMonthAgo = Cashular.Utils.monthsAgo(1);
-        var TwoMonthsAgo = Cashular.Utils.monthsAgo(2);
-        var ThreeMonthsAgo = Cashular.Utils.monthsAgo(3);
-        var FourMonthsAgo = Cashular.Utils.monthsAgo(4);
+    months() {
+        var months = [ ];
 
-        return [{title: "One Month Ago", key: "one_month_ago", from: OneMonthAgo.from, to: OneMonthAgo.to},
-                {title: "Two Months Ago", key: "two_month_ago", from: TwoMonthsAgo.from, to: TwoMonthsAgo.to},
-                {title: "Three Months Ago", key: "three_month_ago", from: ThreeMonthsAgo.from, to: ThreeMonthsAgo.to},
-                {title: "Four Months Ago", key: "four_month_ago", from: FourMonthsAgo.from, to: FourMonthsAgo.to}];
+        var year = new Date().getFullYear();
+
+        for (var i = 1; i <= 12; i++) {
+            var month = Cashular.Utils.monthsAgo(i);
+
+            var title = month.title;
+            if (month.year < year) {
+                title += " " + year;
+            }
+
+            months.push({title: title,
+                         key: month.title.replace(/ /, ""),
+                         from: month.from,
+                         to: month.to});
+        }
+
+        return months;
     }
 
     changeType(type) {
@@ -83,7 +93,7 @@ class Envelopes extends React.Component {
             <Grid>
                 <Cell desktop={3}>
                     <List>
-                        {self.typesA().map(function(type, index) {
+                        {self.previousTimePeriods().map(function(type, index) {
                             return <ListItem key={type.key}
                                              name={type.key}
                                              listname={self.state.unique}
@@ -95,7 +105,7 @@ class Envelopes extends React.Component {
                     </List>
                     <hr />
                     <List>
-                        {self.typesC().map(function(type, index) {
+                        {self.months().map(function(type, index) {
                             return <ListItem key={type.key}
                                              name={type.key}
                                              listname={self.state.unique}
@@ -107,7 +117,7 @@ class Envelopes extends React.Component {
                     </List>
                     <hr />
                     <List>
-                        {self.typesB().map(function(type, index) {
+                        {self.weeks().map(function(type, index) {
                             return <ListItem key={type.key}
                                              name={type.key}
                                              listname={self.state.unique}
