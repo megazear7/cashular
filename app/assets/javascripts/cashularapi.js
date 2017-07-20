@@ -3,22 +3,30 @@
         var self = this;
 
         self.requestMade = false;
+        self.path = "/"+plural;
+        self.method = "GET"
         self.data = { };
 
         function makeRequest() {
             if (! self.requestMade) {
                 self.requestMade = true;
 
-                $.get("/"+plural, self.data)
+                $.ajax({url: self.path,
+                        data: self.data,
+                        type: self.method})
                 .done(function(response) {
-                    $.each(response, function() {
-                        if (typeof self.eachCallback === "function") {
-                            self.eachCallback(this);
-                        }
-                    });
+                    if (typeof self.eachCallback === "function") {
+                        $.each(response, function() {
+                                self.eachCallback(this);
+                        });
+                    }
 
                     if (typeof self.allCallback === "function") {
                         self.allCallback(response);
+                    }
+
+                    if (typeof self.doneCallback === "function") {
+                        self.doneCallback(response);
                     }
                 })
                 .fail(function(error) {
@@ -56,6 +64,12 @@
             return self;
         };
 
+        self.done = function(callback) {
+            self.doneCallback = callback;
+
+            return self;
+        };
+
         self.fail = function(callback) {
             self.failCallback = callback;
 
@@ -85,21 +99,7 @@
         };
 
         self.daysAgo = function(days) {
-            var today = new Date();
-            today.setDate(today.getDate() - days);
-            var dd = today.getDate();
-            var mm = today.getMonth()+1;
-            var yyyy = today.getFullYear();
-
-            if (dd < 10) {
-                dd="0" + dd;
-            } 
-
-            if (mm < 10) {
-                mm = "0" + mm;
-            } 
-
-            self.data.from = yyyy + "-" + mm + "-" + dd;
+            self.data.from = Cashular.Utils.daysAgo(days);
 
             return self;
         };
@@ -111,48 +111,33 @@
         }
 
         self.create = function(fields, success, failure, always) {
-            var data = {};
-            data[singular] = fields;
+            self.data[singular] = fields;
+            self.method = "POST";
 
-            $.post("/"+plural, data)
-            .done(function(response) {
-                if (typeof success === "function") {
-                    success(response);
-                }
-            })
-            .fail(function(error) {
-                if (typeof failure === "function") {
-                    failure(error);
-                }
-            })
-            .always(function() {
-                if (typeof always === "function") {
-                    always();
-                }
-            });
+            makeRequest();
+
+            return self;
         };
 
-        self.destroy = function(id, success, failure, always) {
-            $.ajax({url: "/"+plural+"/"+id, type: "DELETE"})
-            .done(function(removedItem) {
-                if (typeof success === "function") {
-                    success(removedItem);
-                }
-            })
-            .fail(function(error) {
-                if (typeof failure === "function") {
-                    failure(error);
-                }
-            })
-            .always(function() {
-                if (typeof always === "function") {
-                    always();
-                }
-            });
+        self.destroy = function(id) {
+            self.path += "/"+id;
+            self.method = "DELETE";
+
+            makeRequest();
+
+            return self;
         };
 
         self.fromEnvelope = function(id) {
             self.data.envelope_id = id;
+
+            return self;
+        };
+
+        self.unallocated = function() {
+            self.path += "/unallocated";
+
+            makeRequest();
 
             return self;
         };

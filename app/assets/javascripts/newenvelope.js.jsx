@@ -7,7 +7,8 @@ class NewEnvelope extends React.Component {
 
     createEnvelope(title) {
         var self = this;
-        Cashular.Envelopes().create({title: title}, function() {
+        Cashular.Envelopes().create({title: title})
+        .done(function() {
             self.props.onCreate();
         });
     }

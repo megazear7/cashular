@@ -7,7 +7,8 @@ class Envelope extends React.Component {
 
     remove() {
         var self = this;
-        Cashular.Envelopes().destroy(this.props.id, function(destroyedItem) {
+        Cashular.Envelopes().destroy(this.props.id)
+        .done(function(destroyedItem) {
             self.props.onRemove();
         });
     }

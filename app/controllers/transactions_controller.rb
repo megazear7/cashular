@@ -11,7 +11,17 @@ class TransactionsController < ApplicationController
   before_action :set_transactions
 
   def index
-    json_response(@transactions)
+    if @only_unorganized
+      @transactions.where!(envelope_id: nil)
+    end
+
+    json_response(@transactions.first(@page_size))
+  end
+
+  def unallocated
+    json_response({
+        payments: @transactions.where(envelope_id: nil).where("amount < 0").sum(:amount).abs,
+        recieved: @transactions.where(envelope_id: nil).where("amount > 0").sum(:amount)})
   end
 
   private
@@ -49,7 +59,7 @@ class TransactionsController < ApplicationController
       @transactions.where!({envelope_id: @envelope.id})
     end
 
-    if @page_size.nil?
+    if @page_size.nil? || (! @page_size.nil? && @page_size <= 0)
       if not @from.nil?
         @transactions.where!("post_date >= ?", @from)
       end
@@ -58,11 +68,5 @@ class TransactionsController < ApplicationController
         @transactions.where!("post_date <= ?", @to)
       end
     end
-
-    if @only_unorganized
-      @transactions.where!(envelope_id: nil)
-    end
-
-    @transactions = @transactions.first(@page_size)
   end
 end
