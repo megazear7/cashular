@@ -3,6 +3,7 @@ class TransactionsController < ApplicationController
   include Response
   include ExceptionHandler
 
+  before_action :set_envelope
   before_action :set_from
   before_action :set_to
   before_action :set_page_size
@@ -14,6 +15,12 @@ class TransactionsController < ApplicationController
   end
 
   private
+
+  def set_envelope
+    if params[:envelope_id]
+      @envelope = Envelope.find(params[:envelope_id])
+    end
+  end
 
   def set_from
     @from = params[:from]
@@ -37,6 +44,10 @@ class TransactionsController < ApplicationController
 
   def set_transactions
     @transactions = Transaction.all.order!('post_date DESC')
+
+    if @envelope
+      @transactions.where!({envelope_id: @envelope.id})
+    end
 
     if @page_size.nil?
       if not @from.nil?

@@ -6,6 +6,7 @@ class Transaction extends React.Component {
         this.iconAction = this.iconAction.bind(this);
  
         this.state = { showEnvelopes: false, envelope_id: this.props.envelope_id };
+        this.state.unique = Cashular.Utils.makeid();
 
         var self = this;
         $.each(this.props.envelopes, function() {
@@ -75,6 +76,7 @@ class Transaction extends React.Component {
                     <List>
                         {self.props.envelopes.map(function(envelope, index) {
                             return <ListItem key={index} name={envelope.id} onChange={self.organize(envelope.id)}
+                                             listname={self.props.areaname+"-transaction-list-"+self.props.id}
                                              checked={self.state.envelope_id === envelope.id} title={envelope.title} icon="email" />
                         })}
                     </List>

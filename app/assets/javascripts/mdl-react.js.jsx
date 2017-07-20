@@ -26,7 +26,7 @@ class ListItem extends React.Component {
                           htmlFor={"list-option-"+this.props.name}
                           ref={(el) => { this.checkbox = el; }}>
                        <input type="radio" id={"list-option-"+this.props.name} className="mdl-radio__button"
-                              name="options" value={this.props.name} onChange={this.props.onChange}
+                              name={this.props.listname} value={this.props.name} onChange={this.props.onChange}
                               checked={this.props.checked} />
                    </label>
                </span>

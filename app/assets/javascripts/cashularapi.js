@@ -150,9 +150,15 @@
                 }
             });
         };
+
+        self.fromEnvelope = function(id) {
+            self.data.envelope_id = id;
+
+            return self;
+        };
     };
 
-    window.Cashular = { };
+    window.Cashular = window.Cashular || { };
 
     window.Cashular.Transactions = function() {
         return new CashularRequest("transactions", "transaction");

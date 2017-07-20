@@ -28,6 +28,10 @@ class App extends React.Component {
                             <BasicIcon icon="toc" />
                             Transactions
                         </Tab>
+                        <Tab href="#scroll-tab-4">
+                            <BasicIcon icon="group_work" />
+                            Envelopes
+                        </Tab>
                     </TabBar>
                 </Header>
                 <Drawer title={this.props.title} />
@@ -36,10 +40,13 @@ class App extends React.Component {
                         <Envelopes newEnvelope={this.reloadTransactions} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-2">
-                        <Transactions onlyUnorganized={true} />
+                        <Transactions onlyUnorganized={true} areaname="organizer" />
                     </TabPanel>
                     <TabPanel id="scroll-tab-3">
-                        <Transactions />
+                        <Transactions areaname="fulllist" />
+                    </TabPanel>
+                    <TabPanel id="scroll-tab-4">
+                        <Explorer envelopes={this.props.envelopes} />
                     </TabPanel>
                 </Content>
             </Layout>
@@ -48,5 +55,8 @@ class App extends React.Component {
 }
 
 $(document).ready(function() {
-    ReactDOM.render(<App title="Cashular" />, document.getElementById('react-root'));
+    Cashular.Envelopes().all(function(envelopes) {
+        ReactDOM.render(<App title="Cashular" envelopes={envelopes} />, document.getElementById('react-root'));
+        componentHandler.upgradeDom();
+    });
 });
