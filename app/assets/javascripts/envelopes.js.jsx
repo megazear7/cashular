@@ -5,7 +5,7 @@ class Envelopes extends React.Component {
         this.load = this.load.bind(this);
 
         this.state = { envelopes: [ ],
-                       type: "previous_week",
+                       type: {title: "Previous Week", key: "previous_week", daysAgo: 7},
                        unique: Cashular.Utils.makeid() };
 
         this.load();
@@ -17,17 +17,14 @@ class Envelopes extends React.Component {
         var envelopes = Cashular.Envelopes()
         var unallocated = Cashular.Transactions()
             
-        if (self.state.type === "previous_week") {
-            envelopes.daysAgo(7);
-            unallocated.daysAgo(7);
-        } else if (self.state.type === "previous_month") {
-            envelopes.daysAgo(30);
-            unallocated.daysAgo(30);
-        } else if (self.state.type === "previous_year") {
-            envelopes.daysAgo(365);
-            unallocated.daysAgo(365);
+        if (typeof self.state.type.daysAgo !== "undefined") {
+            envelopes.daysAgo(self.state.type.daysAgo);
+            unallocated.daysAgo(self.state.type.daysAgo);
+        } else if (typeof self.state.type.from !== "undefined") {
+            envelopes.from(self.state.type.from).to(self.state.type.to);
+            unallocated.from(self.state.type.from).to(self.state.type.to);
         }
-            
+
         envelopes.all(function(envelopes) {
             self.setState({envelopes: envelopes}, function() {
                 self.props.addOrRemoved(self.state.envelopes);
@@ -40,11 +37,23 @@ class Envelopes extends React.Component {
         });
     }
 
-    types() {
-        return [{title: "Previous Week", key: "previous_week"},
-                {title: "Previous Month", key: "previous_month"},
-                {title: "Previous Year", key: "previous_year"},
+    typesA() {
+        return [{title: "Previous Week", key: "previous_week", daysAgo: 7},
+                {title: "Previous Month", key: "previous_month", daysAgo: 30},
+                {title: "Previous Year", key: "previous_year", daysAgo: 365},
                 {title: "All Time", key: "all_time"}];
+    }
+
+    typesB() {
+        var OneWeekAgo = Cashular.Utils.weeksAgo(1);
+        var TwoWeeksAgo = Cashular.Utils.weeksAgo(2);
+        var ThreeWeeksAgo = Cashular.Utils.weeksAgo(3);
+        var FourWeeksAgo = Cashular.Utils.weeksAgo(4);
+
+        return [{title: "One Week Ago", key: "one_week_ago", from: OneWeekAgo.from, to: OneWeekAgo.to},
+                {title: "Two Weeks Ago", key: "two_week_ago", from: TwoWeeksAgo.from, to: TwoWeeksAgo.to},
+                {title: "Three Weeks Ago", key: "three_week_ago", from: ThreeWeeksAgo.from, to: ThreeWeeksAgo.to},
+                {title: "Four Weeks Ago", key: "four_week_ago", from: FourWeeksAgo.from, to: FourWeeksAgo.to}];
     }
 
     changeType(type) {
@@ -62,12 +71,24 @@ class Envelopes extends React.Component {
             <Grid>
                 <Cell desktop={3}>
                     <List>
-                        {self.types().map(function(type, index) {
+                        {self.typesA().map(function(type, index) {
                             return <ListItem key={type.key}
                                              name={type.key}
                                              listname={self.state.unique}
-                                             onChange={self.changeType(type.key)}
-                                             checked={self.state.type === type.key}
+                                             onChange={self.changeType(type)}
+                                             checked={self.state.type.key === type.key}
+                                             title={type.title}
+                                             icon="restore" />
+                        })}
+                    </List>
+                    <hr />
+                    <List>
+                        {self.typesB().map(function(type, index) {
+                            return <ListItem key={type.key}
+                                             name={type.key}
+                                             listname={self.state.unique}
+                                             onChange={self.changeType(type)}
+                                             checked={self.state.type.key === type.key}
                                              title={type.title}
                                              icon="restore" />
                         })}

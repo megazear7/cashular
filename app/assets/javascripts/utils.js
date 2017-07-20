@@ -12,14 +12,12 @@ window.Cashular.Utils.makeid = function() {
     }
 
     return text;
-}
+};
 
-window.Cashular.Utils.daysAgo = function(days) {
-    var today = new Date();
-    today.setDate(today.getDate() - days);
-    var dd = today.getDate();
-    var mm = today.getMonth()+1;
-    var yyyy = today.getFullYear();
+window.Cashular.Utils.formatDate = function(date) {
+    var dd = date.getDate();
+    var mm = date.getMonth()+1;
+    var yyyy = date.getFullYear();
 
     if (dd < 10) {
         dd="0" + dd;
@@ -30,6 +28,29 @@ window.Cashular.Utils.daysAgo = function(days) {
     } 
 
     return yyyy + "-" + mm + "-" + dd;
-}
+};
+
+window.Cashular.Utils.daysAgo = function(days) {
+    var date = new Date();
+    date.setDate(date.getDate() - days);
+
+    return Cashular.Utils.formatDate(date);
+};
+
+window.Cashular.Utils.weeksAgo = function(weeks) {
+    var weeksAgo = new Date();
+    weeksAgo.setDate(weeksAgo.getDate()-(7 * weeks));
+
+    var monday = new Date(weeksAgo)
+    var day = monday.getDay();
+    monday.setDate(monday.getDate() - day + (day == 0 ? -6:1));
+
+    var sunday = new Date(weeksAgo)
+    var day = sunday.getDay();
+    sunday.setDate(sunday.getDate() + (7 - day));
+
+    return {from: Cashular.Utils.formatDate(monday),
+            to:   Cashular.Utils.formatDate(sunday)}
+};
 
 })();
