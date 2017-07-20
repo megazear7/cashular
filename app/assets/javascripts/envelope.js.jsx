@@ -2,6 +2,8 @@ class Envelope extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = { size: this.props.size || 3 };
+
         this.remove = this.remove.bind(this);
     }
 
@@ -23,7 +25,7 @@ class Envelope extends React.Component {
         }
 
         return (
-            <Cell desktop="3" tablet="4" phone="4">
+            <Cell desktop={this.state.size}>
                 <Card className={"min-card " + color}>
                     {! this.props.dontShowAmount &&
                         <CardTitle>
