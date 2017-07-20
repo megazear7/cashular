@@ -49,7 +49,7 @@ window.Cashular.Utils.weeksAgo = function(weeks) {
     sunday.setDate(sunday.getDate() + (7 - day));
 
     return {from: Cashular.Utils.formatDate(monday),
-            to:   Cashular.Utils.formatDate(sunday)}
+            to:   Cashular.Utils.formatDate(sunday)};
 };
 
 window.Cashular.Utils.monthsAgo = function(months) {
@@ -57,7 +57,7 @@ window.Cashular.Utils.monthsAgo = function(months) {
     monthsAgo.setMonth(monthsAgo.getMonth()-months);
 
     var firstDay = new Date(monthsAgo)
-    firstDay.setDate(0);
+    firstDay.setDate(1);
 
     var lastDay = new Date(monthsAgo.getFullYear(), monthsAgo.getMonth()+1, 0);
 
@@ -69,7 +69,19 @@ window.Cashular.Utils.monthsAgo = function(months) {
     return {from: Cashular.Utils.formatDate(firstDay),
             to:   Cashular.Utils.formatDate(lastDay),
             title: monthNames[firstDay.getMonth()],
-            year: firstDay.getFullYear()}
+            year: firstDay.getFullYear()};
+};
+
+window.Cashular.Utils.yearsAgo = function(years) {
+    var yearsAgo = new Date();
+    yearsAgo.setYear(yearsAgo.getFullYear()-years);
+
+    var firstDay = new Date(yearsAgo.getFullYear(), 0, 1);
+    var lastDay = new Date(yearsAgo.getFullYear(), 12, 0);
+
+    return {from: Cashular.Utils.formatDate(firstDay),
+            to:   Cashular.Utils.formatDate(lastDay),
+            title: ""+firstDay.getFullYear()};
 };
 
 })();

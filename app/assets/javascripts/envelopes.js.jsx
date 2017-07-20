@@ -78,6 +78,21 @@ class Envelopes extends React.Component {
         return months;
     }
 
+    years() {
+        var years = [ ];
+
+        for (var i = 0; i <= 3; i++) {
+            var year = Cashular.Utils.yearsAgo(i);
+
+            years.push({title: year.title,
+                        key: year.title.replace(/ /, ""),
+                        from: year.from,
+                        to: year.to});
+        }
+
+        return years;
+    }
+
     changeType(type) {
         var self = this;
         return function() {
@@ -105,6 +120,18 @@ class Envelopes extends React.Component {
                     </List>
                     <hr />
                     <List>
+                        {self.weeks().map(function(type, index) {
+                            return <ListItem key={type.key}
+                                             name={type.key}
+                                             listname={self.state.unique}
+                                             onChange={self.changeType(type)}
+                                             checked={self.state.type.key === type.key}
+                                             title={type.title}
+                                             icon="restore" />
+                        })}
+                    </List>
+                    <hr />
+                    <List>
                         {self.months().map(function(type, index) {
                             return <ListItem key={type.key}
                                              name={type.key}
@@ -117,7 +144,7 @@ class Envelopes extends React.Component {
                     </List>
                     <hr />
                     <List>
-                        {self.weeks().map(function(type, index) {
+                        {self.years().map(function(type, index) {
                             return <ListItem key={type.key}
                                              name={type.key}
                                              listname={self.state.unique}
