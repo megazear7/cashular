@@ -44,9 +44,13 @@ class Transactions extends React.Component {
         return (
             <Grid className="transaction-list">
                 {self.state.transactions.map(function(transaction, index) {
-                    return <Transaction cost={transaction.amount} description={transaction.description} areaname={self.props.areaname}
-                                        key={transaction.id} id={transaction.id} envelope_id={transaction.envelope_id}
-                                        envelopes={self.state.envelopes} afterOrganize={self.load} />
+                    return <Transaction cost={transaction.amount}
+                                        description={transaction.description}
+                                        key={transaction.id}
+                                        id={transaction.id}
+                                        envelope_id={transaction.envelope_id}
+                                        envelopes={self.state.envelopes}
+                                        afterOrganize={self.load} />
                 })}
                 <LoadMore action={self.loadMore} />
             </Grid>

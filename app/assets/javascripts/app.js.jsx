@@ -40,10 +40,10 @@ class App extends React.Component {
                         <Envelopes newEnvelope={this.reloadTransactions} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-2">
-                        <Transactions onlyUnorganized={true} areaname="organizer" />
+                        <Transactions onlyUnorganized={true} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-3">
-                        <Transactions areaname="fulllist" />
+                        <Transactions />
                     </TabPanel>
                     <TabPanel id="scroll-tab-4">
                         <Explorer envelopes={this.props.envelopes} />

@@ -4,10 +4,9 @@ class Envelopes extends React.Component {
 
         this.load = this.load.bind(this);
 
-        this.state = { };
-        this.state.envelopes = [ ];
-
-        this.state.type = "previous_week";
+        this.state = { envelopes: [ ],
+                       type: "previous_week",
+                       unique: Cashular.Utils.makeid() };
 
         this.load();
     }
@@ -55,8 +54,13 @@ class Envelopes extends React.Component {
                 <Cell desktop={3}>
                     <List>
                         {self.types().map(function(type, index) {
-                            return <ListItem key={type.key} name={type.key} onChange={self.changeType(type.key)}
-                                             checked={self.state.type === type.key} title={type.title} icon="restore" />
+                            return <ListItem key={type.key}
+                                             name={type.key}
+                                             listname={self.state.unique}
+                                             onChange={self.changeType(type.key)}
+                                             checked={self.state.type === type.key}
+                                             title={type.title}
+                                             icon="restore" />
                         })}
                     </List>
                 </Cell>
@@ -64,8 +68,11 @@ class Envelopes extends React.Component {
                     <Grid>
                         {self.state.envelopes.map(function(envelope, index) {
                             if (envelope.sum !== 0) {
-                                return <Envelope amount={envelope.sum} title={envelope.title}
-                                                 key={index} onRemove={self.load} id={envelope.id} /> }})}
+                                return <Envelope amount={envelope.sum}
+                                                 title={envelope.title}
+                                                 key={index}
+                                                 onRemove={self.load}
+                                                 id={envelope.id} /> }})}
                         <NewEnvelope onCreate={self.load} />
                     </Grid>
                 </Cell>
@@ -81,8 +88,12 @@ class Envelopes extends React.Component {
                     <Grid>
                         {self.state.envelopes.map(function(envelope, index) {
                             if (envelope.sum === 0) {
-                                return <Envelope amount={envelope.sum} title={envelope.title} dontShowAmount={true}
-                                                 key={index} onRemove={self.load} id={envelope.id} /> }})}
+                                return <Envelope amount={envelope.sum}
+                                                 title={envelope.title}
+                                                 dontShowAmount={true}
+                                                 key={index}
+                                                 onRemove={self.load}
+                                                 id={envelope.id} /> }})}
                     </Grid>
                 </Cell>
             </Grid>

@@ -1,4 +1,3 @@
-                    
 class List extends React.Component {
     render() {
         return (
@@ -25,8 +24,12 @@ class ListItem extends React.Component {
                    <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect"
                           htmlFor={"list-option-"+this.props.name}
                           ref={(el) => { this.checkbox = el; }}>
-                       <input type="radio" id={"list-option-"+this.props.name} className="mdl-radio__button"
-                              name={this.props.listname} value={this.props.name} onChange={this.props.onChange}
+                       <input type="radio"
+                              id={"list-option-"+this.props.name}
+                              className="mdl-radio__button"
+                              name={this.props.listname}
+                              value={this.props.title}
+                              onChange={this.props.onChange}
                               checked={this.props.checked} />
                    </label>
                </span>

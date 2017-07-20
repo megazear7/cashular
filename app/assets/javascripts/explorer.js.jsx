@@ -4,8 +4,11 @@ class Explorer extends React.Component {
 
         this.loadMore = this.loadMore.bind(this);
         this.load = this.load.bind(this);
+        this.setEnvelope = this.setEnvelope.bind(this);
 
-        this.state = { transactions: [ ], pageSize: 10 };
+        this.state = { transactions: [ ],
+                       pageSize: 10,
+                       unique: Cashular.Utils.makeid() };
     }
 
     loadMore() {
@@ -28,11 +31,9 @@ class Explorer extends React.Component {
 
     setEnvelope(envelope) {
         var self = this;
-        return function() {
-            self.setState({envelope: envelope}, function() {
-                self.load();
-            });
-        }
+        self.setState({envelope: envelope}, function() {
+            self.load();
+        });
     }
 
     render() {
@@ -40,19 +41,15 @@ class Explorer extends React.Component {
         return (
             <Grid>
                 <Cell desktop={3}>
-                    <List>
-                        {self.props.envelopes.map(function(envelope, index) {
-                            return <ListItem key={"explorer-envelope"+envelope.id} name={"explorer-envelope"+envelope.id} onChange={self.setEnvelope(envelope)}
-                                             listname="explorer-envelope"
-                                             checked={self.state.envelope && self.state.envelope.id === envelope.id} title={envelope.title} icon="email" />
-                        })}
-                    </List>
+                    <EnvelopePicker action={self.setEnvelope}
+                                    envelopes={self.props.envelopes}
+                                    envelope_id={self.props.envelope && self.props.envelope.id} />
                 </Cell>
                 <Cell desktop={2} />
                 <Cell desktop={3}>
                     <Grid className="transaction-list">
                         {self.state.transactions.map(function(transaction, index) {
-                            return <Transaction cost={transaction.amount} description={transaction.description} areaname="explorer"
+                            return <Transaction cost={transaction.amount} description={transaction.description}
                                                 key={transaction.id} id={transaction.id} envelope_id={transaction.envelope_id}
                                                 envelopes={self.props.envelopes} afterOrganize={self.load} />
                         })}

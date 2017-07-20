@@ -2,14 +2,14 @@ class Transaction extends React.Component {
     constructor(props) {
         super(props);
 
-        this.organize = this.organize.bind(this);
         this.iconAction = this.iconAction.bind(this);
+        this.organize = this.organize.bind(this);
  
         this.state = { showEnvelopes: false, envelope_id: this.props.envelope_id };
         this.state.unique = Cashular.Utils.makeid();
 
         var self = this;
-        $.each(this.props.envelopes, function() {
+        $.each(self.props.envelopes, function() {
             if (self.props.envelope_id === this.id) {
                 self.state.envelope_title = this.title;
             }
@@ -24,19 +24,17 @@ class Transaction extends React.Component {
         }
     }
 
-    organize(envelopeId) {
+    organize(envelope) {
         var self = this;
 
-        return function() {
-            $.post("/envelopes/"+envelopeId+"/add_transaction/"+self.props.id)
-            .success(function(transaction) {
-                self.setState({envelope_id: transaction.envelope_id}, function() {
-                    self.props.afterOrganize();
-                });
+        $.post("/envelopes/"+envelope.id+"/add_transaction/"+self.props.id)
+        .success(function(transaction) {
+            self.setState({envelope_id: transaction.envelope_id}, function() {
+                self.props.afterOrganize();
             });
+        });
 
-            self.setState({showEnvelopes: false});
-        };
+        self.setState({showEnvelopes: false});
     }
 
     render() {
@@ -68,18 +66,15 @@ class Transaction extends React.Component {
                         {self.props.description}
                     </CardText>
                     <CardMenu>
-                        {icon === "playlist_add_check" && this.state.envelope_title}
+                        {typeof this.state.envelope_title !== "undefined" &&
+                            this.state.envelope_title}
                         <Icon icon={icon} action={self.iconAction} />
                     </CardMenu>
                 </Card>
                 {self.state.showEnvelopes &&
-                    <List>
-                        {self.props.envelopes.map(function(envelope, index) {
-                            return <ListItem key={index} name={envelope.id} onChange={self.organize(envelope.id)}
-                                             listname={self.props.areaname+"-transaction-list-"+self.props.id}
-                                             checked={self.state.envelope_id === envelope.id} title={envelope.title} icon="email" />
-                        })}
-                    </List>
+                    <EnvelopePicker action={self.organize}
+                                    envelopes={self.props.envelopes}
+                                    envelope_id={self.props.envelope_id} />
                 }
             </Cell>
         );
