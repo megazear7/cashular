@@ -60,7 +60,7 @@ class Transaction extends React.Component {
             <Cell desktop="12">
                 <Card className={"min-card " + color}>
                     <CardTitle>
-                        {"$" + Math.abs(self.props.cost)}
+                        {"$" + Math.abs(self.props.cost).toFixed(2)}
                     </CardTitle>
                     <CardText>
                         {self.props.description}

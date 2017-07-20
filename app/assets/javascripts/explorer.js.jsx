@@ -74,7 +74,7 @@ class Explorer extends React.Component {
                 <Cell desktop={1} />
                 <Cell desktop={3} className="centered">
                     {typeof self.state.total !== "undefined" && self.state.total !== 0 &&
-                        <H6>Total: {self.state.total}</H6>}
+                        <H6 className={((self.state.total >= 0) ? "green-font" : "orange-font")}>${Math.abs(self.state.total).toFixed(2)}</H6>}
                     <Grid className="transaction-list">
                         {self.state.transactions.map(function(transaction, index) {
                             return <Transaction cost={transaction.amount}

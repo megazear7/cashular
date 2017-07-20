@@ -148,8 +148,13 @@ class H5 extends React.Component {
 
 class H6 extends React.Component {
     render() {
+        var className = "mdl-typography--title";
+        console.log(this.props);
+        if (this.props.className) {
+            className += " " + this.props.className;
+        }
         return (
-            <h6 className="mdl-typography--title">
+            <h6 className={className}>
                 {this.props.children}
             </h6>
         );
@@ -428,7 +433,7 @@ class Content extends React.Component {
 class Layout extends React.Component {
     render() {
         return (
-            <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color-text--grey-600 main-layout mdl-layout--no-drawer-button">
+            <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color-text--grey-600 main-layout mdl-layout--no-drawer-button mdl-layout--fixed-tabs">
                 {this.props.children}
             </div>
         )

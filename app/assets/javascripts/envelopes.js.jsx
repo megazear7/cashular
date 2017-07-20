@@ -27,7 +27,7 @@ class Envelopes extends React.Component {
         }
 
         envelopes.all(function(envelopes) {
-            self.setState({envelopes: envelopes}, function() {
+            self.setState({envelopes: envelopes, dateRangeTitle: dateRange.title}, function() {
                 self.props.addOrRemoved(self.state.envelopes);
             });
         });
@@ -49,6 +49,10 @@ class Envelopes extends React.Component {
                 </Cell>
                 <Cell desktop={9}>
                     <Grid>
+                        <Cell desktop={12} className="centered">
+                            {self.state.dateRangeTitle &&
+                                <H6>{self.state.dateRangeTitle}</H6>}
+                        </Cell>
                         {self.state.envelopes.map(function(envelope, index) {
                             if (envelope.sum !== 0) {
                                 return <Envelope amount={envelope.sum}
