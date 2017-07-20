@@ -26,7 +26,7 @@ class Envelopes extends React.Component {
             
         envelopes.all(function(envelopes) {
             self.setState({envelopes: envelopes}, function() {
-                self.props.newEnvelope();
+                self.props.newEnvelope(self.state.envelopes);
             });
         });
     }

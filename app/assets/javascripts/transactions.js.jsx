@@ -25,17 +25,15 @@ class Transactions extends React.Component {
     load() {
         var self = this;
 
-        Cashular.Envelopes().all(function(envelopes) {
-            var transactions = Cashular.Transactions().pageSize(self.state.pageSize);
+        var transactions = Cashular.Transactions().pageSize(self.state.pageSize);
 
-            if (self.props.onlyUnorganized) {
-                transactions.onlyUnorganized();
-            }
+        if (self.props.onlyUnorganized) {
+            transactions.onlyUnorganized();
+        }
 
-            transactions.all(function(transactions) {
-                self.setState({transactions: transactions,
-                               envelopes: envelopes});
-            });
+        transactions.all(function(transactions) {
+            self.setState({transactions: transactions,
+                           envelopes: self.props.envelopes});
         });
     }
 
@@ -49,7 +47,7 @@ class Transactions extends React.Component {
                                         key={transaction.id}
                                         id={transaction.id}
                                         envelope_id={transaction.envelope_id}
-                                        envelopes={self.state.envelopes}
+                                        envelopes={self.props.envelopes}
                                         afterOrganize={self.load} />
                 })}
                 <LoadMore action={self.loadMore} />

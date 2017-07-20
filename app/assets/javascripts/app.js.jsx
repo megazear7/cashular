@@ -2,13 +2,13 @@ class App extends React.Component {
     constructor(props) {
         super(props);
 
-        this.reloadTransactions = this.reloadTransactions.bind(this);
+        this.setEnvelopes = this.setEnvelopes.bind(this);
+
+        this.state = { envelopes: this.props.envelopes };
     }
 
-    reloadTransactions() {
-        // TODO This is meant to update the envelope list inside the transactions
-        // but it doesn't work
-        this.forceUpdate();
+    setEnvelopes(envelopes) {
+        this.setState({envelopes: envelopes });
     }
 
     render() {
@@ -37,16 +37,17 @@ class App extends React.Component {
                 <Drawer title={this.props.title} />
                 <Content>
                     <TabPanel className="is-active" id="scroll-tab-1">
-                        <Envelopes newEnvelope={this.reloadTransactions} />
+                        <Envelopes newEnvelope={this.setEnvelopes} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-2">
-                        <Transactions onlyUnorganized={true} />
+                        <Transactions onlyUnorganized={true}
+                                      envelopes={this.state.envelopes} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-3">
-                        <Transactions />
+                        <Transactions envelopes={this.state.envelopes} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-4">
-                        <Explorer envelopes={this.props.envelopes} />
+                        <Explorer envelopes={this.state.envelopes} />
                     </TabPanel>
                 </Content>
             </Layout>
