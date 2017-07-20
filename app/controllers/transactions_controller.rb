@@ -15,15 +15,10 @@ class TransactionsController < ApplicationController
       @transactions.where!(envelope_id: nil)
     end
 
-    if @page_size.nil? || (! @page_size.nil? && @page_size <= 0)
-        json_response({
-            transactions: @transactions,
-            total: @transactions.sum(:amount)})
-    else
-        json_response({
-            transactions: @transactions.first(@page_size),
-            total: @transactions.sum(:amount)})
-    end
+    json_response({
+        transactions: @transactions.first(@page_size),
+        count: @transactions.count,
+        total: @transactions.sum(:amount)})
   end
 
   def unallocated
@@ -50,6 +45,10 @@ class TransactionsController < ApplicationController
 
   def set_page_size
     @page_size = params[:pageSize].to_i
+
+    if @page_size.nil? || (! @page_size.nil? && @page_size <= 0)
+        @page_size = 10
+    end
   end
 
   def set_only_unorganized
@@ -63,14 +62,12 @@ class TransactionsController < ApplicationController
       @transactions.where!({envelope_id: @envelope.id})
     end
 
-    if @page_size.nil? || (! @page_size.nil? && @page_size <= 0)
-      if not @from.nil?
-        @transactions.where!("post_date >= ?", @from)
-      end
+    if not @from.nil?
+      @transactions.where!("post_date >= ?", @from)
+    end
 
-      if not @to.nil?
-        @transactions.where!("post_date <= ?", @to)
-      end
+    if not @to.nil?
+      @transactions.where!("post_date <= ?", @to)
     end
   end
 end

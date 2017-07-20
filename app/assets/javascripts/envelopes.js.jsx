@@ -10,19 +10,19 @@ class Envelopes extends React.Component {
         this.load({title: "Previous Week", key: "previous_week", daysAgo: 7});
     }
 
-    load(type) {
+    load(dateRange) {
         var self = this;
 
         var envelopes = Cashular.Envelopes()
         var unallocated = Cashular.Transactions()
             
-        if (typeof type !== "undefined") {
-            if (typeof type.daysAgo !== "undefined") {
-                envelopes.daysAgo(type.daysAgo);
-                unallocated.daysAgo(type.daysAgo);
-            } else if (type.from !== "undefined") {
-                envelopes.from(type.from).to(type.to);
-                unallocated.from(type.from).to(type.to);
+        if (typeof dateRange !== "undefined") {
+            if (typeof dateRange.daysAgo !== "undefined") {
+                envelopes.daysAgo(dateRange.daysAgo);
+                unallocated.daysAgo(dateRange.daysAgo);
+            } else if (dateRange.from !== "undefined") {
+                envelopes.from(dateRange.from).to(dateRange.to);
+                unallocated.from(dateRange.from).to(dateRange.to);
             }
         }
 

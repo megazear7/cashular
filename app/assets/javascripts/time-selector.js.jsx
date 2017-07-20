@@ -2,8 +2,10 @@ class TimeSelector extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { type: {title: "Previous Week", key: "previous_week", daysAgo: 7},
-                       unique: Cashular.Utils.makeid() };
+        this.state = { unique: Cashular.Utils.makeid() };
+        this.state.type = this.props.initial || {title: "Previous Week",
+                                                 key: "previous_week",
+                                                 daysAgo: 7};
     }
 
     previousTimePeriods() {

@@ -8,7 +8,7 @@ class Explorer extends React.Component {
 
         this.state = { transactions: [ ],
                        pageSize: 10,
-                       type: {title: "Previous Week", key: "previous_week", daysAgo: 7},
+                       dateRange: {title: "Previous Week", key: "previous_week", daysAgo: 7},
                        unique: Cashular.Utils.makeid() };
 
         if (this.props.envelopes.length > 0) {
@@ -26,17 +26,17 @@ class Explorer extends React.Component {
         });
     }
 
-    load(type) {
+    load(dateRange) {
         var self = this;
-        self.setState({type: type});
+        self.setState({dateRange: dateRange});
 
         var transactions = Cashular.Transactions();
 
-        if (typeof type !== "undefined") {
-            if (typeof type.daysAgo !== "undefined") {
-                transactions.daysAgo(type.daysAgo);
-            } else if (type.from !== "undefined") {
-                transactions.from(type.from).to(type.to);
+        if (typeof dateRange !== "undefined") {
+            if (typeof dateRange.daysAgo !== "undefined") {
+                transactions.daysAgo(dateRange.daysAgo);
+            } else if (dateRange.from !== "undefined") {
+                transactions.from(dateRange.from).to(dateRange.to);
             }
         } else {
             transactions.pageSize(self.state.pageSize)
@@ -51,7 +51,7 @@ class Explorer extends React.Component {
     setEnvelope(envelope) {
         var self = this;
         self.setState({envelope: envelope}, function() {
-            self.load(self.state.type);
+            self.load(self.state.dateRange);
         });
     }
 
