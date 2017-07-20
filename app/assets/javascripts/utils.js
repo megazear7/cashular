@@ -40,17 +40,29 @@ window.Cashular.Utils.daysAgo = function(days) {
 window.Cashular.Utils.weeksAgo = function(weeks) {
     var weeksAgo = new Date();
     weeksAgo.setDate(weeksAgo.getDate()-(7 * weeks));
+    var day = weeksAgo.getDay();
 
     var monday = new Date(weeksAgo)
-    var day = monday.getDay();
     monday.setDate(monday.getDate() - day + (day == 0 ? -6:1));
 
     var sunday = new Date(weeksAgo)
-    var day = sunday.getDay();
     sunday.setDate(sunday.getDate() + (7 - day));
 
     return {from: Cashular.Utils.formatDate(monday),
             to:   Cashular.Utils.formatDate(sunday)}
+};
+
+window.Cashular.Utils.monthsAgo = function(months) {
+    var monthsAgo = new Date();
+    monthsAgo.setMonth(monthsAgo.getMonth()-months);
+
+    var firstDay = new Date(monthsAgo)
+    firstDay.setDate(0);
+
+    var lastDay = new Date(monthsAgo.getFullYear(), monthsAgo.getMonth()+1, 0);
+
+    return {from: Cashular.Utils.formatDate(firstDay),
+            to:   Cashular.Utils.formatDate(lastDay)}
 };
 
 })();

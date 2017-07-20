@@ -56,6 +56,18 @@ class Envelopes extends React.Component {
                 {title: "Four Weeks Ago", key: "four_week_ago", from: FourWeeksAgo.from, to: FourWeeksAgo.to}];
     }
 
+    typesC() {
+        var OneMonthAgo = Cashular.Utils.monthsAgo(1);
+        var TwoMonthsAgo = Cashular.Utils.monthsAgo(2);
+        var ThreeMonthsAgo = Cashular.Utils.monthsAgo(3);
+        var FourMonthsAgo = Cashular.Utils.monthsAgo(4);
+
+        return [{title: "One Month Ago", key: "one_month_ago", from: OneMonthAgo.from, to: OneMonthAgo.to},
+                {title: "Two Months Ago", key: "two_month_ago", from: TwoMonthsAgo.from, to: TwoMonthsAgo.to},
+                {title: "Three Months Ago", key: "three_month_ago", from: ThreeMonthsAgo.from, to: ThreeMonthsAgo.to},
+                {title: "Four Months Ago", key: "four_month_ago", from: FourMonthsAgo.from, to: FourMonthsAgo.to}];
+    }
+
     changeType(type) {
         var self = this;
         return function() {
@@ -72,6 +84,18 @@ class Envelopes extends React.Component {
                 <Cell desktop={3}>
                     <List>
                         {self.typesA().map(function(type, index) {
+                            return <ListItem key={type.key}
+                                             name={type.key}
+                                             listname={self.state.unique}
+                                             onChange={self.changeType(type)}
+                                             checked={self.state.type.key === type.key}
+                                             title={type.title}
+                                             icon="restore" />
+                        })}
+                    </List>
+                    <hr />
+                    <List>
+                        {self.typesC().map(function(type, index) {
                             return <ListItem key={type.key}
                                              name={type.key}
                                              listname={self.state.unique}
