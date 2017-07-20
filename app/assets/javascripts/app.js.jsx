@@ -37,7 +37,7 @@ class App extends React.Component {
                 <Drawer title={this.props.title} />
                 <Content>
                     <TabPanel className="is-active" id="scroll-tab-1">
-                        <Envelopes newEnvelope={this.setEnvelopes} />
+                        <Envelopes addOrRemoved={this.setEnvelopes} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-2">
                         <Transactions onlyUnorganized={true}
