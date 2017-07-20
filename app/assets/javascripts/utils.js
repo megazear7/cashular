@@ -65,7 +65,6 @@ window.Cashular.Utils.monthsAgo = function(months) {
       "July", "August", "September", "October", "November", "December"
     ];
 
-
     return {from: Cashular.Utils.formatDate(firstDay),
             to:   Cashular.Utils.formatDate(lastDay),
             title: monthNames[firstDay.getMonth()],
