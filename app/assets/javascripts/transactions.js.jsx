@@ -41,6 +41,10 @@ class Transactions extends React.Component {
         var self = this;
         return (
             <Grid className="transaction-list">
+                {self.state.transactions.length > 0 &&
+                    <Cell className="centered" desktop={12}>
+                        <H6>{Cashular.Utils.prettyDate(new Date(self.state.transactions[0].post_date))}</H6>
+                    </Cell>}
                 {self.state.transactions.map(function(transaction, index) {
                     return <Transaction cost={transaction.amount}
                                         description={transaction.description}

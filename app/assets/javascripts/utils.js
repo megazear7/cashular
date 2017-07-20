@@ -14,6 +14,11 @@ window.Cashular.Utils.makeid = function() {
     return text;
 };
 
+window.Cashular.Utils.monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+];
+
 window.Cashular.Utils.formatDate = function(date) {
     var dd = date.getDate();
     var mm = date.getMonth()+1;
@@ -28,6 +33,17 @@ window.Cashular.Utils.formatDate = function(date) {
     } 
 
     return yyyy + "-" + mm + "-" + dd;
+};
+
+window.Cashular.Utils.prettyDate = function(date) {
+    var dd = date.getDate();
+    var yyyy = date.getFullYear();
+
+    if (dd < 10) {
+        dd="0" + dd;
+    } 
+
+    return Cashular.Utils.monthNames[date.getMonth()] + " " + dd + ", " + yyyy;
 };
 
 window.Cashular.Utils.daysAgo = function(days) {
@@ -61,13 +77,11 @@ window.Cashular.Utils.monthsAgo = function(months) {
 
     var lastDay = new Date(monthsAgo.getFullYear(), monthsAgo.getMonth()+1, 0);
 
-    var monthNames = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
+
 
     return {from: Cashular.Utils.formatDate(firstDay),
             to:   Cashular.Utils.formatDate(lastDay),
-            title: monthNames[firstDay.getMonth()],
+            title: Cashular.Utils.monthNames[firstDay.getMonth()],
             year: firstDay.getFullYear()};
 };
 
