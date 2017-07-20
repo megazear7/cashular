@@ -31,8 +31,8 @@ class Transactions extends React.Component {
             transactions.onlyUnorganized();
         }
 
-        transactions.all(function(transactions) {
-            self.setState({transactions: transactions,
+        transactions.all(function(response) {
+            self.setState({transactions: response.transactions,
                            envelopes: self.props.envelopes});
         });
     }

@@ -8,7 +8,12 @@ class Explorer extends React.Component {
 
         this.state = { transactions: [ ],
                        pageSize: 10,
+                       type: {title: "Previous Week", key: "previous_week", daysAgo: 7},
                        unique: Cashular.Utils.makeid() };
+
+        if (this.props.envelopes.length > 0) {
+            this.state.envelope = this.props.envelopes[0];
+        }
     }
 
     loadMore() {
@@ -21,18 +26,32 @@ class Explorer extends React.Component {
         });
     }
 
-    load() {
+    load(type) {
         var self = this;
+        self.setState({type: type});
 
-        Cashular.Transactions().pageSize(self.state.pageSize).fromEnvelope(self.state.envelope.id).all(function(transactions) {
-            self.setState({transactions: transactions});
+        var transactions = Cashular.Transactions();
+
+        if (typeof type !== "undefined") {
+            if (typeof type.daysAgo !== "undefined") {
+                transactions.daysAgo(type.daysAgo);
+            } else if (type.from !== "undefined") {
+                transactions.from(type.from).to(type.to);
+            }
+        } else {
+            transactions.pageSize(self.state.pageSize)
+        }
+
+        transactions.fromEnvelope(self.state.envelope.id).all(function(response) {
+            self.setState({transactions: response.transactions,
+                           total: response.total});
         });
     }
 
     setEnvelope(envelope) {
         var self = this;
         self.setState({envelope: envelope}, function() {
-            self.load();
+            self.load(self.state.type);
         });
     }
 
@@ -41,12 +60,15 @@ class Explorer extends React.Component {
         return (
             <Grid>
                 <Cell desktop={3}>
-                    <EnvelopePicker action={self.setEnvelope}
-                                    envelopes={self.props.envelopes}
-                                    envelope_id={self.props.envelope && self.props.envelope.id} />
+                    <Grid>
+                        {self.state.envelope &&
+                            <TimeSelector onChange={this.load} />}
+                    </Grid>
                 </Cell>
-                <Cell desktop={2} />
-                <Cell desktop={3}>
+                <Cell desktop={1} />
+                <Cell desktop={3} className="centered">
+                    {typeof self.state.total !== "undefined" && self.state.total !== 0 &&
+                        <H6>Total: {self.state.total}</H6>}
                     <Grid className="transaction-list">
                         {self.state.transactions.map(function(transaction, index) {
                             return <Transaction cost={transaction.amount} description={transaction.description}
@@ -57,7 +79,12 @@ class Explorer extends React.Component {
                             <LoadMore action={self.loadMore} />}
                     </Grid>
                 </Cell>
-                <Cell desktop={3} />
+                <Cell desktop={1} />
+                <Cell desktop={3}>
+                    <EnvelopePicker action={self.setEnvelope}
+                                    envelopes={self.props.envelopes}
+                                    envelope_id={self.state.envelope && self.state.envelope.id} />
+                </Cell>
             </Grid>
         );
     }
