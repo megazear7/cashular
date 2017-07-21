@@ -54,6 +54,29 @@ class ListItem extends React.Component {
     }
 }
 
+class Radio extends React.Component {
+    componentDidMount() {
+        componentHandler.upgradeElement(this.radio);
+    }
+
+    render() {
+        return (
+            <label className="mdl-radio mdl-js-radio mdl-js-ripple-effect"
+                   htmlFor={this.props.name}
+                   ref={(el) => { this.radio = el; }}>
+                <input type="radio"
+                       id={this.props.name}
+                       className="mdl-radio__button"
+                       name={this.props.listname}
+                       value={this.props.value}
+                       onChange={this.props.onChange}
+                       defaultChecked={this.props.checked} />
+                <span className="mdl-radio__label">{this.props.title}</span>
+            </label>
+        )
+    }
+}
+
 class CardMenu extends React.Component {
     render() {
         return (
@@ -149,7 +172,6 @@ class H5 extends React.Component {
 class H6 extends React.Component {
     render() {
         var className = "mdl-typography--title";
-        console.log(this.props);
         if (this.props.className) {
             className += " " + this.props.className;
         }

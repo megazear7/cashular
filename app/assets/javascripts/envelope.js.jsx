@@ -29,7 +29,7 @@ class Envelope extends React.Component {
                 <Card className={"min-card " + color}>
                     {! this.props.dontShowAmount &&
                         <CardTitle>
-                            ${Math.abs(this.props.amount).toFixed(2)}
+                            ${Cashular.Utils.format(Math.abs(this.props.amount))}
                         </CardTitle>}
                     <CardText>
                         {this.props.title}

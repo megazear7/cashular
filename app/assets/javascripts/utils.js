@@ -97,4 +97,8 @@ window.Cashular.Utils.yearsAgo = function(years) {
             title: ""+firstDay.getFullYear()};
 };
 
+window.Cashular.Utils.format = function(x) {
+    return x.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 })();

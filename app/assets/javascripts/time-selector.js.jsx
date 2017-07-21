@@ -1,3 +1,7 @@
+var avgWeeksPerMonth = 4.348;
+var weeksInYear = 52;
+var monthsInYear = 12;
+
 class TimeSelector extends React.Component {
     constructor(props) {
         super(props);
@@ -10,8 +14,8 @@ class TimeSelector extends React.Component {
 
     previousTimePeriods() {
         return [{title: "Previous Week", key: "previous_week", daysAgo: 7},
-                {title: "Previous Month", key: "previous_month", daysAgo: 30},
-                {title: "Previous Year", key: "previous_year", daysAgo: 365},
+                {title: "Previous Month", key: "previous_month", daysAgo: 30, weekly: avgWeeksPerMonth}, // Average weeks in a month
+                {title: "Previous Year", key: "previous_year", daysAgo: 365, weekly: weeksInYear, monthly: monthsInYear},
                 {title: "All Time", key: "all_time"}];
     }
 
@@ -43,7 +47,8 @@ class TimeSelector extends React.Component {
             months.push({title: title,
                          key: month.title.replace(/ /, ""),
                          from: month.from,
-                         to: month.to});
+                         to: month.to,
+                         weekly: avgWeeksPerMonth});
         }
 
         return months;
@@ -58,7 +63,9 @@ class TimeSelector extends React.Component {
             years.push({title: year.title,
                         key: year.title.replace(/ /, ""),
                         from: year.from,
-                        to: year.to});
+                        to: year.to,
+                        weekly: weeksInYear,
+                        monthly: monthsInYear });
         }
 
         return years;
