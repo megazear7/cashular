@@ -45,7 +45,7 @@ class Envelopes extends React.Component {
 
         unallocated.unallocated()
         .done(function(response) {
-            self.setState({unallocated: response.transactions});
+            self.setState({unallocated: response});
         });
     }
 
@@ -74,9 +74,7 @@ class Envelopes extends React.Component {
                 </Cell>
                 <Cell desktop={9}>
                     <Grid>
-                        <Cell desktop={2}>
-                        </Cell>
-                        <Cell desktop={8} className="centered">
+                        <Cell desktop={10} className="centered">
                             {typeof self.state.dateRange !== "undefined" && self.state.dateRange.title &&
                                 <H6>{self.state.dateRange.title}</H6>}
                         </Cell>
