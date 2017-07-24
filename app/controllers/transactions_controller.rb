@@ -3,12 +3,12 @@ class TransactionsController < ApplicationController
   include Response
   include ExceptionHandler
 
-  before_action :set_envelope
-  before_action :set_from
-  before_action :set_to
-  before_action :set_page_size
-  before_action :set_only_unorganized
-  before_action :set_transactions
+  before_action :set_envelope, except: [:upload]
+  before_action :set_from, except: [:upload]
+  before_action :set_to, except: [:upload]
+  before_action :set_page_size, except: [:upload]
+  before_action :set_only_unorganized, except: [:upload]
+  before_action :set_transactions, except: [:upload]
 
   def index
     if @only_unorganized
@@ -19,6 +19,18 @@ class TransactionsController < ApplicationController
         transactions: @transactions.first(@page_size),
         count: @transactions.count,
         total: @transactions.sum(:amount)})
+  end
+
+  def upload
+    params[:transactions].each do |index, transaction|
+      Transaction.find_or_create_by!(
+        user_id: current_user.id,
+        description: transaction[:description],
+        amount: transaction[:amount],
+        post_date: transaction[:post_date])
+    end
+
+    redirect_to "/"
   end
 
   def unallocated

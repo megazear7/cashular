@@ -70,6 +70,9 @@ class Transaction extends React.Component {
                     </CardTitle>
                     <CardText>
                         {self.props.description}
+                        <div className="transaction-date">
+                            {self.props.post_date}
+                        </div>
                     </CardText>
                     <CardMenu>
                         {typeof this.state.envelope_title !== "undefined" &&

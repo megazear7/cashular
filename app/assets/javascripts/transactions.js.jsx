@@ -72,6 +72,7 @@ class Transactions extends React.Component {
                         </Cell>}
                     {self.state.transactions.map(function(transaction, index) {
                         return <Transaction cost={transaction.amount}
+                                            post_date={transaction.post_date}
                                             description={transaction.description}
                                             key={transaction.id}
                                             id={transaction.id}

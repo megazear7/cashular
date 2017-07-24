@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
     resources :transactions, only: [ :index ] do
       collection do
+        post 'upload'
         get 'unallocated'
       end
     end

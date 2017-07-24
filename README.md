@@ -1,6 +1,6 @@
-Add ability to rename envelopes
+Add ability to upload transactions.
 
-Add task to download db as csv.
+Add ability to rename envelopes
 
 Some of the mdl grids, cells and cards are not lining up.
 
