@@ -16,11 +16,14 @@ class EnvelopesController < ApplicationController
   def create
     @envelope = Envelope.create(envelope_params)
 
+    @envelope.user = current_user
+    @envelope.save
+
     json_response(@envelope)
   end
 
   def add_transaction
-    @transaction = Transaction.find(params[:transaction_id])
+    @transaction = Transaction.where(user: current_user).find(params[:transaction_id])
     @envelope.transactions << @transaction
 
     json_response(@transaction)
@@ -44,7 +47,7 @@ class EnvelopesController < ApplicationController
 
   def set_envelopes
     @envelopes = [ ]
-    Envelope.all.each do |envelope|
+    Envelope.where(user: current_user).all.each do |envelope|
       @envelopes << {
         id: envelope.id,
         title: envelope.title,
@@ -55,7 +58,7 @@ class EnvelopesController < ApplicationController
   end
 
   def set_envelope
-    @envelope = Envelope.find(params[:id])
+    @envelope = Envelope.where(user: current_user).find(params[:id])
   end
 
   def envelope_params

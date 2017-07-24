@@ -31,7 +31,7 @@ class TransactionsController < ApplicationController
 
   def set_envelope
     if params[:envelope_id]
-      @envelope = Envelope.find(params[:envelope_id])
+      @envelope = Envelope.where(user: current_user).find(params[:envelope_id])
     end
   end
 
@@ -56,7 +56,7 @@ class TransactionsController < ApplicationController
   end
 
   def set_transactions
-    @transactions = Transaction.all.order!('post_date DESC')
+    @transactions = Transaction.where(user: current_user).order!('post_date DESC')
 
     if @envelope
       @transactions.where!({envelope_id: @envelope.id})

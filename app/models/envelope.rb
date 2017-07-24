@@ -1,4 +1,5 @@
 class Envelope < ApplicationRecord
+  belongs_to :user
   has_many :phrases
   has_many :transactions
 

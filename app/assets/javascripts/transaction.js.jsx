@@ -4,13 +4,18 @@ class Transaction extends React.Component {
 
         this.iconAction = this.iconAction.bind(this);
         this.organize = this.organize.bind(this);
+        this.setEnvelopeTitle = this.setEnvelopeTitle.bind(this);
  
         this.state = { showEnvelopes: false, envelope_id: this.props.envelope_id };
         this.state.unique = Cashular.Utils.makeid();
 
+        this.setEnvelopeTitle();
+    }
+
+    setEnvelopeTitle() {
         var self = this;
         $.each(self.props.envelopes, function() {
-            if (self.props.envelope_id === this.id) {
+            if (self.state.envelope_id === this.id) {
                 self.state.envelope_title = this.title;
             }
         });
@@ -31,6 +36,7 @@ class Transaction extends React.Component {
         .success(function(transaction) {
             self.setState({envelope_id: transaction.envelope_id}, function() {
                 self.props.afterOrganize();
+                self.setEnvelopeTitle();
             });
         });
 
