@@ -5,3 +5,11 @@
 #error_explanation h2 {
     font-size: 20px !important;
 }
+
+body.signed-out {
+    background-color: rgb(139,195,74);
+}
+
+body.signed-out h1 {
+    color: rgb(66,66,66);
+}

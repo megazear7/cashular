@@ -13,7 +13,11 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.light_green-deep_orange.min.css" />
   </head>
 
-  <body>
+  <% if ! current_user %>
+    <body class="signed-out">
+  <% else %>
+    <body>
+  <% end %>
     <% if alert %>
       <div class="hidden" id="alert" data-message="<%= alert %>"></div>
     <% end %>
@@ -21,9 +25,19 @@
       <div class="hidden" id="notice" data-message="<%= notice %>"></div>
     <% end %>
 
-    <%= yield %>
+    <% if ! current_user %>
+      <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--12-col centered">
+          <h1 class="mdl-typography--display-1">Cashular</h1>
+        </div>
+        <div class="mdl-cell mdl-cell--4-col"></div>
+        <div class="mdl-cell mdl-cell--4-col"><%= yield %></div>
+        <div class="mdl-cell mdl-cell--4-col"></div>
+    <% else %>
+      <%= yield %>
+    <% end %>
 
-    <div id="demo-snackbar-example" class="mdl-js-snackbar mdl-snackbar">
+    <div id="snackbar-alerter" class="mdl-js-snackbar mdl-snackbar">
         <div class="mdl-snackbar__text"></div>
         <button class="mdl-snackbar__action" type="button"></button>
     </div>

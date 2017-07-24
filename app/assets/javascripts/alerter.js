@@ -8,7 +8,7 @@
     }
 
     if (typeof message !== "undefined") {
-      var snackbarContainer = document.querySelector('#demo-snackbar-example');
+      var snackbarContainer = document.querySelector('#snackbar-alerter');
 
       var data = {
         message: message,
