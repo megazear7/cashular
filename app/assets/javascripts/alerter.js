@@ -12,7 +12,7 @@
 
       var data = {
         message: message,
-        timeout: 2000,
+        timeout: 5000,
         actionText: 'Undo'
       };
 
