@@ -1,29 +1,49 @@
-<h2>Sign up</h2>
-
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= devise_error_messages! %>
-
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true %>
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--4-col"></div>
+  <div class="mdl-cell mdl-cell--4-col">
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <div class="login-card mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+          <h2 class="mdl-card__title-text">Sign up</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+          <div class="mdl-textfield mdl-js-textfield">
+            <%= f.email_field :email, autofocus: true, class: "mdl-textfield__input", id: "email", pattern: "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" %>
+            <%= f.label :email, class: "mdl-textfield__label", for: "email" %>
+            <span class="mdl-textfield__error">Please enter a valid email.</span>
+          </div>
+          <br />
+          <div class="mdl-textfield mdl-js-textfield">
+            <%= f.password_field :password, autocomplete: "off", class: "mdl-textfield__input", id: "password" %>
+            <%= f.label :password, class: "mdl-textfield__label", for: "password" %>
+          </div>
+          <br />
+          <div class="mdl-textfield mdl-js-textfield">
+            <%= f.password_field :password_confirmation, autocomplete: "off", class: "mdl-textfield__input", id: "password" %>
+            <%= f.label :password_confirmation, class: "mdl-textfield__label", for: "password" %>
+          </div>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <div class="actions">
+            <%= f.submit "Sign up", class: "mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" %>
+          </div>
+        </div>
+        <div class="mdl-card__menu">
+          <button type="button" id="login-menu-lower-right" class="mdl-button mdl-js-button mdl-button--icon">
+            <i class="material-icons">more_vert</i>
+          </button>
+          <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="login-menu-lower-right">
+            <%= render "devise/shared/links" %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
   </div>
-
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "off" %>
+  <div class="mdl-cell mdl-cell--4-col"></div>
+  <div class="mdl-cell mdl-cell--4-col"></div>
+  <div class="mdl-cell mdl-cell--4-col">
+    <%= devise_error_messages! %>
   </div>
+  <div class="mdl-cell mdl-cell--4-col"></div>
+</div>
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
