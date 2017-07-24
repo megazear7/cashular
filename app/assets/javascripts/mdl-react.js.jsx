@@ -423,6 +423,10 @@ class Header extends React.Component {
               <span className="mdl-layout__title">
                 {this.props.title}
               </span>
+              <div className="mdl-layout-spacer"></div>
+              <nav className="mdl-navigation">
+                <a className="mdl-navigation__link" href="/users/sign_out" data-method="delete">Sign out</a>
+              </nav>
             </div>
             {this.props.children}
           </header>
