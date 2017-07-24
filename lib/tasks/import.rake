@@ -8,8 +8,9 @@ namespace :import do
     end
   end
 
-  # Example: rake import:csv[/path/to/csv]
-  task :csv, [:path] => [:environment] do |t, args|
+  # Remove header row, remove old data, save as xls / xlsx
+  # Example: rake import:csv[/path/to/xls]
+  task :xls, [:path] => [:environment] do |t, args|
     book = Spreadsheet.open(args.path)
     sheet = book.worksheet(0)
 
