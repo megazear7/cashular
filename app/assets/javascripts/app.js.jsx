@@ -56,9 +56,10 @@ class App extends React.Component {
 }
 
 $(document).ready(function() {
-    Cashular.Envelopes().all(function(envelopes) {
-        ReactDOM.render(<App title="Cashular" envelopes={envelopes} />, document.getElementById('react-root'));
-        componentHandler.upgradeDom();
-    });
-
+    if (window.location.pathname === "" || window.location.pathname === "/") {
+        Cashular.Envelopes().all(function(envelopes) {
+            ReactDOM.render(<App title="Cashular" envelopes={envelopes} />, document.getElementById('react-root'));
+            componentHandler.upgradeDom();
+        });
+    }
 });
