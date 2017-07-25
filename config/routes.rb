@@ -5,6 +5,9 @@ Rails.application.routes.draw do
     root to: 'application#main'
 
     resources :transactions, only: [ :index, :destroy ] do
+      member do
+        post 'restore'
+      end
       collection do
         post 'upload'
         get 'unallocated'

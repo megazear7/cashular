@@ -141,6 +141,12 @@
 
             return self;
         };
+
+        self.retrieveDeleted = function() {
+            self.data.retrieveDeleted = true;
+
+            return self;
+        };
     };
 
     window.Cashular = window.Cashular || { };

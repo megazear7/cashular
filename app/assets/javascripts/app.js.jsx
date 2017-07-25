@@ -14,6 +14,7 @@ class App extends React.Component {
     render() {
         return(
             <Layout title="Cashular">
+                <Drawer title={this.props.title} />
                 <Header title={this.props.title}>
                     <TabBar>
                         <Tab href="#scroll-tab-1" className="is-active">
@@ -38,7 +39,6 @@ class App extends React.Component {
                         </Tab>
                     </TabBar>
                 </Header>
-                <Drawer title={this.props.title} />
                 <Content>
                     <TabPanel className="is-active" id="scroll-tab-1">
                         <Envelopes addOrRemoved={this.setEnvelopes} />

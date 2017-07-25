@@ -6,6 +6,7 @@ class Transaction extends React.Component {
         this.organize = this.organize.bind(this);
         this.setEnvelopeTitle = this.setEnvelopeTitle.bind(this);
         this.deleteTransaction = this.deleteTransaction.bind(this);
+        this.restoreTransaction = this.restoreTransaction.bind(this);
  
         this.state = { showEnvelopes: false, envelope_id: this.props.envelope_id };
         this.state.unique = Cashular.Utils.makeid();
@@ -49,13 +50,34 @@ class Transaction extends React.Component {
 
         $.ajax({url: "/transactions/"+this.props.id, method: "DELETE"})
         .done(function() {
-            self.props.transactionDeleted();
+            self.props.transactionDeletedOrRestored();
         })
         .fail(function() {
             var snackbarContainer = document.querySelector('#snackbar-alerter');
 
             var data = {
                 message: "Failed to delete transaction",
+                timeout: 5000,
+                actionText: 'Undo'
+            };
+
+            var snackbar = new MaterialSnackbar(snackbarContainer);
+            snackbar.showSnackbar(data);
+        });
+    }
+
+    restoreTransaction() {
+        var self = this;
+
+        $.ajax({url: "/transactions/"+this.props.id+"/restore", method: "POST"})
+        .done(function() {
+            self.props.transactionDeletedOrRestored();
+        })
+        .fail(function() {
+            var snackbarContainer = document.querySelector('#snackbar-alerter');
+
+            var data = {
+                message: "Failed to restore transaction",
                 timeout: 5000,
                 actionText: 'Undo'
             };
@@ -102,13 +124,17 @@ class Transaction extends React.Component {
                         </div>
                     </CardText>
                     <CardMenu>
-                        {typeof self.state.envelope_title !== "undefined" &&
-                            self.state.envelope_title}
-                        <Icon icon={icon} action={self.iconAction} />
+                        {! self.props.deleted && typeof self.state.envelope_title !== "undefined" &&
+                                self.state.envelope_title}
+                        {! self.props.deleted &&
+                            <Icon icon={icon} action={self.iconAction} />}
                     </CardMenu>
                     {! self.props.organizer &&
                         <CardActions>
-                            <Icon icon="delete_forever" className="pull-right" action={self.deleteTransaction}></Icon>
+                            {! self.props.deleted &&
+                                <Icon icon="delete_forever" className="pull-right" action={self.deleteTransaction}></Icon>}
+                            {self.props.deleted &&
+                                <Icon icon="add" className="pull-right" action={self.restoreTransaction}></Icon>}
                         </CardActions>}
                 </Card>
                 {self.state.showEnvelopes &&

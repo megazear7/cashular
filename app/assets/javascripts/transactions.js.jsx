@@ -6,9 +6,12 @@ class Transactions extends React.Component {
         this.loadMore = this.loadMore.bind(this);
         this.load = this.load.bind(this);
         this.resetAndLoad = this.resetAndLoad.bind(this);
+        this.showDeleted = this.showDeleted.bind(this);
 
+        this.state.unique = Cashular.Utils.makeid();
         this.state.pageSize = 10;
         this.state.transactions = [ ];
+        this.state.showingNonDeleted = true;
 
         this.load();
     }
@@ -40,10 +43,24 @@ class Transactions extends React.Component {
             }
         }
 
+        if (typeof self.state.showingNonDeleted !== "undefined" && ! self.state.showingNonDeleted) {
+            transactions.retrieveDeleted();
+        }
+
         transactions.all(function(response) {
             self.setState({transactions: response.transactions,
                            count: response.count,
                            envelopes: self.props.envelopes});
+        });
+    }
+
+    showDeleted(e) {
+        var self = this;
+
+        self.setState(function(prevState) {
+            return { showingNonDeleted: ! prevState.showingNonDeleted };
+        }, function() {
+            self.load();
         });
     }
 
@@ -52,6 +69,10 @@ class Transactions extends React.Component {
         self.setState({ pageSize: 10, dateRange: dateRange }, function() {
             self.load();
         });
+    }
+
+    componentDidMount() {
+        componentHandler.upgradeDom();
     }
 
     render() {
@@ -67,10 +88,14 @@ class Transactions extends React.Component {
                 </Cell>
                 <Cell desktop={4}>
                     <Grid>
-                        {self.state.transactions.length > 0 &&
-                            <Cell className="centered" desktop={12}>
-                                <H6>{Cashular.Utils.prettyDate(new Date(self.state.transactions[0].post_date))}</H6>
-                            </Cell>}
+                        <Cell className="centered" desktop={12}>
+                            <H6>
+                                {self.state.transactions.length > 0 && self.state.showingNonDeleted &&
+                                    Cashular.Utils.prettyDate(new Date(self.state.transactions[0].post_date))}
+                                {self.state.transactions.length > 0 && ! self.state.showingNonDeleted &&
+                                    "Deleted Transactions"}
+                            </H6>
+                        </Cell>
                     </Grid>
                     {self.state.transactions.map(function(transaction, index) {
                         return <Transaction cost={transaction.amount}
@@ -79,15 +104,27 @@ class Transactions extends React.Component {
                                             key={transaction.id}
                                             id={transaction.id}
                                             organizer={self.props.onlyUnorganized}
+                                            deleted={transaction.deleted}
                                             envelope_id={transaction.envelope_id}
-                                            transactionDeleted={self.load}
+                                            transactionDeletedOrRestored={self.load}
                                             envelopes={self.props.envelopes}
                                             afterOrganize={self.resetAndLoad} />
                     })}
                     {self.state.count > self.state.pageSize &&
                         <LoadMore action={self.loadMore} />}
                 </Cell>
-                <Cell desktop={4}></Cell>
+                <Cell desktop={4}>
+                    <label className="mdl-switch mdl-js-switch mdl-js-ripple-effect transaction-switch"
+                           htmlFor={self.state.unique+"-show-non-deleted"}
+                           ref={(el) => { self.deletedSwitch = el}}>
+                        <input type="checkbox"
+                               id={self.state.unique+"-show-non-deleted"}
+                               className="mdl-switch__input"
+                               defaultChecked={self.state.showingNonDeleted}
+                               onChange={self.showDeleted} />
+                        <span className="mdl-switch__label"></span>
+                    </label>
+                </Cell>
             </Grid>
         );
     }

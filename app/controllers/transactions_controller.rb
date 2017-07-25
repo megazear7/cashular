@@ -7,8 +7,9 @@ class TransactionsController < ApplicationController
   before_action :set_to, except: [:upload]
   before_action :set_page_size, except: [:upload]
   before_action :set_only_unorganized, except: [:upload]
+  before_action :set_retrieve_deleted, only: [:index]
   before_action :set_transactions, except: [:upload]
-  before_action :set_transaction, only: [:destroy]
+  before_action :set_transaction, only: [:destroy, :restore]
 
   def index
     if @only_unorganized
@@ -40,6 +41,13 @@ class TransactionsController < ApplicationController
     json_response(@transaction)
   end
 
+  def restore
+    @transaction.deleted = false
+    @transaction.save
+
+    json_response(@transaction)
+  end
+
   def unallocated
     json_response({
         payments: @transactions.where(envelope_id: nil).where("amount < 0").sum(:amount).abs,
@@ -54,9 +62,17 @@ class TransactionsController < ApplicationController
     end
   end
 
+  def set_retrieve_deleted
+    @retrieve_deleted = false
+
+    if params[:retrieveDeleted]
+      @retrieve_deleted = true
+    end
+  end
+
   def set_transaction
     if params[:id]
-      @transaction = Transaction.where(user: current_user, deleted: false).find(params[:id])
+      @transaction = Transaction.where(user: current_user).find(params[:id])
     end
   end
 
@@ -81,7 +97,7 @@ class TransactionsController < ApplicationController
   end
 
   def set_transactions
-    @transactions = Transaction.where(user: current_user, deleted: false).order!('post_date DESC')
+    @transactions = Transaction.where(user: current_user, deleted: @retrieve_deleted).order!('post_date DESC')
 
     if @envelope
       @transactions.where!({envelope_id: @envelope.id})
