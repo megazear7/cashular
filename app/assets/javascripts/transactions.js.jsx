@@ -83,8 +83,7 @@ class Transactions extends React.Component {
                     {self.state.count > self.state.pageSize &&
                         <LoadMore action={self.loadMore} />}
                 </Cell>
-                <Cell desktop={4}>
-                </Cell>
+                <Cell desktop={4}></Cell>
             </Grid>
         );
     }

@@ -1,4 +1,5 @@
-Add ability to upload transactions.
+IN PROCESS: Add ability to upload transactions.
+ -- ajax the data up to api at the todo that I put in the uploader react component
 
 Add ability to rename envelopes
 

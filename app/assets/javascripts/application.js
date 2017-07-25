@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-csv.min
 //= require material
 //= require react
 //= require_tree .

@@ -1,10 +1,72 @@
+class FileUploader extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.onChange = this.onChange.bind(this);
+    }
+
+    onChange(evt) {
+        var files = evt.target.files;
+        var file = files[0];
+
+        this.input.value = file.name;
+
+        this.props.action(file);
+    }
+
+    render() {
+        return (
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--file">
+                <input className="mdl-textfield__input" placeholder="File" type="text" readOnly ref={(el) => { this.input = el; }} />
+
+                <div className="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
+                    <i className="material-icons">attach_file</i>
+                    <input type="file" id="files" name="files[]" multiple onChange={this.onChange} />
+                </div>
+            </div>
+        )
+    }
+}
+
+class Table extends React.Component {
+    render() {
+        var self = this;
+
+        var className = "mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp";
+        if (typeof self.props.className !== "undefined") {
+            className += " " + self.props.className
+        }
+
+        return (
+            <table className={className}>
+              <thead>
+                <tr>
+                  {self.props.columns.map(function(column, index) {
+                      return <th className={column.numeric ? "" : "mdl-data-table__cell--non-numeric"} key={index}>{column.title}</th>
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {self.props.rows.map(function(row, index) {
+                    return (<tr key={index}>
+                                {self.props.columns.map(function(column, index) {
+                                    return <td className={column.numeric ? "" : "mdl-data-table__cell--non-numeric"} key={index}>{row[column.name]}</td>
+                                })}
+                            </tr>)
+                })}
+              </tbody>
+            </table>
+        );
+    }
+}
+
 class List extends React.Component {
     render() {
         return (
             <ul className="mdl-list">
                 {this.props.children}
             </ul>
-        )
+        );
     }
 }
               
@@ -50,7 +112,7 @@ class ListItem extends React.Component {
                    </label>
                </span>
             </li>
-        )
+        );
     }
 }
 
@@ -73,7 +135,7 @@ class Radio extends React.Component {
                        defaultChecked={this.props.checked} />
                 <span className="mdl-radio__label">{this.props.title}</span>
             </label>
-        )
+        );
     }
 }
 
@@ -83,7 +145,7 @@ class CardMenu extends React.Component {
             <div className="mdl-card__menu">
                 {this.props.children}
             </div>
-        )
+        );
     }
 }
 
@@ -215,8 +277,14 @@ class LesserIcon extends React.Component {
 
 class Button extends React.Component {
     render() {
+        var className = "mdl-button mdl-button--colored " + (this.props.center ? "centered" : "");
+
+        if (this.props.className) {
+            className += " " + this.props.className
+        }
+
         return (
-            <a onClick={this.props.action} className={"mdl-button mdl-button--colored " + (this.props.center ? "centered" : "")}>
+            <a onClick={this.props.action} className={className}>
                 {this.props.children}
             </a>
         );

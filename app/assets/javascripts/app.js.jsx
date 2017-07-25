@@ -32,6 +32,10 @@ class App extends React.Component {
                             <BasicIcon icon="group_work" />
                             Envelopes
                         </Tab>
+                        <Tab href="#scroll-tab-5">
+                            <BasicIcon icon="backup" />
+                            Upload
+                        </Tab>
                     </TabBar>
                 </Header>
                 <Drawer title={this.props.title} />
@@ -48,6 +52,9 @@ class App extends React.Component {
                     </TabPanel>
                     <TabPanel id="scroll-tab-4">
                         <Explorer envelopes={this.state.envelopes} />
+                    </TabPanel>
+                    <TabPanel id="scroll-tab-5">
+                        <Uploader />
                     </TabPanel>
                 </Content>
             </Layout>
