@@ -1,3 +1,21 @@
+class Menu extends React.Component {
+    render() {
+        return (
+            <ul className="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" htmlFor={this.props.htmlFor}>
+                {this.props.children}
+            </ul>
+        );
+    }
+}
+
+class MenuItem extends React.Component {
+    render() {
+        return (
+            <a className="mdl-menu__item mdl-js-ripple-effect">{this.props.children}</a>
+        );
+    }
+}
+
 class FileUploader extends React.Component {
     constructor(props) {
         super(props);
@@ -151,8 +169,12 @@ class CardMenu extends React.Component {
 
 class CardTitle extends React.Component {
     render() {
+        var className = "mdl-card__title";
+        if (! this.props.dontExpand) {
+            className += " mdl-card--expand";
+        }
         return (
-            <div className="mdl-card__title mdl-card--expand">
+            <div className={className}>
                 <h2 className="mdl-card__title-text">
                     {this.props.children}
                 </h2>
@@ -173,8 +195,14 @@ class CardText extends React.Component {
 
 class CardActions extends React.Component {
     render() {
+        var className = "mdl-card__actions mdl-card--border";
+
+        if (typeof this.props.className !== "undefined") {
+            className += " " + this.props.className;
+        }
+
         return (
-            <div className="mdl-card__actions mdl-card--border">
+            <div className={className}>
                 {this.props.children}
             </div>
         );
@@ -247,8 +275,14 @@ class H6 extends React.Component {
 
 class BasicIcon extends React.Component {
     render() {
+        var className = "mdl-button mdl-button--icon";
+
+        if (typeof this.props.className !== "undefined") {
+            className += " " + this.props.className;
+        }
+
         return (
-            <button className="mdl-button mdl-button--icon" disabled>
+            <button className={className} disabled>
                 <i className="material-icons">{this.props.icon}</i>
             </button>
         );
@@ -257,8 +291,15 @@ class BasicIcon extends React.Component {
 
 class Icon extends React.Component {
     render() {
+        var className = "mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect";
+
+        if (typeof this.props.className !== "undefined") {
+            className += " " + this.props.className;
+        }
+
+
         return (
-            <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" onClick={this.props.action}>
+            <button className={className} onClick={this.props.action}>
                 <i className="material-icons">{this.props.icon}</i>
             </button>
         );
@@ -267,8 +308,14 @@ class Icon extends React.Component {
 
 class LesserIcon extends React.Component {
     render() {
+        var className = "mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect";
+
+        if (typeof this.props.className !== "undefined") {
+            className += " " + this.props.className;
+        }
+
         return (
-            <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" onClick={this.props.action}>
+            <button className={className} onClick={this.props.action}>
                 <i className="material-icons lesser-icon">{this.props.icon}</i>
             </button>
         );

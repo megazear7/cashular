@@ -5,6 +5,7 @@ class Transaction extends React.Component {
         this.iconAction = this.iconAction.bind(this);
         this.organize = this.organize.bind(this);
         this.setEnvelopeTitle = this.setEnvelopeTitle.bind(this);
+        this.deleteTransaction = this.deleteTransaction.bind(this);
  
         this.state = { showEnvelopes: false, envelope_id: this.props.envelope_id };
         this.state.unique = Cashular.Utils.makeid();
@@ -43,6 +44,31 @@ class Transaction extends React.Component {
         self.setState({showEnvelopes: false});
     }
 
+    deleteTransaction() {
+        var self = this;
+
+        $.ajax({url: "/transactions/"+this.props.id, method: "DELETE"})
+        .done(function() {
+            self.props.transactionDeleted();
+        })
+        .fail(function() {
+            var snackbarContainer = document.querySelector('#snackbar-alerter');
+
+            var data = {
+                message: "Failed to delete transaction",
+                timeout: 5000,
+                actionText: 'Undo'
+            };
+
+            var snackbar = new MaterialSnackbar(snackbarContainer);
+            snackbar.showSnackbar(data);
+        });
+    }
+
+    componentDidMount() {
+        componentHandler.upgradeDom();
+    }
+
     render() {
         var self = this;
 
@@ -63,7 +89,8 @@ class Transaction extends React.Component {
         }
 
         return (
-            <Cell desktop="12">
+            <Grid>
+            <Cell desktop="12" className="transaction-cell">
                 <Card className={"min-card " + color}>
                     <CardTitle>
                         {"$" + Math.abs(self.props.cost).toFixed(2)}
@@ -75,10 +102,14 @@ class Transaction extends React.Component {
                         </div>
                     </CardText>
                     <CardMenu>
-                        {typeof this.state.envelope_title !== "undefined" &&
-                            this.state.envelope_title}
+                        {typeof self.state.envelope_title !== "undefined" &&
+                            self.state.envelope_title}
                         <Icon icon={icon} action={self.iconAction} />
                     </CardMenu>
+                    {! self.props.organizer &&
+                        <CardActions>
+                            <Icon icon="delete_forever" className="pull-right" action={self.deleteTransaction}></Icon>
+                        </CardActions>}
                 </Card>
                 {self.state.showEnvelopes &&
                     <EnvelopePicker action={self.organize}
@@ -86,6 +117,7 @@ class Transaction extends React.Component {
                                     envelope_id={self.props.envelope_id} />
                 }
             </Cell>
+            </Grid>
         );
     }
 }

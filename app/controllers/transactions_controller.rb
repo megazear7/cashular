@@ -1,5 +1,4 @@
 class TransactionsController < ApplicationController
-#class TransactionsController < ActionController::API
   include Response
   include ExceptionHandler
 
@@ -9,6 +8,7 @@ class TransactionsController < ApplicationController
   before_action :set_page_size, except: [:upload]
   before_action :set_only_unorganized, except: [:upload]
   before_action :set_transactions, except: [:upload]
+  before_action :set_transaction, only: [:destroy]
 
   def index
     if @only_unorganized
@@ -33,6 +33,13 @@ class TransactionsController < ApplicationController
     redirect_to "/"
   end
 
+  def destroy
+    @transaction.deleted = true
+    @transaction.save
+
+    json_response(@transaction)
+  end
+
   def unallocated
     json_response({
         payments: @transactions.where(envelope_id: nil).where("amount < 0").sum(:amount).abs,
@@ -44,6 +51,12 @@ class TransactionsController < ApplicationController
   def set_envelope
     if params[:envelope_id]
       @envelope = Envelope.where(user: current_user).find(params[:envelope_id])
+    end
+  end
+
+  def set_transaction
+    if params[:id]
+      @transaction = Transaction.where(user: current_user, deleted: false).find(params[:id])
     end
   end
 
@@ -68,7 +81,7 @@ class TransactionsController < ApplicationController
   end
 
   def set_transactions
-    @transactions = Transaction.where(user: current_user).order!('post_date DESC')
+    @transactions = Transaction.where(user: current_user, deleted: false).order!('post_date DESC')
 
     if @envelope
       @transactions.where!({envelope_id: @envelope.id})

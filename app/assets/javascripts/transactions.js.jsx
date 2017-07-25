@@ -66,17 +66,21 @@ class Transactions extends React.Component {
                 <Cell desktop={1}>
                 </Cell>
                 <Cell desktop={4}>
-                    {self.state.transactions.length > 0 &&
-                        <Cell className="centered" desktop={12}>
-                            <H6>{Cashular.Utils.prettyDate(new Date(self.state.transactions[0].post_date))}</H6>
-                        </Cell>}
+                    <Grid>
+                        {self.state.transactions.length > 0 &&
+                            <Cell className="centered" desktop={12}>
+                                <H6>{Cashular.Utils.prettyDate(new Date(self.state.transactions[0].post_date))}</H6>
+                            </Cell>}
+                    </Grid>
                     {self.state.transactions.map(function(transaction, index) {
                         return <Transaction cost={transaction.amount}
                                             post_date={transaction.post_date}
                                             description={transaction.description}
                                             key={transaction.id}
                                             id={transaction.id}
+                                            organizer={self.props.onlyUnorganized}
                                             envelope_id={transaction.envelope_id}
+                                            transactionDeleted={self.load}
                                             envelopes={self.props.envelopes}
                                             afterOrganize={self.resetAndLoad} />
                     })}

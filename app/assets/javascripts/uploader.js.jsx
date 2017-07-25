@@ -17,7 +17,6 @@ class Uploader extends React.Component {
         reader.readAsText(file);
 
         reader.onload = function(event){
-            console.log($.csv.toObjects(event.target.result));
             self.setState({uploadData: $.csv.toObjects(event.target.result)});
         };
 
@@ -27,8 +26,17 @@ class Uploader extends React.Component {
     }
 
     finishUpload() {
-        // TODO ajax this up to the api
-        console.log(this.state.uploadData);
+        var data = { };
+        
+        data.transactions = this.state.uploadData.map(function(transaction) {
+            return {
+                description: transaction.description,
+                post_date: transaction.date,
+                amount: transaction.amount
+            };
+        });
+
+        $.post("/transactions/upload", data);
     }
 
     render() {

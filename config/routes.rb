@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   authenticate :user do
     root to: 'application#main'
 
-    resources :transactions, only: [ :index ] do
+    resources :transactions, only: [ :index, :destroy ] do
       collection do
         post 'upload'
         get 'unallocated'

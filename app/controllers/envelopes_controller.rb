@@ -23,7 +23,7 @@ class EnvelopesController < ApplicationController
   end
 
   def add_transaction
-    @transaction = Transaction.where(user: current_user).find(params[:transaction_id])
+    @transaction = Transaction.where(user: current_user, deleted: false).find(params[:transaction_id])
     @envelope.transactions << @transaction
 
     json_response(@transaction)

@@ -21,6 +21,11 @@
 
 .min-card {
     min-height: 0 !important;
+    overflow: visible !important;
+}
+
+.transaction-cell {
+    z-index: 0 !important;
 }
 
 .lesser-icon {
@@ -84,4 +89,8 @@ tr.orange-font {
 
 .mdl-list__item:hover {
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.pull-right {
+    float: right;
 }
