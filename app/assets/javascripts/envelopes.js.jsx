@@ -29,7 +29,16 @@ class Envelopes extends React.Component {
         }
 
         envelopes.all(function(envelopes) {
-            self.setState({envelopes: envelopes, dateRange: dateRange}, function() {
+            var grossSpending = Math.abs(envelopes.reduce(function(gross, envelope) {
+                return envelope.sum < 0 ? gross + parseFloat(envelope.sum) : gross;
+            }, 0));
+
+            var grossReceived = Math.abs(envelopes.reduce(function(gross, envelope) {
+                return envelope.sum > 0 ? gross + parseFloat(envelope.sum) : gross;
+            }, 0));
+
+            self.setState({envelopes: envelopes, dateRange: dateRange,
+                           grossSpending: grossSpending, grossReceived: grossReceived}, function() {
                 self.props.addOrRemoved(self.state.envelopes);
                 if (self.radio1) {
                     componentHandler.upgradeElement(self.radio1);
@@ -107,6 +116,16 @@ class Envelopes extends React.Component {
                             </Grid>
                         </Cell>
                         <Cell desktop={4}>
+                            {typeof self.state.grossSpending !== "undefined" && (self.state.grossSpending > 0 || self.state.grossReceived > 0) &&
+                                <Grid>
+                                    <Cell desktop={12}>
+                                        <H6>Total</H6>
+                                        {self.state.grossSpending > 0 &&
+                                            <p>Spent: ${Cashular.Utils.format(self.state.grossSpending)}</p>}
+                                        {self.state.grossReceived > 0 &&
+                                            <p>Recieved: ${Cashular.Utils.format(self.state.grossReceived)}</p>}
+                                    </Cell>
+                                </Grid>}
                             {typeof self.state.unallocated !== "undefined" && (self.state.unallocated.payments > 0 || self.state.unallocated.recieved > 0) &&
                                 <Grid>
                                     <Cell desktop={12}>
