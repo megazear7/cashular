@@ -15,7 +15,7 @@ namespace :import do
 
     book.worksheet(0).each do |row|
       if is_present(row[2]) and is_present(row[4]) and is_present(row[5])
-        transaction = Transaction.find_or_initialize_by({
+        transaction = Transaction.find_or_initialize_by(
           details: row[1].nil? ? "No Details Available" : row[0],
           post_date: row[2],
           description: row[3].nil? ? "No Description Available" : row[2],
@@ -24,7 +24,7 @@ namespace :import do
           balance: row[6],
           check_number: row[7].nil? ? -1 : row[6],
           envelope_id: row[8],
-          user_id: 1}, :without_protection => true
+          user_id: 1
         )
 
         transaction.id = row[0];
