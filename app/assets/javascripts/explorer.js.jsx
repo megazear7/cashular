@@ -71,25 +71,25 @@ class Explorer extends React.Component {
                             <TimeSelector onChange={self.resetAndLoad} />}
                     </Grid>
                 </Cell>
-                <Cell desktop={1} />
-                <Cell desktop={3} className="centered">
+                <Cell desktop={1}>
+                </Cell>
+                <Cell desktop={4} className="centered">
                     {typeof self.state.total !== "undefined" && self.state.total !== 0 &&
                         <H6 className={((self.state.total >= 0) ? "green-font" : "orange-font")}>${Math.abs(self.state.total).toFixed(2)}</H6>}
-                    <Grid className="transaction-list">
-                        {self.state.transactions.map(function(transaction, index) {
-                            return <Transaction cost={transaction.amount}
-                                                description={transaction.description}
-                                                key={transaction.id}
-                                                id={transaction.id}
-                                                envelope_id={transaction.envelope_id}
-                                                envelopes={self.props.envelopes}
-                                                afterOrganize={self.resetAndLoad} />
-                        })}
-                        {self.state.envelope && self.state.count > self.state.pageSize &&
-                            <LoadMore action={self.loadMore} />}
-                    </Grid>
+                    {self.state.transactions.map(function(transaction, index) {
+                        return <Transaction cost={transaction.amount}
+                                            description={transaction.description}
+                                            key={transaction.id}
+                                            id={transaction.id}
+                                            envelope_id={transaction.envelope_id}
+                                            envelopes={self.props.envelopes}
+                                            afterOrganize={self.resetAndLoad} />
+                    })}
+                    {self.state.envelope && self.state.count > self.state.pageSize &&
+                        <LoadMore action={self.loadMore} />}
                 </Cell>
-                <Cell desktop={1} />
+                <Cell desktop={1}>
+                </Cell>
                 <Cell desktop={3}>
                     <EnvelopePicker action={self.setEnvelope}
                                     envelopes={self.props.envelopes}
