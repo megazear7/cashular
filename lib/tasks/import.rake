@@ -13,7 +13,7 @@ namespace :import do
 
     book.worksheet(0).each do |row|
       if is_present(row[2]) and is_present(row[4]) and is_present(row[6])
-        transaction = Transaction.find_or_initialize_by(row[0].to_i)
+        transaction = Transaction.find(row[0])
         transaction.description = row[3].nil? ? "No Description Available" : row[3]
         transaction.save
       end
