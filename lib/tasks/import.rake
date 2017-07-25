@@ -8,21 +8,33 @@ namespace :import do
     end
   end
 
+  task :update, [:path] => [:environment] do |t, args|
+    book = Spreadsheet.open(args.path)
+
+    book.worksheet(0).each do |row|
+      if is_present(row[2]) and is_present(row[4]) and is_present(row[6])
+        transaction = Transaction.find_or_initialize_by(row[0])
+        transaction.description = row[3].nil? ? "No Description Available" : row[3]
+        transaction.save
+      end
+    end
+  end
+
   # Remove header row, remove old data, save as xls / xlsx
   # Example: rake import:xls[/path/to/xls]
   task :xls, [:path] => [:environment] do |t, args|
     book = Spreadsheet.open(args.path)
 
     book.worksheet(0).each do |row|
-      if is_present(row[2]) and is_present(row[4]) and is_present(row[5])
+      if is_present(row[2]) and is_present(row[4]) and is_present(row[6])
         transaction = Transaction.find_or_initialize_by(
-          details: row[1].nil? ? "No Details Available" : row[0],
+          details: row[1].nil? ? "No Details Available" : row[1],
           post_date: row[2],
-          description: row[3].nil? ? "No Description Available" : row[2],
+          description: row[3].nil? ? "No Description Available" : row[3],
           amount: row[4],
-          t_type: row[5].nil? ? "No Type Available" : row[4],
+          t_type: row[5].nil? ? "No Type Available" : row[5],
           balance: row[6],
-          check_number: row[7].nil? ? -1 : row[6],
+          check_number: row[7].nil? ? -1 : row[7],
           envelope_id: row[8],
           user_id: 1
         )
