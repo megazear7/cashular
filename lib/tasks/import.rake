@@ -9,7 +9,7 @@ namespace :import do
   end
 
   # Remove header row, remove old data, save as xls / xlsx
-  # Example: rake import:csv[/path/to/xls]
+  # Example: rake import:xls[/path/to/xls]
   task :xls, [:path] => [:environment] do |t, args|
     book = Spreadsheet.open(args.path)
 
