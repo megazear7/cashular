@@ -43,19 +43,19 @@ class Uploader extends React.Component {
         var self = this;
         return (
             <Grid>
-                <Cell desktop={12} className="centered">
+                <Cell desktop={12} tablet={8} phone={4} className="centered">
                     <H5>Upload Transactions</H5>
                     <p>The file must be a csv with three column headers: description, date, and amount.</p>
                 </Cell>
-                <Cell desktop={12} className="centered">
+                <Cell desktop={12} tablet={8} phone={4} className="centered">
                     <FileUploader action={self.uploadTransactions} />
                 </Cell>
                 {typeof self.state.uploadData !== "undefined" &&
-                    <Cell desktop={12} className="centered">
+                    <Cell desktop={12} tablet={8} phone={4} className="centered">
                         <Button action={self.finishUpload} className="mdl-button--raised">Upload</Button>
                     </Cell>}
                 {typeof self.state.uploadData !== "undefined" &&
-                    <Cell desktop={12}>
+                    <Cell desktop={12} tablet={8} phone={4}>
                         <Table rows={self.state.uploadData} className="center" columns={this.state.columns} />
                     </Cell>}
             </Grid>

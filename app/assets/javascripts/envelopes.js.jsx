@@ -35,11 +35,11 @@ class Envelopes extends React.Component {
 
         return (
             <Grid>
-                <Cell desktop={10} className="centered">
+                <Cell desktop={10} tablet={7} phone={3} className="centered">
                     {typeof self.props.dateRange !== "undefined" && self.props.dateRange.title &&
                         <H6>{self.props.dateRange.title}</H6>}
                 </Cell>
-                <Cell desktop={2}>
+                <Cell desktop={2} tablet={1} phone={1}>
                     <PeriodSelector onChange={self.setTimePeriod} dateRange={self.props.dateRange} />
                 </Cell>
                 {self.props.envelopes.map(function(envelope, index) {
@@ -50,10 +50,10 @@ class Envelopes extends React.Component {
                                          onRemove={self.load}
                                          id={envelope.id} /> }})}
                 <NewEnvelope onCreate={self.load} />
-                <Cell desktop={12}>
+                <Cell desktop={12} tablet={8} phone={4}>
                     <hr />
                 </Cell>
-                <Cell desktop={8}>
+                <Cell desktop={10} tablet={6} phone={0}>
                     <H6>Empty Envelopes</H6>
                     <Grid>
                         {self.props.envelopes.map(function(envelope, index) {
@@ -67,10 +67,10 @@ class Envelopes extends React.Component {
                                                  size={4} /> }})}
                     </Grid>
                 </Cell>
-                <Cell desktop={4}>
+                <Cell desktop={2} tablet={2} phone={4}>
                     {(grossSpending > 0 || grossReceived > 0) &&
                         <Grid>
-                            <Cell desktop={12}>
+                            <Cell desktop={12} tablet={8} phone={4}>
                                 <H6>Total</H6>
                                 {grossSpending > 0 &&
                                     <p>Spent: ${Cashular.Utils.format(grossSpending)}</p>}
@@ -80,7 +80,7 @@ class Envelopes extends React.Component {
                         </Grid>}
                     {typeof self.state.unallocated !== "undefined" && (self.state.unallocated.payments > 0 || self.state.unallocated.recieved > 0) &&
                         <Grid>
-                            <Cell desktop={12}>
+                            <Cell desktop={12} tablet={8} phone={4}>
                                 <H6>Unallocated</H6>
                                 {self.state.unallocated.payments > 0 &&
                                     <p>Payments: ${Cashular.Utils.format(self.state.unallocated.payments)}</p>}

@@ -54,13 +54,18 @@ class Explorer extends React.Component {
         var self = this;
         return (
             <Grid>
-                <Cell desktop={12} className="centered">
+                <Cell desktop={3} tablet={0} phone={0}>
+                </Cell> 
+                <Cell desktop={5} tablet={5} phone={4} className="centered">
                     {typeof self.props.dateRange !== "undefined" && self.props.dateRange.title &&
                         <H6>{self.props.dateRange.title}</H6>}
                 </Cell>
-                <Cell desktop={4}>
+                <Cell desktop={4} tablet={3} phone={0}>
+                </Cell> 
+
+                <Cell desktop={3} tablet={0} phone={0}>
                 </Cell>
-                <Cell desktop={4} className="centered">
+                <Cell desktop={5} tablet={5} phone={4} className="centered">
                     {typeof self.props.transactionData.total !== "undefined" && self.props.transactionData.total !== 0 &&
                         <H6 className={((self.props.transactionData.total >= 0) ? "green-font" : "orange-font")}>
                             ${Math.abs(self.props.transactionData.total).toFixed(2)}</H6>}
@@ -76,9 +81,12 @@ class Explorer extends React.Component {
                     {self.state.envelope && self.props.transactionData.count > self.state.pageSize &&
                         <LoadMore action={self.loadMore} />}
                 </Cell>
-                <Cell desktop={1}>
+                <Cell desktop={1} tablet={0} phone={0}>
                 </Cell>
-                <Cell desktop={3}>
+                <Cell desktop={0} tablet={0} phone={4} className="centered">
+                    <H5>Select Envelope:</H5>
+                </Cell>
+                <Cell desktop={3} tablet={3} phone={4}>
                     <EnvelopePicker action={self.setEnvelope}
                                     envelopes={self.props.envelopes}
                                     envelope_id={self.state.envelope && self.state.envelope.id} />

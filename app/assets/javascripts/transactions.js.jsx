@@ -55,22 +55,31 @@ class Transactions extends React.Component {
         var self = this;
         return (
             <Grid>
-                <Cell desktop={12} className="centered">
-                    <H6>{this.props.title}</H6>
+                <Cell desktop={3} tablet={1} phone={0}>
                 </Cell>
-                <Cell desktop={4}>
+                <Cell desktop={5} tablet={6} phone={3} className="centered">
+                    <H6>
+                        {self.props.transactions.length > 0 && self.state.showingNonDeleted &&
+                            Cashular.Utils.prettyDate(new Date(self.props.transactions[0].post_date))}
+                        {self.props.transactions.length > 0 && ! self.state.showingNonDeleted &&
+                            "Deleted Transactions"}
+                    </H6>
                 </Cell>
-                <Cell desktop={4}>
-                    <Grid>
-                        <Cell className="centered" desktop={12}>
-                            <H6>
-                                {self.props.transactions.length > 0 && self.state.showingNonDeleted &&
-                                    Cashular.Utils.prettyDate(new Date(self.props.transactions[0].post_date))}
-                                {self.props.transactions.length > 0 && ! self.state.showingNonDeleted &&
-                                    "Deleted Transactions"}
-                            </H6>
-                        </Cell>
-                    </Grid>
+                <Cell desktop={4} tablet={1} phone={1}>
+                    <label className="mdl-switch mdl-js-switch mdl-js-ripple-effect transaction-switch"
+                           htmlFor={self.state.unique+"-show-non-deleted"}
+                           ref={(el) => { self.deletedSwitch = el}}>
+                        <input type="checkbox"
+                               id={self.state.unique+"-show-non-deleted"}
+                               className="mdl-switch__input"
+                               defaultChecked={self.state.showingNonDeleted}
+                               onChange={self.showDeleted} />
+                        <span className="mdl-switch__label"></span>
+                    </label>
+                </Cell>
+                <Cell desktop={3} tablet={1} phone={0}>
+                </Cell>
+                <Cell desktop={5} tablet={6} phone={4}>
                     {self.props.transactions.map(function(transaction, index) {
                         return <Transaction cost={transaction.amount}
                                             post_date={transaction.post_date}
@@ -87,17 +96,7 @@ class Transactions extends React.Component {
                     {self.state.count > self.state.pageSize &&
                         <LoadMore action={self.loadMore} />}
                 </Cell>
-                <Cell desktop={4}>
-                    <label className="mdl-switch mdl-js-switch mdl-js-ripple-effect transaction-switch"
-                           htmlFor={self.state.unique+"-show-non-deleted"}
-                           ref={(el) => { self.deletedSwitch = el}}>
-                        <input type="checkbox"
-                               id={self.state.unique+"-show-non-deleted"}
-                               className="mdl-switch__input"
-                               defaultChecked={self.state.showingNonDeleted}
-                               onChange={self.showDeleted} />
-                        <span className="mdl-switch__label"></span>
-                    </label>
+                <Cell desktop={4} tablet={1} phone={0}>
                 </Cell>
             </Grid>
         );

@@ -25,7 +25,7 @@ class Envelope extends React.Component {
         }
 
         return (
-            <Cell desktop={this.state.size}>
+            <Cell desktop={3} tablet={4} phone={4}>
                 <Card className={"min-card " + color}>
                     {! this.props.dontShowAmount &&
                         <CardTitle>

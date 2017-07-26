@@ -374,8 +374,13 @@ class Cell extends React.Component {
     }
 
     render() {
+        var className = this.cellClass();
+
+        if (typeof this.props.className !== "undefined") {
+            className += " " + this.props.className;
+        }
         return (
-            <div className={this.cellClass() + " " + this.props.className}>
+            <div className={className}>
                 {this.props.children}
             </div>
         );
@@ -569,7 +574,7 @@ class Content extends React.Component {
 class Layout extends React.Component {
     render() {
         return (
-            <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color-text--grey-600 mdl-layout--fixed-tabs  mdl-layout--fixed-drawer mdl-layout--overlay-drawer-button">
+            <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color-text--grey-600 mdl-layout--fixed-drawer mdl-layout--overlay-drawer-button">
                 {this.props.children}
             </div>
         )

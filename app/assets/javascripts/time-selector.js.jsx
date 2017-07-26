@@ -83,7 +83,7 @@ class TimeSelector extends React.Component {
     render() {
         var self = this;
         return (
-            <Cell desktop={12}>
+            <Cell desktop={12} tablet={8} phone={4}>
                 <List>
                     {self.previousTimePeriods().map(function(type, index) {
                         return <ListItem key={self.state.unique + type.key}

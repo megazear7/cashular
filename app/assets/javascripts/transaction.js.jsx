@@ -112,7 +112,7 @@ class Transaction extends React.Component {
 
         return (
             <Grid>
-            <Cell desktop="12" className="transaction-cell">
+            <Cell desktop="12" tablet="8" phone="4" className="transaction-cell">
                 <Card className={"min-card " + color}>
                     <CardTitle>
                         {"$" + Math.abs(self.props.cost).toFixed(2)}
