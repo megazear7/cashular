@@ -35,7 +35,10 @@ class FileUploader extends React.Component {
     render() {
         return (
             <div className="mdl-textfield mdl-js-textfield mdl-textfield--file">
-                <input className="mdl-textfield__input" placeholder="File" type="text" readOnly ref={(el) => { this.input = el; }} />
+                <input className="mdl-textfield__input"
+                       placeholder="File"
+                       type="text"
+                       readOnly ref={(el) => { this.input = el; }} />
 
                 <div className="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
                     <i className="material-icons">attach_file</i>

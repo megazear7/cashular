@@ -1,7 +1,4 @@
-Currently moving the date range picker into the drawer. Transactions and Explorer
-doesn't want to update when the new date range is selected.
-
-Make mobile friendly
+Fix upload, date isn't saved correctly. Incorerectly formatted in uploader. TODO listed
 
 Add ability to rename envelopes
 

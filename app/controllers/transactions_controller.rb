@@ -23,15 +23,17 @@ class TransactionsController < ApplicationController
   end
 
   def upload
+    transactions = []
     params[:transactions].each do |index, transaction|
-      Transaction.find_or_create_by!(
+      transactions << Transaction.find_or_create_by!(
         user_id: current_user.id,
         description: transaction[:description],
         amount: transaction[:amount],
-        post_date: transaction[:post_date])
+        post_date: Date.strptime(transaction[:post_date], "%m/%d/%Y")
+      )
     end
 
-    redirect_to "/"
+    json_response(transactions)
   end
 
   def destroy

@@ -9,6 +9,7 @@ class App extends React.Component {
         this.setOrganizerTransactions = this.setOrganizerTransactions.bind(this);
         this.setTransactions = this.setTransactions.bind(this);
         this.setExplorerTransactions = this.setExplorerTransactions.bind(this);
+        this.setAllTransactions = this.setAllTransactions.bind(this);
 
         this.state = { envelopes: this.props.envelopes,
                        dateRange: {title: "Previous Week", key: "previous_week", daysAgo: 7},
@@ -84,36 +85,41 @@ class App extends React.Component {
         var self = this;
         self.setState({dateRange: dateRange}, function() {
             self.loadEnvelopes();
-
-            var organizerOptions;
-            if (typeof this.state.organizerOptions !== "undefined") {
-                organizerOptions = this.state.organizerOptions;
-            } else {
-                organizerOptions = { };
-            }
-
-            var transactionsOptions;
-            if (typeof this.state.transactionsOptions !== "undefined") {
-                transactionsOptions = this.state.transactionsOptions;
-            } else {
-                transactionsOptions = { };
-            }
-
-            var explorerOptions;
-            if (typeof this.state.explorerOptions !== "undefined") {
-                explorerOptions = this.state.explorerOptions;
-            } else {
-                explorerOptions = { };
-            }
-
-            organizerOptions.pageSize = 10;
-            transactionsOptions.pageSize = 10;
-            explorerOptions.pageSize = 10;
-
-            self.setOrganizerTransactions(organizerOptions);
-            self.setTransactions(transactionsOptions);
-            self.setExplorerTransactions(explorerOptions);
+            self.setAllTransactions();
         });
+    }
+
+    setAllTransactions() {
+        var self = this;
+
+        var organizerOptions;
+        if (typeof this.state.organizerOptions !== "undefined") {
+            organizerOptions = this.state.organizerOptions;
+        } else {
+            organizerOptions = { };
+        }
+
+        var transactionsOptions;
+        if (typeof this.state.transactionsOptions !== "undefined") {
+            transactionsOptions = this.state.transactionsOptions;
+        } else {
+            transactionsOptions = { };
+        }
+
+        var explorerOptions;
+        if (typeof this.state.explorerOptions !== "undefined") {
+            explorerOptions = this.state.explorerOptions;
+        } else {
+            explorerOptions = { };
+        }
+
+        organizerOptions.pageSize = 10;
+        transactionsOptions.pageSize = 10;
+        explorerOptions.pageSize = 10;
+
+        self.setOrganizerTransactions(organizerOptions);
+        self.setTransactions(transactionsOptions);
+        self.setExplorerTransactions(explorerOptions);
     }
 
     setOrganizerTransactions(options) {
@@ -184,6 +190,7 @@ class App extends React.Component {
                     <TabPanel className="is-active" id="scroll-tab-1">
                         <Envelopes addOrRemoved={this.setEnvelopes}
                                    dateRange={this.state.dateRange}
+                                   addOrRemovedEnvelope={this.loadEnvelopes}
                                    envelopes={this.state.envelopes}
                                    unallocated={this.state.unallocated} />
                     </TabPanel>
@@ -205,7 +212,7 @@ class App extends React.Component {
                                   envelopes={this.state.envelopes} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-5">
-                        <Uploader />
+                        <Uploader addedTransactions={this.setAllTransactions} />
                     </TabPanel>
                 </Content>
             </Layout>

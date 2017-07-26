@@ -1,10 +1,11 @@
 class Uploader extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { columns: [
-            { title: "Description", name: "description" },
-            { title: "Date", name: "date", numeric: true },
-            { title: "Amount", name: "amount", numeric: true }]};
+        this.state = {
+            columns: [
+                { title: "Description", name: "description" },
+                { title: "Date", name: "date", numeric: true },
+                { title: "Amount", name: "amount", numeric: true }]};
 
         this.uploadTransactions = this.uploadTransactions.bind(this);
         this.finishUpload = this.finishUpload.bind(this);
@@ -17,6 +18,8 @@ class Uploader extends React.Component {
         reader.readAsText(file);
 
         reader.onload = function(event){
+            // TODO the date is not correctly formatted here
+            console.log(event.target.result)
             self.setState({uploadData: $.csv.toObjects(event.target.result)});
         };
 
@@ -26,9 +29,10 @@ class Uploader extends React.Component {
     }
 
     finishUpload() {
+        var self = this;
         var data = { };
         
-        data.transactions = this.state.uploadData.map(function(transaction) {
+        data.transactions = self.state.uploadData.map(function(transaction) {
             return {
                 description: transaction.description,
                 post_date: transaction.date,
@@ -36,7 +40,11 @@ class Uploader extends React.Component {
             };
         });
 
-        $.post("/transactions/upload", data);
+        $.post("/transactions/upload", data)
+        .success(function() {
+            self.props.addedTransactions();
+            self.setState({uploadData: [ ]});
+        });
     }
 
     render() {
@@ -54,7 +62,7 @@ class Uploader extends React.Component {
                     <Cell desktop={12} tablet={8} phone={4} className="centered">
                         <Button action={self.finishUpload} className="mdl-button--raised">Upload</Button>
                     </Cell>}
-                {typeof self.state.uploadData !== "undefined" &&
+                {typeof self.state.uploadData !== "undefined" && self.state.uploadData.length > 0 &&
                     <Cell desktop={12} tablet={8} phone={4}>
                         <Table rows={self.state.uploadData} className="center" columns={this.state.columns} />
                     </Cell>}
