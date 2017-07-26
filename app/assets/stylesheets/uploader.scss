@@ -24,3 +24,50 @@
 .file-upload {
     width: 200px;
 }
+
+@media only screen and (max-width: 860px) {
+
+  table, thead, tbody, th, td, tr {
+      display: block !important;
+  }
+
+  thead {
+    display: none !important;
+  }
+
+  // mdl specifics
+
+  .mdl-data-table tbody tr {
+    height: auto !important;
+  }
+  
+  .mdl-data-table tbody tr:nth-child(even) {
+    background-color: #eee !important;
+  }
+
+  .mdl-data-table td,
+  .mdl-data-table td:first-of-type {
+    padding-left: 50% !important;
+    overflow: hidden !important;
+  }
+
+  .mdl-data-table td:before {
+    position: absolute !important;
+    top: 6px !important;
+    left: 6px !important;
+    width: 45% !important;
+    padding: 6px 18px 0 !important;
+    white-space: nowrap !important;
+    content: attr(data-label) !important;
+    text-align: left !important;
+    color: rgba(0, 0, 0, 0.541176) !important;
+    font-weight: bold !important;
+    font-family: Helvetica, Arial, sans-serif !important;
+    font-size: 12px !important;
+  }
+  
+  .mdl-data-table td:last-of-type {
+    padding-right: 18px !important;
+  }
+  
+}

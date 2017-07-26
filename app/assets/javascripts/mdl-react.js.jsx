@@ -68,7 +68,9 @@ class Table extends React.Component {
                 {self.props.rows.map(function(row, index) {
                     return (<tr key={index}>
                                 {self.props.columns.map(function(column, index) {
-                                    return <td className={column.numeric ? "" : "mdl-data-table__cell--non-numeric"} key={index}>{row[column.name]}</td>
+                                    return <td data-label={column.title}
+                                               className={column.numeric ? "" : "mdl-data-table__cell--non-numeric"}
+                                               key={index}>{row[column.name]}</td>
                                 })}
                             </tr>)
                 })}
