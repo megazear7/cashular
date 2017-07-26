@@ -7,14 +7,14 @@ class Explorer extends React.Component {
         this.setEnvelope = this.setEnvelope.bind(this);
         this.resetAndLoad = this.resetAndLoad.bind(this);
 
-        this.state = { transactions: [ ],
-                       pageSize: 10,
-                       dateRange: {title: "Previous Week", key: "previous_week", daysAgo: 7},
+        this.state = { pageSize: 10,
                        unique: Cashular.Utils.makeid() };
 
         if (this.props.envelopes.length > 0) {
             this.state.envelope = this.props.envelopes[0];
         }
+
+        this.load();
     }
 
     loadMore() {
@@ -30,26 +30,15 @@ class Explorer extends React.Component {
     load() {
         var self = this;
 
-        var transactions = Cashular.Transactions().pageSize(self.state.pageSize);
-
-        if (typeof this.state.dateRange !== "undefined") {
-            if (typeof this.state.dateRange.daysAgo !== "undefined") {
-                transactions.daysAgo(this.state.dateRange.daysAgo);
-            } else if (this.state.dateRange.from !== "undefined") {
-                transactions.from(this.state.dateRange.from).to(this.state.dateRange.to);
-            }
-        }
-
-        transactions.fromEnvelope(self.state.envelope.id).all(function(response) {
-            self.setState({transactions: response.transactions,
-                           count: response.count,
-                           total: response.total});
+        self.props.setTransactions({
+            pageSize: self.state.pageSize,
+            envelope: self.state.envelope
         });
     }
 
-    resetAndLoad(dateRange) {
+    resetAndLoad() {
         var self = this;
-        self.setState({dateRange: dateRange, pageSize: 10}, function() {
+        self.setState({ pageSize: 10}, function() {
             self.load();
         });
     }
@@ -58,34 +47,33 @@ class Explorer extends React.Component {
         var self = this;
         self.setState({envelope: envelope, pageSize: 10}, function() {
             self.load();
-        });
+        })
     }
 
     render() {
         var self = this;
         return (
             <Grid>
-                <Cell desktop={3}>
-                    <Grid>
-                        {self.state.envelope &&
-                            <TimeSelector onChange={self.resetAndLoad} />}
-                    </Grid>
+                <Cell desktop={12} className="centered">
+                    {typeof self.props.dateRange !== "undefined" && self.props.dateRange.title &&
+                        <H6>{self.props.dateRange.title}</H6>}
                 </Cell>
-                <Cell desktop={1}>
+                <Cell desktop={4}>
                 </Cell>
                 <Cell desktop={4} className="centered">
-                    {typeof self.state.total !== "undefined" && self.state.total !== 0 &&
-                        <H6 className={((self.state.total >= 0) ? "green-font" : "orange-font")}>${Math.abs(self.state.total).toFixed(2)}</H6>}
-                    {self.state.transactions.map(function(transaction, index) {
+                    {typeof self.props.transactionData.total !== "undefined" && self.props.transactionData.total !== 0 &&
+                        <H6 className={((self.props.transactionData.total >= 0) ? "green-font" : "orange-font")}>
+                            ${Math.abs(self.props.transactionData.total).toFixed(2)}</H6>}
+                    {self.props.transactionData.transactions.map(function(transaction, index) {
                         return <Transaction cost={transaction.amount}
                                             description={transaction.description}
                                             key={transaction.id}
                                             id={transaction.id}
                                             envelope_id={transaction.envelope_id}
                                             envelopes={self.props.envelopes}
-                                            afterOrganize={self.resetAndLoad} />
+                                            afterOrganize={self.load} />
                     })}
-                    {self.state.envelope && self.state.count > self.state.pageSize &&
+                    {self.state.envelope && self.props.transactionData.count > self.state.pageSize &&
                         <LoadMore action={self.loadMore} />}
                 </Cell>
                 <Cell desktop={1}>

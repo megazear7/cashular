@@ -10,7 +10,6 @@ class Transactions extends React.Component {
 
         this.state.unique = Cashular.Utils.makeid();
         this.state.pageSize = 10;
-        this.state.transactions = [ ];
         this.state.showingNonDeleted = true;
 
         this.load();
@@ -29,28 +28,9 @@ class Transactions extends React.Component {
     load() {
         var self = this;
 
-        var transactions = Cashular.Transactions().pageSize(self.state.pageSize);
-
-        if (self.props.onlyUnorganized) {
-            transactions.onlyUnorganized();
-        }
-
-        if (typeof self.state.dateRange !== "undefined") {
-            if (typeof self.state.dateRange.daysAgo !== "undefined") {
-                transactions.daysAgo(self.state.dateRange.daysAgo);
-            } else if (self.state.dateRange.from !== "undefined") {
-                transactions.from(self.state.dateRange.from).to(self.state.dateRange.to);
-            }
-        }
-
-        if (typeof self.state.showingNonDeleted !== "undefined" && ! self.state.showingNonDeleted) {
-            transactions.retrieveDeleted();
-        }
-
-        transactions.all(function(response) {
-            self.setState({transactions: response.transactions,
-                           count: response.count,
-                           envelopes: self.props.envelopes});
+        self.props.setTransactions({
+            pageSize: self.state.pageSize,
+            showingNonDeleted: self.state.showingNonDeleted
         });
     }
 
@@ -64,40 +44,34 @@ class Transactions extends React.Component {
         });
     }
 
-    resetAndLoad(dateRange) {
+    resetAndLoad() {
         var self = this;
-        self.setState({ pageSize: 10, dateRange: dateRange }, function() {
+        self.setState({ pageSize: 10 }, function() {
             self.load();
         });
-    }
-
-    componentDidMount() {
-        componentHandler.upgradeDom();
     }
 
     render() {
         var self = this;
         return (
             <Grid>
-                <Cell desktop={3}>
-                    <Grid>
-                        <TimeSelector onChange={self.resetAndLoad} initial={{title: "All Time", key: "all_time"}} />
-                    </Grid>
+                <Cell desktop={12} className="centered">
+                    <H6>{this.props.title}</H6>
                 </Cell>
-                <Cell desktop={1}>
+                <Cell desktop={4}>
                 </Cell>
                 <Cell desktop={4}>
                     <Grid>
                         <Cell className="centered" desktop={12}>
                             <H6>
-                                {self.state.transactions.length > 0 && self.state.showingNonDeleted &&
-                                    Cashular.Utils.prettyDate(new Date(self.state.transactions[0].post_date))}
-                                {self.state.transactions.length > 0 && ! self.state.showingNonDeleted &&
+                                {self.props.transactions.length > 0 && self.state.showingNonDeleted &&
+                                    Cashular.Utils.prettyDate(new Date(self.props.transactions[0].post_date))}
+                                {self.props.transactions.length > 0 && ! self.state.showingNonDeleted &&
                                     "Deleted Transactions"}
                             </H6>
                         </Cell>
                     </Grid>
-                    {self.state.transactions.map(function(transaction, index) {
+                    {self.props.transactions.map(function(transaction, index) {
                         return <Transaction cost={transaction.amount}
                                             post_date={transaction.post_date}
                                             description={transaction.description}
@@ -108,7 +82,7 @@ class Transactions extends React.Component {
                                             envelope_id={transaction.envelope_id}
                                             transactionDeletedOrRestored={self.load}
                                             envelopes={self.props.envelopes}
-                                            afterOrganize={self.resetAndLoad} />
+                                            afterOrganize={self.load} />
                     })}
                     {self.state.count > self.state.pageSize &&
                         <LoadMore action={self.loadMore} />}
@@ -129,4 +103,3 @@ class Transactions extends React.Component {
         );
     }
 }
-

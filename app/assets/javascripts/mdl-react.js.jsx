@@ -504,7 +504,10 @@ class Drawer extends React.Component {
         return (
             <div className="mdl-layout__drawer">
                 <span className="mdl-layout__title">{this.props.title}</span>
-                <nav className="mdl-navigation"></nav>
+                <nav className="mdl-navigation">
+                    {this.props.children}
+                    <a className="mdl-navigation__link" href="/users/sign_out" data-method="delete">Sign out</a>
+                </nav>
             </div>
         );
     }
@@ -533,17 +536,9 @@ class Tab extends React.Component {
 class Header extends React.Component {
     render() {
         return (
-          <header className="mdl-layout__header  mdl-layout__header--scroll mdl-layout--fixed-header">
-            <div className="mdl-layout__header-row">
-              <span className="mdl-layout__title">
-                {this.props.title}
-              </span>
-              <div className="mdl-layout-spacer"></div>
-              <nav className="mdl-navigation">
-                <a className="mdl-navigation__link" href="/users/sign_out" data-method="delete">Sign out</a>
-              </nav>
-            </div>
-            {this.props.children}
+          <header className="mdl-layout__header">
+              <div className="mdl-layout__header-row"></div>
+              {this.props.children}
           </header>
         )
     }
@@ -574,7 +569,7 @@ class Content extends React.Component {
 class Layout extends React.Component {
     render() {
         return (
-            <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color-text--grey-600 main-layout mdl-layout--no-drawer-button mdl-layout--fixed-tabs">
+            <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color-text--grey-600 mdl-layout--fixed-tabs  mdl-layout--fixed-drawer mdl-layout--overlay-drawer-button">
                 {this.props.children}
             </div>
         )

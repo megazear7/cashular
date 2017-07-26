@@ -15,6 +15,10 @@
  *= require_self
  */
 
+.mdl-layout__header-row {
+    height: 36px !important;
+}
+
 .full-card {
     width: 100% !important;
 }
