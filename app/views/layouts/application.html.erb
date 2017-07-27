@@ -28,9 +28,11 @@
     <% end %>
 
     <% if ! current_user %>
+      <div class="orange-strip-1"></div>
+      <div class="orange-strip-2"></div>
       <div class="mdl-grid">
         <div class="mdl-cell mdl-cell--12-col centered">
-          <h1 class="mdl-typography--display-1">Cashular</h1>
+          <h1 class="mdl-typography--display-1 login-title">Cashular</h1>
         </div>
         <div class="mdl-cell mdl-cell--4-col"></div>
         <div class="mdl-cell mdl-cell--4-col"><%= yield %></div>

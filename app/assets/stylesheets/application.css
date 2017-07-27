@@ -66,12 +66,12 @@
     background-color: #ffca28;
 }
 
-tr.green-font {
-    color: #81c784;
+.green-font {
+    color: #81c784 !important;
 }
 
-tr.orange-font {
-    color: #ffca28;
+.orange-font {
+    color: #ffca28 !important;
 }
 
 .green-font {
