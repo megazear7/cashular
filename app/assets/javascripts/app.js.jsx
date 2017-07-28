@@ -220,10 +220,29 @@ class App extends React.Component {
     }
 }
 
+
+
+
 $(document).ready(function() {
     if (window.location.pathname === "" || window.location.pathname === "/") {
-        Cashular.Envelopes().all(function(envelopes) {
-            ReactDOM.render(<App title="Cashular" envelopes={envelopes} />, document.getElementById('react-root'));
+        // Example request to graphql:
+        Cashular(`{
+        user(id: 1, from:"06/05/2017", organized: true, deleted: false) {
+          email
+          envelopes {
+            id
+            title
+            net
+            gain
+            loss
+            transactions {
+              post_date
+              description
+              amount
+            }
+          }
+        }}`, function() {
+            ReactDOM.render(<App title="Cashular" envelopes={this.user.envelopes} />, document.getElementById('react-root'));
             componentHandler.upgradeDom();
         });
     }

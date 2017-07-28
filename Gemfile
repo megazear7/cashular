@@ -9,6 +9,8 @@ gem 'material_design_lite-rails', '~> 1.3'
 gem "react-rails"
 gem 'spreadsheet', '~> 1.1', '>= 1.1.4'
 gem 'devise'
+gem 'graphql'
+gem 'will_paginate', '~> 3.1.0'
 
 group :development do
   gem 'better_errors'
@@ -57,3 +59,5 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+gem 'graphiql-rails', group: :development

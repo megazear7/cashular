@@ -149,7 +149,12 @@
         };
     };
 
-    window.Cashular = window.Cashular || { };
+    window.Cashular = window.Cashular || function(query, callback) {
+        $.post("graphql", {query: query})
+        .success(function(result) {
+            callback.bind(result.data)();
+        });
+    };
 
     window.Cashular.Transactions = function() {
         return new CashularRequest("transactions", "transaction");
@@ -158,4 +163,6 @@
     window.Cashular.Envelopes = function() {
         return new CashularRequest("envelopes", "envelope");
     };
+
+
 })();
