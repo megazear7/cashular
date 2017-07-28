@@ -101,4 +101,20 @@ window.Cashular.Utils.format = function(x) {
     return x.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+window.Cashular.Utils.graphArgs = function(args) {
+    var graphArgs = [ ];
+
+    $.each(args, function(key, val) {
+        if (typeof val !== "undefined") {
+            if (typeof val === "string") {
+                graphArgs.push(key + ": \"" + val + "\"");
+            } else if (typeof val === "number") {
+                graphArgs.push(key + ": " + val);
+            } 
+        }
+    });
+
+    return graphArgs.join(", ");
+}
+
 })();

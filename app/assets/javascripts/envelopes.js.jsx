@@ -35,7 +35,7 @@ class Envelopes extends React.Component {
                     <PeriodSelector onChange={self.setTimePeriod} dateRange={self.props.dateRange} />
                 </Cell>
                 {self.props.envelopes.map(function(envelope, index) {
-                    if (envelope.sum !== 0) {
+                    if (envelope.net != 0) {
                         return <Envelope amount={self.perTimePeriod(envelope.net)}
                                          title={envelope.title}
                                          key={index}
@@ -49,7 +49,7 @@ class Envelopes extends React.Component {
                     <H6>Empty Envelopes</H6>
                     <Grid>
                         {self.props.envelopes.map(function(envelope, index) {
-                            if (envelope.sum === 0) {
+                            if (envelope.net == 0) {
                                 return <Envelope amount={envelope.net}
                                                  title={envelope.title}
                                                  dontShowAmount={true}
@@ -60,24 +60,15 @@ class Envelopes extends React.Component {
                     </Grid>
                 </Cell>
                 <Cell desktop={2} tablet={2} phone={4}>
-                    {(self.props.gain > 0 || self.props.loss > 0) &&
+                    {(self.props.gain > 0 || self.props.loss > 0 || self.props.unallocated > 0) &&
                         <Grid>
                             <Cell desktop={12} tablet={8} phone={4}>
-                                <H6>Total</H6>
                                 {self.props.loss > 0 &&
                                     <p>Spent: ${Cashular.Utils.format(self.props.loss)}</p>}
                                 {self.props.gain > 0 &&
                                     <p>Recieved: ${Cashular.Utils.format(self.props.gain)}</p>}
-                            </Cell>
-                        </Grid>}
-                    {typeof self.state.unallocated !== "undefined" && (self.state.unallocated.payments > 0 || self.state.unallocated.recieved > 0) &&
-                        <Grid>
-                            <Cell desktop={12} tablet={8} phone={4}>
-                                <H6>Unallocated</H6>
-                                {self.state.unallocated.payments > 0 &&
-                                    <p>Payments: ${Cashular.Utils.format(self.state.unallocated.payments)}</p>}
-                                {self.state.unallocated.recieved > 0 &&
-                                    <p>Recieved: ${Cashular.Utils.format(self.state.unallocated.recieved)}</p>}
+                                {self.props.unallocated > 0 &&
+                                    <p>Unallocated: ${Cashular.Utils.format(self.props.unallocated)}</p>}
                             </Cell>
                         </Grid>}
                 </Cell>

@@ -66,10 +66,10 @@ class Explorer extends React.Component {
                 <Cell desktop={3} tablet={0} phone={0}>
                 </Cell>
                 <Cell desktop={5} tablet={5} phone={4} className="centered">
-                    {typeof self.props.transactionData.total !== "undefined" && self.props.transactionData.total !== 0 &&
-                        <H6 className={((self.props.transactionData.total >= 0) ? "green-font" : "orange-font")}>
-                            ${Math.abs(self.props.transactionData.total).toFixed(2)}</H6>}
-                    {self.props.transactionData.transactions.map(function(transaction, index) {
+                    {typeof self.props.net !== "undefined" && self.props.net !== 0 &&
+                        <H6 className={((self.props.net >= 0) ? "green-font" : "orange-font")}>
+                            ${Math.abs(self.props.net).toFixed(2)}</H6>}
+                    {self.props.transactions.map(function(transaction, index) {
                         return <Transaction cost={transaction.amount}
                                             description={transaction.description}
                                             key={transaction.id}

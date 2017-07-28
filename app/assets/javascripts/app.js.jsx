@@ -11,11 +11,12 @@ class App extends React.Component {
         this.setExplorerTransactions = this.setExplorerTransactions.bind(this);
         this.setAllTransactions = this.setAllTransactions.bind(this);
 
-        this.state = { envelopes: this.props.envelopes,
+        this.state = { user: { envelopes: [ ] },
                        dateRange: {title: "Previous Week", key: "previous_week", daysAgo: 7},
                        organizerTransactions: [ ],
                        transactions: [ ],
-                       explorerTransactionData: { transactions: [ ] }  };
+                       explorerNet: 0,
+                       explorerTransactions: [ ] };
 
         this.loadEnvelopes();
     }
@@ -23,37 +24,18 @@ class App extends React.Component {
     loadEnvelopes() {
         var self = this;
 
-        var unallocated = Cashular.Transactions()
-            
-        /*
-        var envelopes = Cashular.Envelopes()
-        if (typeof self.state.dateRange !== "undefined") {
-            if (typeof self.state.dateRange.daysAgo !== "undefined") {
-                envelopes.daysAgo(self.state.dateRange.daysAgo);
-                unallocated.daysAgo(self.state.dateRange.daysAgo);
-            } else if (self.state.dateRange.from !== "undefined") {
-                envelopes.from(self.state.dateRange.from).to(self.state.dateRange.to);
-                unallocated.from(self.state.dateRange.from).to(self.state.dateRange.to);
-            }
-        }
-
-        envelopes.all(function(envelopes) {
-            self.setState({envelopes: envelopes});
-        });
-        */
-
-        unallocated.unallocated().done(function(response) {
-            self.setState({unallocated: response});
+        var args = Cashular.Utils.graphArgs({
+             id: self.props.userId,
+             from: self.state.dateRange.from,
+             to: self.state.dateRange.to,
+             daysAgo: self.state.dateRange.daysAgo
         });
 
         Cashular(`{
-        user(id: ${self.props.userId},
-             from: "${self.state.dateRange.from}"
-             to: "${self.state.dateRange.to}"
-             daysAgo: ${self.state.dateRange.daysAgo}) {
-          email
+        user(${args}) {
           gain
           loss
+          unallocated
           envelopes {
             id
             title
@@ -67,66 +49,60 @@ class App extends React.Component {
             }
           }
         }}`, function() {
-            console.log(this);
-            self.setState({envelopes: this.user.envelopes});
+            self.setState({user: this.user});
         });
-
-        /*
-        Cashular(`{
-        user(id: ${self.props.userId},
-             from: "${self.state.dateRange.from}"
-             to: "${self.state.dateRange.to}"
-             daysAgo: "${self.state.dateRange.daysAgo}"
-             organized: false) {
-          email
-          gain
-          loss
-          envelopes {
-            id
-            title
-            net
-            gain
-            loss
-            transactions {
-              post_date
-              description
-              amount
-            }
-          }
-        }}`, function() {
-            console.log(this);
-        });
-        */
     }
 
     loadTransactions(options, callback) {
         var self = this;
 
-        var transactions = Cashular.Transactions().pageSize(options.pageSize);
-
-        if (options.onlyUnorganized) {
-            transactions.onlyUnorganized();
-        }
-
-        if (typeof options.dateRange !== "undefined") {
-            if (typeof options.dateRange.daysAgo !== "undefined") {
-                transactions.daysAgo(options.dateRange.daysAgo);
-            } else if (options.dateRange.from !== "undefined") {
-                transactions.from(options.dateRange.from).to(options.dateRange.to);
-            }
-        }
-
-        if (typeof options.showingNonDeleted !== "undefined" && ! options.showingNonDeleted) {
-            transactions.retrieveDeleted();
-        }
-
+        // TODO this should have to be two different calls
         if (options.envelope) {
-            transactions.fromEnvelope(options.envelope.id);
-        }
+            var args = Cashular.Utils.graphArgs({
+                 id: options.envelope.id,
+                 from: self.state.dateRange.from,
+                 to: self.state.dateRange.to,
+                 daysAgo: self.state.dateRange.daysAgo,
+                 unorganized: ! options.onlyUnorganized,
+                 deleted: ! options.showingNonDeleted
+            });
 
-        transactions.all(function(response) {
-            callback(response);
-        });
+            Cashular(`{
+            envelope(${args}) {
+              transactions {
+                id
+                description
+                amount
+                amount
+                post_date
+              }
+            }}`, function() {
+                callback(this.envelope.transactions, this.envelope.net);
+            });
+
+        } else {
+            var args = Cashular.Utils.graphArgs({
+                 id: self.props.userId,
+                 from: self.state.dateRange.from,
+                 to: self.state.dateRange.to,
+                 daysAgo: self.state.dateRange.daysAgo,
+                 unorganized: ! options.onlyUnorganized,
+                 deleted: ! options.showingNonDeleted
+            });
+
+            Cashular(`{
+            user(${args}) {
+              transactions {
+                id
+                description
+                amount
+                amount
+                post_date
+              }
+            }}`, function() {
+                callback(this.user.transactions, this.user.net);
+            });
+        }
     }
 
     setEnvelopes(envelopes) {
@@ -193,8 +169,8 @@ class App extends React.Component {
 
         options.dateRange = self.state.dateRange;
 
-        self.loadTransactions(options, function(result) {
-            self.setState({transactions: result.transactions,
+        self.loadTransactions(options, function(transactions) {
+            self.setState({transactions: transactions,
                            transactionsOptions: options});
         });
     }
@@ -204,8 +180,9 @@ class App extends React.Component {
 
         options.dateRange = self.state.dateRange;
 
-        self.loadTransactions(options, function(result) {
-            self.setState({explorerTransactionData: result,
+        self.loadTransactions(options, function(transactions, net) {
+            self.setState({explorerTransactions: transactions,
+                           explorerNet: net,
                            explorerOptions: options});
         });
     }
@@ -245,25 +222,28 @@ class App extends React.Component {
                         <Envelopes addOrRemoved={this.setEnvelopes}
                                    dateRange={this.state.dateRange}
                                    addOrRemovedEnvelope={this.loadEnvelopes}
-                                   envelopes={this.state.envelopes}
-                                   unallocated={this.state.unallocated} />
+                                   gain={this.state.user.gain}
+                                   loss={this.state.user.gain}
+                                   envelopes={this.state.user.envelopes}
+                                   unallocated={this.state.user.unallocated} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-2">
                         <Transactions onlyUnorganized={true}
                                       setTransactions={this.setOrganizerTransactions}
                                       transactions={this.state.organizerTransactions}
-                                      envelopes={this.state.envelopes} />
+                                      envelopes={this.state.user.envelopes} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-3">
                         <Transactions setTransactions={this.setTransactions}
                                       transactions={this.state.transactions}
-                                      envelopes={this.state.envelopes} />
+                                      envelopes={this.state.user.envelopes} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-4">
                         <Explorer dateRange={this.state.dateRange}
                                   setTransactions={this.setExplorerTransactions}
-                                  transactionData={this.state.explorerTransactionData}
-                                  envelopes={this.state.envelopes} />
+                                  explorerNet={this.state.explorerNet}
+                                  transactions={this.state.explorerTransactions}
+                                  envelopes={this.state.user.envelopes} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-5">
                         <Uploader addedTransactions={this.setAllTransactions} />
@@ -276,28 +256,7 @@ class App extends React.Component {
 
 $(document).ready(function() {
     if (window.location.pathname === "" || window.location.pathname === "/") {
-        // Example request to graphql:
-        Cashular(`{
-        user(id: 2, from:"06/05/2017", organized: true, deleted: false) {
-          id
-          email
-          gain
-          loss
-          envelopes {
-            id
-            title
-            net
-            gain
-            loss
-            transactions {
-              post_date
-              description
-              amount
-            }
-          }
-        }}`, function() {
-            ReactDOM.render(<App title="Cashular" userId={this.user.id} envelopes={this.user.envelopes} />, document.getElementById('react-root'));
-            componentHandler.upgradeDom();
-        });
+        ReactDOM.render(<App title="Cashular" userId={2} />, document.getElementById('react-root'));
+        componentHandler.upgradeDom();
     }
 });

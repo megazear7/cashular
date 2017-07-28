@@ -79,4 +79,19 @@ UserType = GraphQL::ObjectType.define do
       return get_transactions(obj.transactions, args, ctx).where("amount > ?", 0).sum(:amount)
     }
   end
+  field :gain do
+    type types.Float
+    resolve -> (obj, args, ctx) {
+      return get_transactions(obj.transactions, args, ctx).where(envelope_id: nil).sum(:amount)
+    }
+  end
+  field :unallocated do
+    type types.Float
+    resolve -> (obj, args, ctx) {
+      transactions = get_transactions(obj.transactions, args, ctx)
+      unallocated = transactions.where(envelope_id: nil).where("amount < 0").sum(:amount).abs +
+                    transactions.where(envelope_id: nil).where("amount > 0").sum(:amount).abs
+      return unallocated
+    }
+  end
 end
