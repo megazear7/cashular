@@ -129,7 +129,7 @@ class App extends React.Component {
         options.dateRange = self.state.dateRange;
 
         self.loadTransactions(options, function(result) {
-            self.setState({organizerTransactionsResponse: result.transactions,
+            self.setState({organizerTransactions: result.transactions,
                            organizerOptions: options});
         });
     }
