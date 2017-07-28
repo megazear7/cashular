@@ -5,6 +5,13 @@ Solution to the problem of sharing transaction callback data between react compo
 
 I've replaced all api GET calls with graphql requests, need to remove the legacy API.
 
+Need to simplify the method of getting transaction data for the react components in order
+    to be proper react components instead of sharing so much implementation details
+    between components.
+
+
+Need to enhance graphql to enable mutations.
+
 Trying to integrate graphql. Wanted to use react relay as well but it doesn't
 seem to be easy to do with rails.
 
