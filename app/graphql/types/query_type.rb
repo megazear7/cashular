@@ -36,18 +36,22 @@ QueryType = GraphQL::ObjectType.define do
   field :user do
     type UserType
     argument :id, !types.ID
+    argument :daysAgo, types.Int
     argument :from, types.String
     argument :to, types.String
     argument :organized, types.Boolean
     argument :deleted, types.Boolean
     description "Find a User by ID"
     resolve ->(obj, args, ctx) {
-      if args.key? :from
-        ctx[:from] = args[:from]
-        puts ctx[:from]
+      if args.key? :daysAgo
+        ctx[:daysAgo] = args[:daysAgo]
       end
 
-      if args.key? :to
+      if args.key?(:from) and not args.key?(:daysAgo)
+        ctx[:from] = args[:from]
+      end
+
+      if args.key?(:to) and not args.key?(:daysAgo)
         ctx[:to] = args[:to]
       end
 

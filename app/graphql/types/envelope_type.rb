@@ -2,10 +2,9 @@ require_relative "./transaction_type"
 require_relative "./user_type"
 
 def get_transactions transactions, args, ctx
-  if not ctx[:deleted].nil?
-    transactions.where!(deleted: ctx[:deleted])
-  else
-    transactions.where!(deleted: false)
+  if not ctx[:daysAgo].nil?
+    daysAgo = (Date.today - ctx[:daysAgo])
+    transactions.where!("post_date >= ?", daysAgo)
   end
 
   if not ctx[:from].nil?
@@ -14,6 +13,12 @@ def get_transactions transactions, args, ctx
 
   if not ctx[:to].nil?
     transactions.where!("post_date <= ?", ctx[:to])
+  end
+
+  if not ctx[:deleted].nil?
+    transactions.where!(deleted: ctx[:deleted])
+  else
+    transactions.where!(deleted: false)
   end
 
   if not ctx[:organized].nil? and ctx[:organized]

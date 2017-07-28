@@ -1,3 +1,6 @@
+Trying to integrate graphql. Wanted to use react relay as well but it doesn't
+seem to be easy to do with rails.
+
 Add ability to rename envelopes
 
 Be able to tag transactions with a further description. Example of use:
