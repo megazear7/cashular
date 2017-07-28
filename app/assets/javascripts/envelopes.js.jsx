@@ -25,14 +25,6 @@ class Envelopes extends React.Component {
     render() {
         var self = this;
 
-        var grossSpending = Math.abs(self.props.envelopes.reduce(function(gross, envelope) {
-            return envelope.sum < 0 ? gross + parseFloat(envelope.sum) : gross;
-        }, 0));
-
-        var grossReceived = Math.abs(self.props.envelopes.reduce(function(gross, envelope) {
-            return envelope.sum > 0 ? gross + parseFloat(envelope.sum) : gross;
-        }, 0));
-
         return (
             <Grid>
                 <Cell desktop={10} tablet={7} phone={3} className="centered">
@@ -44,7 +36,7 @@ class Envelopes extends React.Component {
                 </Cell>
                 {self.props.envelopes.map(function(envelope, index) {
                     if (envelope.sum !== 0) {
-                        return <Envelope amount={self.perTimePeriod(envelope.sum)}
+                        return <Envelope amount={self.perTimePeriod(envelope.net)}
                                          title={envelope.title}
                                          key={index}
                                          onRemove={self.props.addOrRemovedEnvelope}
@@ -58,7 +50,7 @@ class Envelopes extends React.Component {
                     <Grid>
                         {self.props.envelopes.map(function(envelope, index) {
                             if (envelope.sum === 0) {
-                                return <Envelope amount={envelope.sum}
+                                return <Envelope amount={envelope.net}
                                                  title={envelope.title}
                                                  dontShowAmount={true}
                                                  key={index}
@@ -68,14 +60,14 @@ class Envelopes extends React.Component {
                     </Grid>
                 </Cell>
                 <Cell desktop={2} tablet={2} phone={4}>
-                    {(grossSpending > 0 || grossReceived > 0) &&
+                    {(self.props.gain > 0 || self.props.loss > 0) &&
                         <Grid>
                             <Cell desktop={12} tablet={8} phone={4}>
                                 <H6>Total</H6>
-                                {grossSpending > 0 &&
-                                    <p>Spent: ${Cashular.Utils.format(grossSpending)}</p>}
-                                {grossReceived > 0 &&
-                                    <p>Recieved: ${Cashular.Utils.format(grossReceived)}</p>}
+                                {self.props.loss > 0 &&
+                                    <p>Spent: ${Cashular.Utils.format(self.props.loss)}</p>}
+                                {self.props.gain > 0 &&
+                                    <p>Recieved: ${Cashular.Utils.format(self.props.gain)}</p>}
                             </Cell>
                         </Grid>}
                     {typeof self.state.unallocated !== "undefined" && (self.state.unallocated.payments > 0 || self.state.unallocated.recieved > 0) &&

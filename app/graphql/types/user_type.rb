@@ -2,28 +2,28 @@ require_relative "./envelope_type"
 require_relative "./transaction_type"
 
 def get_transactions transactions, args, ctx
-  if not ctx[:daysAgo].nil?
+  if not ctx[:daysAgo].nil? and ctx[:daysAgo] != "undefined"
     daysAgo = (Date.today - ctx[:daysAgo])
     transactions.where!("post_date >= ?", daysAgo)
   end
 
-  if not ctx[:from].nil?
+  if not ctx[:from].nil? and ctx[:from] != "undefined"
     transactions.where!("post_date >= ?", ctx[:from])
   end
 
-  if not ctx[:to].nil?
+  if not ctx[:to].nil? and ctx[:to] != "undefined"
     transactions.where!("post_date <= ?", ctx[:to])
   end
 
-  if not ctx[:deleted].nil?
+  if not ctx[:deleted].nil? and ctx[:deleted] != "undefined"
     transactions.where!(deleted: ctx[:deleted])
   else
     transactions.where!(deleted: false)
   end
 
-  if not ctx[:organized].nil? and ctx[:organized]
+  if not ctx[:organized].nil? and ctx[:organized] != "undefined" and ctx[:organized]
     transactions = transactions.where.not(envelope_id: nil)
-  elsif not ctx[:organized].nil? and not ctx[:organized]
+  elsif not ctx[:organized].nil? and ctx[:organized] != "undefined" and not ctx[:organized]
     transactions.where!(envelope_id: nil)
   end
 
@@ -61,4 +61,22 @@ UserType = GraphQL::ObjectType.define do
     }
   end
   field :envelopes, types[EnvelopeType]
+  field :net do
+    type types.Float
+    resolve -> (obj, args, ctx) {
+      return get_transactions(obj.transactions, args, ctx).sum(:amount)
+    }
+  end
+  field :loss do
+    type types.Float
+    resolve -> (obj, args, ctx) {
+      return get_transactions(obj.transactions, args, ctx).where("amount < ?", 0).sum(:amount).abs()
+    }
+  end
+  field :gain do
+    type types.Float
+    resolve -> (obj, args, ctx) {
+      return get_transactions(obj.transactions, args, ctx).where("amount > ?", 0).sum(:amount)
+    }
+  end
 end

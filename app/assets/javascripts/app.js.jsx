@@ -23,9 +23,10 @@ class App extends React.Component {
     loadEnvelopes() {
         var self = this;
 
-        var envelopes = Cashular.Envelopes()
         var unallocated = Cashular.Transactions()
             
+        /*
+        var envelopes = Cashular.Envelopes()
         if (typeof self.state.dateRange !== "undefined") {
             if (typeof self.state.dateRange.daysAgo !== "undefined") {
                 envelopes.daysAgo(self.state.dateRange.daysAgo);
@@ -39,10 +40,63 @@ class App extends React.Component {
         envelopes.all(function(envelopes) {
             self.setState({envelopes: envelopes});
         });
+        */
 
         unallocated.unallocated().done(function(response) {
             self.setState({unallocated: response});
         });
+
+        Cashular(`{
+        user(id: ${self.props.userId},
+             from: "${self.state.dateRange.from}"
+             to: "${self.state.dateRange.to}"
+             daysAgo: ${self.state.dateRange.daysAgo}) {
+          email
+          gain
+          loss
+          envelopes {
+            id
+            title
+            net
+            gain
+            loss
+            transactions {
+              post_date
+              description
+              amount
+            }
+          }
+        }}`, function() {
+            console.log(this);
+            self.setState({envelopes: this.user.envelopes});
+        });
+
+        /*
+        Cashular(`{
+        user(id: ${self.props.userId},
+             from: "${self.state.dateRange.from}"
+             to: "${self.state.dateRange.to}"
+             daysAgo: "${self.state.dateRange.daysAgo}"
+             organized: false) {
+          email
+          gain
+          loss
+          envelopes {
+            id
+            title
+            net
+            gain
+            loss
+            transactions {
+              post_date
+              description
+              amount
+            }
+          }
+        }}`, function() {
+            console.log(this);
+        });
+        */
     }
 
     loadTransactions(options, callback) {
@@ -218,17 +272,17 @@ class App extends React.Component {
             </Layout>
         );
     }
-}
-
-
-
+};
 
 $(document).ready(function() {
     if (window.location.pathname === "" || window.location.pathname === "/") {
         // Example request to graphql:
         Cashular(`{
-        user(id: 1, from:"06/05/2017", organized: true, deleted: false) {
+        user(id: 2, from:"06/05/2017", organized: true, deleted: false) {
+          id
           email
+          gain
+          loss
           envelopes {
             id
             title
@@ -242,7 +296,7 @@ $(document).ready(function() {
             }
           }
         }}`, function() {
-            ReactDOM.render(<App title="Cashular" envelopes={this.user.envelopes} />, document.getElementById('react-root'));
+            ReactDOM.render(<App title="Cashular" userId={this.user.id} envelopes={this.user.envelopes} />, document.getElementById('react-root'));
             componentHandler.upgradeDom();
         });
     }
