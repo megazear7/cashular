@@ -18,9 +18,20 @@ class Uploader extends React.Component {
         reader.readAsText(file);
 
         reader.onload = function(event){
-            // TODO the date is not correctly formatted here
-            console.log(event.target.result)
-            self.setState({uploadData: $.csv.toObjects(event.target.result)});
+            var uploadRows = $.csv.toObjects(event.target.result);
+            var uploadRowsFormatted = [ ];
+
+            $.each(uploadRows, function(index, row) {
+                // This ensures the date is in the correct format
+                var date = moment(row.date, "MM/DD/YYYY")
+                uploadRowsFormatted.push({
+                    amount: row.amount,
+                    date: date.format("MMMM Do, YYYY"),
+                    description: row.description
+                });
+            });
+
+            self.setState({uploadData: uploadRows, uploadDataFormatted: uploadRowsFormatted});
         };
 
         reader.onerror = function() {
@@ -53,18 +64,18 @@ class Uploader extends React.Component {
             <Grid>
                 <Cell desktop={12} tablet={8} phone={4} className="centered">
                     <H5>Upload Transactions</H5>
-                    <p>The file must be a csv with three column headers: description, date, and amount.</p>
+                    <p>The file must be a csv with three column headers: description, date, and amount. The dates need to be in the format MM/DD/YYYY</p>
                 </Cell>
                 <Cell desktop={12} tablet={8} phone={4} className="centered">
                     <FileUploader action={self.uploadTransactions} />
                 </Cell>
-                {typeof self.state.uploadData !== "undefined" &&
+                {typeof self.state.uploadData !== "undefined" && self.state.uploadData.length > 0 &&
                     <Cell desktop={12} tablet={8} phone={4} className="centered">
                         <Button action={self.finishUpload} className="mdl-button--raised">Upload</Button>
                     </Cell>}
                 {typeof self.state.uploadData !== "undefined" && self.state.uploadData.length > 0 &&
                     <Cell desktop={12} tablet={8} phone={4}>
-                        <Table rows={self.state.uploadData} className="center" columns={this.state.columns} />
+                        <Table rows={self.state.uploadDataFormatted} className="center" columns={this.state.columns} />
                     </Cell>}
             </Grid>
         );

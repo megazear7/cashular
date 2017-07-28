@@ -15,4 +15,5 @@
 //= require jquery-csv.min
 //= require material
 //= require react
+//= require moment
 //= require_tree .

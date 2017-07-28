@@ -9,6 +9,7 @@ gem 'material_design_lite-rails', '~> 1.3'
 gem "react-rails"
 gem 'spreadsheet', '~> 1.1', '>= 1.1.4'
 gem 'devise'
+gem 'momentjs-rails'
 
 group :development do
   gem 'better_errors'
