@@ -86,7 +86,6 @@ class Transactions extends React.Component {
                                             description={transaction.description}
                                             key={transaction.id}
                                             id={transaction.id}
-                                            organizer={self.props.onlyUnorganized}
                                             deleted={transaction.deleted}
                                             envelope_id={transaction.envelope_id}
                                             transactionDeletedOrRestored={self.load}

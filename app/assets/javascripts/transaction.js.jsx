@@ -129,13 +129,12 @@ class Transaction extends React.Component {
                         {! self.props.deleted &&
                             <Icon icon={icon} action={self.iconAction} />}
                     </CardMenu>
-                    {! self.props.organizer &&
-                        <CardActions>
-                            {! self.props.deleted &&
-                                <Icon icon="delete_forever" className="pull-right" action={self.deleteTransaction}></Icon>}
-                            {self.props.deleted &&
-                                <Icon icon="add" className="pull-right" action={self.restoreTransaction}></Icon>}
-                        </CardActions>}
+                    <CardActions>
+                        {! self.props.deleted &&
+                            <Icon icon="delete_forever" className="pull-right" action={self.deleteTransaction}></Icon>}
+                        {self.props.deleted &&
+                            <Icon icon="add" className="pull-right" action={self.restoreTransaction}></Icon>}
+                    </CardActions>
                 </Card>
                 {self.state.showEnvelopes &&
                     <EnvelopePicker action={self.organize}

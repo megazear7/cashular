@@ -195,8 +195,7 @@ class App extends React.Component {
                                    unallocated={this.state.unallocated} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-2">
-                        <Transactions onlyUnorganized={true}
-                                      setTransactions={this.setOrganizerTransactions}
+                        <Transactions setTransactions={this.setOrganizerTransactions}
                                       transactions={this.state.organizerTransactions}
                                       envelopes={this.state.envelopes} />
                     </TabPanel>
