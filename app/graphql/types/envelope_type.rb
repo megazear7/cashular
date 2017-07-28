@@ -34,13 +34,30 @@ EnvelopeType = GraphQL::ObjectType.define do
   name "Envelope"
   field :id, !types.ID
   field :title, types.String
+  field :transaction_count do
+    type types.Int
+    resolve -> (obj, args, ctx) {
+      obj.transactions.count
+    }
+  end
   field :transactions do
     type types[TransactionType]
-    argument :from, types.String
-    argument :to, types.String
-    argument :deleted, types.String
+    argument :page, types.Int
+    argument :perPage, types.Int
     resolve -> (obj, args, ctx) {
-      return get_transactions(obj.transactions, args, ctx).order('post_date DESC')
+      transactions = get_transactions(obj.transactions, args, ctx).order('post_date DESC, created_at DESC, id')
+
+      per_page = 10
+      if args.key? :perPage
+        per_page = args[:perPage]
+      end
+
+      page = 1
+      if args.key? :page
+        page = args[:page]
+      end
+
+      transactions.paginate(page: page, per_page: per_page)
     }
   end
   field :user do
@@ -51,24 +68,18 @@ EnvelopeType = GraphQL::ObjectType.define do
   end
   field :net do
     type types.Float
-    argument :from, types.String
-    argument :to, types.String
     resolve -> (obj, args, ctx) {
       return get_transactions(obj.transactions, args, ctx).sum(:amount)
     }
   end
   field :loss do
     type types.Float
-    argument :from, types.String
-    argument :to, types.String
     resolve -> (obj, args, ctx) {
       return get_transactions(obj.transactions, args, ctx).where("amount < ?", 0).sum(:amount).abs()
     }
   end
   field :gain do
     type types.Float
-    argument :from, types.String
-    argument :to, types.String
     resolve -> (obj, args, ctx) {
       return get_transactions(obj.transactions, args, ctx).where("amount > ?", 0).sum(:amount)
     }

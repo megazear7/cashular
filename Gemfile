@@ -10,6 +10,7 @@ gem "react-rails"
 gem 'spreadsheet', '~> 1.1', '>= 1.1.4'
 gem 'devise'
 gem 'graphql'
+gem 'will_paginate', '~> 3.1.0'
 
 group :development do
   gem 'better_errors'

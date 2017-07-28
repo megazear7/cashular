@@ -1,6 +1,7 @@
 require_relative "./envelope_type"
 require_relative "./user_type"
 
+
 TransactionType = GraphQL::ObjectType.define do
   name "Transaction"
   field :id, !types.ID

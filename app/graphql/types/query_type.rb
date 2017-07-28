@@ -6,18 +6,27 @@ QueryType = GraphQL::ObjectType.define do
   field :envelope do
     type EnvelopeType
     argument :id, !types.ID
+    argument :daysAgo, types.Int
     argument :from, types.String
     argument :to, types.String
     argument :organized, types.Boolean
     argument :deleted, types.Boolean
     description "Find a Envelope by ID"
     resolve ->(obj, args, ctx) {
-      if args.key? :from
+      if Envelope.find(args[:id]).user.id != ctx[:current_user].id
+        return nil
+      end
+
+      if args.key? :daysAgo
+        ctx[:daysAgo] = args[:daysAgo]
+      end
+
+      if args.key? :from and not args.key?(:daysAgo)
         ctx[:from] = args[:from]
         puts ctx[:from]
       end
 
-      if args.key? :to
+      if args.key? :to and not args.key?(:daysAgo)
         ctx[:to] = args[:to]
       end
 
@@ -43,6 +52,10 @@ QueryType = GraphQL::ObjectType.define do
     argument :deleted, types.Boolean
     description "Find a User by ID"
     resolve ->(obj, args, ctx) {
+      if args[:id].to_i != ctx[:current_user].id
+        return nil
+      end
+
       if args.key? :daysAgo
         ctx[:daysAgo] = args[:daysAgo]
       end
