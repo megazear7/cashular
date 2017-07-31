@@ -110,7 +110,9 @@ window.Cashular.Utils.graphArgs = function(args) {
                 graphArgs.push(key + ": \"" + val + "\"");
             } else if (typeof val === "number") {
                 graphArgs.push(key + ": " + val);
-            } 
+            } else if (typeof val === "boolean") {
+                graphArgs.push(key + ": " + val);
+            }
         }
     });
 

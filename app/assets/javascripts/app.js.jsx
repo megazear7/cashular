@@ -35,6 +35,7 @@ class App extends React.Component {
         user(${args}) {
           gain
           loss
+          count
           unallocated
           envelopes {
             id
@@ -56,53 +57,63 @@ class App extends React.Component {
     loadTransactions(options, callback) {
         var self = this;
 
-        // TODO this should have to be two different calls
-        if (options.envelope) {
-            var args = Cashular.Utils.graphArgs({
-                 id: options.envelope.id,
-                 from: self.state.dateRange.from,
-                 to: self.state.dateRange.to,
-                 daysAgo: self.state.dateRange.daysAgo,
-                 unorganized: ! options.onlyUnorganized,
-                 deleted: ! options.showingNonDeleted
-            });
+        var args = {
+             id: self.props.userId,
+             from: self.state.dateRange.from,
+             to: self.state.dateRange.to,
+             daysAgo: self.state.dateRange.daysAgo
+        };
 
-            Cashular(`{
-            envelope(${args}) {
-              transactions {
-                id
-                description
-                amount
-                amount
-                post_date
-              }
-            }}`, function() {
-                callback(this.envelope.transactions, this.envelope.net);
-            });
-
-        } else {
-            var args = Cashular.Utils.graphArgs({
-                 id: self.props.userId,
-                 from: self.state.dateRange.from,
-                 to: self.state.dateRange.to,
-                 daysAgo: self.state.dateRange.daysAgo,
-                 unorganized: ! options.onlyUnorganized,
-                 deleted: ! options.showingNonDeleted
-            });
-
-            Cashular(`{
-            user(${args}) {
-              transactions {
-                id
-                description
-                amount
-                amount
-                post_date
-              }
-            }}`, function() {
-                callback(this.user.transactions, this.user.net);
-            });
+        if (options.onlyUnorganized) {
+            args.organized = false;
         }
+
+        if (! options.showingNonDeleted) {
+            args.deleted = true;
+        }
+
+        Cashular(`{
+        user(${Cashular.Utils.graphArgs(args)}) {
+          transactions {
+            id
+            description
+            amount
+            post_date
+          }
+        }}`, function() {
+            callback(this.user.transactions, this.user.net);
+        });
+    }
+
+    loadEnvelopeTransactions(options, callback) {
+        var self = this;
+
+        var args = {
+             id: options.envelope.id,
+             from: self.state.dateRange.from,
+             to: self.state.dateRange.to,
+             daysAgo: self.state.dateRange.daysAgo
+        };
+
+        if (options.onlyUnorganized) {
+            args.organized = false;
+        }
+
+        if (! options.showingNonDeleted) {
+            args.deleted = false;
+        }
+
+        Cashular(`{
+        envelope(${Cashular.Utils.graphArgs(args)}) {
+          transactions {
+            id
+            description
+            amount
+            post_date
+          }
+        }}`, function() {
+            callback(this.envelope);
+        });
     }
 
     setEnvelopes(envelopes) {
@@ -158,8 +169,8 @@ class App extends React.Component {
         options.onlyUnorganized = true;
         options.dateRange = self.state.dateRange;
 
-        self.loadTransactions(options, function(result) {
-            self.setState({organizerTransactionsResponse: result.transactions,
+        self.loadTransactions(options, function(transactions, net) {
+            self.setState({organizerTransactions: transactions,
                            organizerOptions: options});
         });
     }
@@ -180,11 +191,13 @@ class App extends React.Component {
 
         options.dateRange = self.state.dateRange;
 
-        self.loadTransactions(options, function(transactions, net) {
-            self.setState({explorerTransactions: transactions,
-                           explorerNet: net,
-                           explorerOptions: options});
-        });
+        if (typeof options.envelope !== "undefined") {
+            self.loadEnvelopeTransactions(options, function(envelope) {
+                self.setState({explorerNet: envelope.net,
+                               explorerCount: envelope.count,
+                               explorerTransactions: envelope.transactions});
+            });
+        }
     }
 
     render() {
@@ -223,7 +236,7 @@ class App extends React.Component {
                                    dateRange={this.state.dateRange}
                                    addOrRemovedEnvelope={this.loadEnvelopes}
                                    gain={this.state.user.gain}
-                                   loss={this.state.user.gain}
+                                   loss={this.state.user.loss}
                                    envelopes={this.state.user.envelopes}
                                    unallocated={this.state.user.unallocated} />
                     </TabPanel>
@@ -241,7 +254,8 @@ class App extends React.Component {
                     <TabPanel id="scroll-tab-4">
                         <Explorer dateRange={this.state.dateRange}
                                   setTransactions={this.setExplorerTransactions}
-                                  explorerNet={this.state.explorerNet}
+                                  net={this.state.explorerNet}
+                                  count={this.state.exploreCount}
                                   transactions={this.state.explorerTransactions}
                                   envelopes={this.state.user.envelopes} />
                     </TabPanel>

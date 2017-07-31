@@ -45,7 +45,7 @@ class TimeSelector extends React.Component {
             }
 
             months.push({title: title,
-                         key: month.title.replace(/ /, ""),
+                         key: month.title.replace(/ /, "") + "-" + Cashular.Utils.makeid(),
                          from: month.from,
                          to: month.to,
                          weekly: avgWeeksPerMonth});
@@ -86,8 +86,8 @@ class TimeSelector extends React.Component {
             <Cell desktop={12} tablet={8} phone={4}>
                 <List>
                     {self.previousTimePeriods().map(function(type, index) {
-                        return <ListItem key={self.state.unique + type.key}
-                                         name={self.state.unique + type.key}
+                        return <ListItem key={self.state.unique + "-" + type.key}
+                                         name={self.state.unique + "-" + type.key}
                                          listname={self.state.unique}
                                          onChange={self.changeType(type)}
                                          checked={self.state.type.key === type.key}
@@ -98,8 +98,8 @@ class TimeSelector extends React.Component {
                 <hr />
                 <List>
                     {self.weeks().map(function(type, index) {
-                        return <ListItem key={self.state.unique + type.key}
-                                         name={self.state.unique + type.key}
+                        return <ListItem key={self.state.unique + "-" + type.key}
+                                         name={self.state.unique + "-" + type.key}
                                          listname={self.state.unique}
                                          onChange={self.changeType(type)}
                                          checked={self.state.type.key === type.key}
@@ -110,8 +110,8 @@ class TimeSelector extends React.Component {
                 <hr />
                 <List>
                     {self.months().map(function(type, index) {
-                        return <ListItem key={self.state.unique + type.key}
-                                         name={self.state.unique + type.key}
+                        return <ListItem key={self.state.unique + "-" + type.key}
+                                         name={self.state.unique + "-" + type.key}
                                          listname={self.state.unique}
                                          onChange={self.changeType(type)}
                                          checked={self.state.type.key === type.key}
@@ -122,8 +122,8 @@ class TimeSelector extends React.Component {
                 <hr />
                 <List>
                     {self.years().map(function(type, index) {
-                        return <ListItem key={self.state.unique + type.key}
-                                         name={self.state.unique + type.key}
+                        return <ListItem key={self.state.unique + "-" + type.key}
+                                         name={self.state.unique + "-" + type.key}
                                          listname={self.state.unique}
                                          onChange={self.changeType(type)}
                                          checked={self.state.type.key === type.key}

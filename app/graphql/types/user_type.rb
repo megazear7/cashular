@@ -70,19 +70,19 @@ UserType = GraphQL::ObjectType.define do
   field :loss do
     type types.Float
     resolve -> (obj, args, ctx) {
-      return get_transactions(obj.transactions, args, ctx).where("amount < ?", 0).sum(:amount).abs()
+      return get_transactions(obj.transactions, args, ctx).where("amount < 0").sum(:amount).abs
     }
   end
   field :gain do
     type types.Float
     resolve -> (obj, args, ctx) {
-      return get_transactions(obj.transactions, args, ctx).where("amount > ?", 0).sum(:amount)
+      return get_transactions(obj.transactions, args, ctx).where("amount > 0").sum(:amount).abs
     }
   end
-  field :gain do
-    type types.Float
+  field :count do
+    type types.Int
     resolve -> (obj, args, ctx) {
-      return get_transactions(obj.transactions, args, ctx).where(envelope_id: nil).sum(:amount)
+      return get_transactions(obj.transactions, args, ctx).count
     }
   end
   field :unallocated do

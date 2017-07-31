@@ -1,27 +1,30 @@
-Solution to the problem of sharing transaction callback data between react components:
-    - Dont pass the results of the api request to child components, pass the
-      definition of the request, and then add to that request stuff specific to
-      that component, and then make the request in the component itself.
+# Cashular
+> A envelope based cash management system. Transactional data can be uploaded
+> from csv files and then organized into spending envelopes. Then you can
+> discover where you are spending your money, as well as how well you spent
+> your money during particular weeks, months and years.
 
-I've replaced all api GET calls with graphql requests, need to remove the legacy API.
+## Rails
+1. Delivers SPA
+2. User authentication
+3. Controls Databse
+4. Easy to use Dev setup
+5. Prod environment
 
-Need to simplify the method of getting transaction data for the react components in order
-    to be proper react components instead of sharing so much implementation details
-    between components.
+## GraphQL
+1. Provides SPA with a friendly API
 
+## React
+1. Creates user interface
 
-Need to enhance graphql to enable mutations.
+## Material Design Lite
+1. Provides OOTB design solutions
+2. Provides Grid System
 
-Trying to integrate graphql. Wanted to use react relay as well but it doesn't
-seem to be easy to do with rails.
-
-Add ability to rename envelopes
-
-Be able to tag transactions with a further description. Example of use:
-    - the google pay $16 was sherlock!!!
-
-Fix css includes so that I dont have to !important everything
-
-Put external libraries into vendor folder
-
-material-ui.com is a react + material integration. Should we reimplememt the site with this?
+## Other
+1. Devise user authentication
+2. Jquery
+3. Postgres
+4. Spreadsheet processing
+5. Will paginate
+6. SCSS

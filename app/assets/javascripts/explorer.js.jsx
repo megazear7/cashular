@@ -78,7 +78,7 @@ class Explorer extends React.Component {
                                             envelopes={self.props.envelopes}
                                             afterOrganize={self.load} />
                     })}
-                    {self.state.envelope && self.props.transactionData.count > self.state.pageSize &&
+                    {self.state.envelope && self.props.count > self.state.pageSize &&
                         <LoadMore action={self.loadMore} />}
                 </Cell>
                 <Cell desktop={1} tablet={0} phone={0}>
