@@ -24,32 +24,14 @@ class App extends React.Component {
     loadEnvelopes() {
         var self = this;
 
-        var args = Cashular.Utils.graphArgs({
+        var variables = {
              id: self.props.userId,
              from: self.state.dateRange.from,
              to: self.state.dateRange.to,
              daysAgo: self.state.dateRange.daysAgo
-        });
+        };
 
-        Cashular.API(`{
-        user(${args}) {
-          gain
-          loss
-          count
-          unallocated
-          envelopes {
-            id
-            title
-            net
-            gain
-            loss
-            transactions {
-              post_date
-              description
-              amount
-            }
-          }
-        }}`, function() {
+        Cashular.Queries.UserEnvelopes(variables, function() {
             self.setState({user: this.user});
         });
     }
@@ -57,7 +39,7 @@ class App extends React.Component {
     loadTransactions(options, callback) {
         var self = this;
 
-        var args = {
+        var variables = {
              id: self.props.userId,
              from: self.state.dateRange.from,
              to: self.state.dateRange.to,
@@ -65,23 +47,14 @@ class App extends React.Component {
         };
 
         if (options.onlyUnorganized) {
-            args.organized = false;
+            variables.organized = false;
         }
 
         if (! options.showingNonDeleted) {
-            args.deleted = true;
+            variables.deleted = true;
         }
 
-        Cashular.API(`{
-        user(${Cashular.Utils.graphArgs(args)}) {
-          transactions {
-            id
-            description
-            amount
-            post_date
-            deleted
-          }
-        }}`, function() {
+        Cashular.Queries.UserTransactions(variables, function() {
             callback(this.user.transactions, this.user.net);
         });
     }
@@ -89,7 +62,7 @@ class App extends React.Component {
     loadEnvelopeTransactions(options, callback) {
         var self = this;
 
-        var args = {
+        var variables = {
              id: options.envelope.id,
              from: self.state.dateRange.from,
              to: self.state.dateRange.to,
@@ -97,24 +70,17 @@ class App extends React.Component {
         };
 
         if (options.onlyUnorganized) {
-            args.organized = false;
+            variables.organized = false;
         }
 
         if (! options.showingNonDeleted) {
-            args.deleted = false;
+            variables.deleted = false;
         }
 
-        Cashular.API(`{
-        envelope(${Cashular.Utils.graphArgs(args)}) {
-          transactions {
-            id
-            description
-            amount
-            post_date
-          }
-        }}`, function() {
+        Cashular.Queries.Envelope(variables, function() {
             callback(this.envelope);
         });
+
     }
 
     setEnvelopes(envelopes) {

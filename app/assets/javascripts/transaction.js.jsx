@@ -34,56 +34,41 @@ class Transaction extends React.Component {
     organize(envelope) {
         var self = this;
 
-        Cashular.API.Transaction.organize(envelope.id, self.props.id)
-        .success(function(transaction) {
-            self.setState({envelope_id: transaction.envelope_id}, function() {
+        var variables = {
+            envelopeId: envelope.id,
+            transactionId: self.props.id
+        };
+
+        Cashular.Queries.OrganizeTransaction(variables, function() {
+            self.setState({envelope_id: this.envelope.id}, function() {
                 self.props.afterOrganize();
                 self.setEnvelopeTitle();
+                self.setState({showEnvelopes: false});
             });
         });
-
-        self.setState({showEnvelopes: false});
     }
 
     deleteTransaction() {
         var self = this;
 
-        Cashular.API.Transaction.destroy(this.props.id)
-        .done(function() {
+        var variables = {
+            transactionId: self.props.id
+        };
+
+        Cashular.Queries.DeleteTransaction(variables, function() {
             self.props.transactionDeletedOrRestored();
-        })
-        .fail(function() {
-            var snackbarContainer = document.querySelector('#snackbar-alerter');
-
-            var data = {
-                message: "Failed to delete transaction",
-                timeout: 5000,
-                actionText: 'Undo'
-            };
-
-            var snackbar = new MaterialSnackbar(snackbarContainer);
-            snackbar.showSnackbar(data);
         });
     }
 
     restoreTransaction() {
         var self = this;
 
-        Cashular.API.Transaction.restore(this.props.id)
-        .done(function() {
+        var variables = {
+            transactionId: self.props.id
+        };
+
+        Cashular.Queries.RestoreTransaction(variables, function() {
             self.props.transactionDeletedOrRestored();
-        })
-        .fail(function() {
-            var snackbarContainer = document.querySelector('#snackbar-alerter');
-
-            var data = {
-                message: "Failed to restore transaction",
-                timeout: 5000,
-                actionText: 'Undo'
-            };
-
-            var snackbar = new MaterialSnackbar(snackbarContainer);
-            snackbar.showSnackbar(data);
         });
     }
 
@@ -140,7 +125,7 @@ class Transaction extends React.Component {
                 {self.state.showEnvelopes &&
                     <EnvelopePicker action={self.organize}
                                     envelopes={self.props.envelopes}
-                                    envelope_id={self.props.envelope_id} />
+                                    envelope_id={self.state.envelope_id} />
                 }
             </Cell>
             </Grid>

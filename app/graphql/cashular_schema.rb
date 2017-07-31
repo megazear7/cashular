@@ -3,5 +3,4 @@ require_relative "types/mutation_type"
 
 CashularSchema = GraphQL::Schema.define do
   query(QueryType)
-  mutation(MutationType)
 end

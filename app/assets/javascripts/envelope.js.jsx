@@ -9,9 +9,14 @@ class Envelope extends React.Component {
 
     remove() {
         var self = this;
-        Cashular.API.Envelopes().destroy(this.props.id)
-        .done(function(destroyedItem) {
-            self.props.onRemove();
+
+        var variables = {
+            userId: 2,
+            envelopeId: this.props.id
+        };
+
+        Cashular.Queries.DeleteEnvelope(variables, function() {
+            self.props.onRemove(this.user);
         });
     }
 

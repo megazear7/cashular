@@ -9,6 +9,7 @@ TransactionType = GraphQL::ObjectType.define do
   field :description, types.String
   field :amount, types.Float
   field :deleted, types.Boolean
+  field :envelope_id, types.ID
   field :envelope do
     type EnvelopeType
     resolve -> (obj, args, ctx) {
@@ -19,6 +20,20 @@ TransactionType = GraphQL::ObjectType.define do
     type UserType
     resolve -> (obj, args, ctx) {
       obj.user
+    }
+  end
+  field :delete do
+    type types.Boolean 
+    resolve -> (obj, args, ctx) {
+      obj.deleted = true
+      obj.save
+    }
+  end
+  field :restore do
+    type types.Boolean 
+    resolve -> (obj, args, ctx) {
+      obj.deleted = false
+      obj.save
     }
   end
 end

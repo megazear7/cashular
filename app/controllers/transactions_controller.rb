@@ -2,8 +2,6 @@ class TransactionsController < ApplicationController
   include Response
   include ExceptionHandler
 
-  before_action :set_transaction, only: [:destroy, :restore]
-
   def upload
     transactions = []
     params[:transactions].each do |index, transaction|
@@ -16,25 +14,5 @@ class TransactionsController < ApplicationController
     end
 
     json_response(transactions)
-  end
-
-  def destroy
-    @transaction.deleted = true
-    @transaction.save
-
-    json_response(@transaction)
-  end
-
-  def restore
-    @transaction.deleted = false
-    @transaction.save
-
-    json_response(@transaction)
-  end
-
-  private
-
-  def set_transaction
-    @transaction = Transaction.where(user: current_user).find(params[:id])
   end
 end

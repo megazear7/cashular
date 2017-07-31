@@ -94,4 +94,16 @@ UserType = GraphQL::ObjectType.define do
       return unallocated
     }
   end
+  field :createEnvelope, EnvelopeType do
+    argument :title, !types.String
+    resolve ->(obj, args, ctx) {
+      Envelope.create({title: args[:title], user_id: ctx[:current_user].id})
+    }
+  end
+  field :deleteEnvelope, EnvelopeType do
+    argument :id, !types.ID
+    resolve ->(obj, args, ctx) {
+      return Envelope.find(args[:id]).destroy
+    }
+  end
 end

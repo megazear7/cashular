@@ -99,4 +99,14 @@ EnvelopeType = GraphQL::ObjectType.define do
       return unallocated
     }
   end
+  field :organizeTransaction do
+    type TransactionType
+    argument :id, !types.ID
+    resolve -> (obj, args, ctx) {
+      transaction = Transaction.where(user: ctx[:current_user]).find(args[:id])
+      obj.transactions << transaction
+      return transaction
+    }
+  end
+
 end

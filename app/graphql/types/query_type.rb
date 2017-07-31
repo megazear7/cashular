@@ -38,7 +38,7 @@ QueryType = GraphQL::ObjectType.define do
         ctx[:deleted] = args[:deleted]
       end
 
-      Envelope.find(args["id"])
+      Envelope.find(args[:id])
     }
   end
 
@@ -76,7 +76,16 @@ QueryType = GraphQL::ObjectType.define do
         ctx[:deleted] = args[:deleted]
       end
 
-      User.find(args["id"])
+      User.find(args[:id])
+    }
+  end
+
+  field :transaction do
+    type TransactionType
+    argument :id, !types.ID
+    description "Find a Transaction by ID"
+    resolve ->(obj, args, ctx) {
+      Transaction.find(args[:id])
     }
   end
 end
