@@ -4,14 +4,7 @@ class EnvelopesController < ApplicationController
 
   protect_from_forgery prepend: true
 
-  before_action :set_from
-  before_action :set_to
-  before_action :set_envelopes, only: [ :index ]
   before_action :set_envelope, only: [ :add_transaction, :destroy ]
-
-  def index
-    json_response(@envelopes)
-  end
 
   def create
     @envelope = Envelope.create(envelope_params)
@@ -36,26 +29,6 @@ class EnvelopesController < ApplicationController
   end
 
   private
-
-  def set_from
-    @from = params[:from]
-  end
-
-  def set_to
-    @to = params[:to]
-  end
-
-  def set_envelopes
-    @envelopes = [ ]
-    Envelope.where(user: current_user).all.each do |envelope|
-      @envelopes << {
-        id: envelope.id,
-        title: envelope.title,
-        sum: envelope.sum(@from, @to)
-      }
-    end
-    @envelopes
-  end
 
   def set_envelope
     @envelope = Envelope.where(user: current_user).find(params[:id])

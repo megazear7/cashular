@@ -42,34 +42,6 @@
             }
         }
 
-        self.each = function(callback) {
-            self.eachCallback = callback;
-
-            makeRequest();
-
-            return self;
-        };
-
-        self.onlyUnorganized = function() {
-            self.data.onlyUnorganized = true;
-
-            return self;
-        };
-
-        self.all = function(callback) {
-            self.allCallback = callback;
-
-            makeRequest();
-
-            return self;
-        };
-
-        self.done = function(callback) {
-            self.doneCallback = callback;
-
-            return self;
-        };
-
         self.fail = function(callback) {
             self.failCallback = callback;
 
@@ -81,34 +53,6 @@
 
             return self;
         };
-
-        self.from = function(from) {
-            if (typeof from !== "undefined") {
-                self.data.from = from;
-            }
-
-            return self;
-        };
-
-        self.to = function(to) {
-            if (typeof to !== "undefined") {
-                self.data.to = to;
-            }
-
-            return self;
-        };
-
-        self.daysAgo = function(days) {
-            self.data.from = Cashular.Utils.daysAgo(days);
-
-            return self;
-        };
-
-        self.pageSize = function(count) {
-            self.data.pageSize = count;
-
-            return self;
-        }
 
         self.create = function(fields, success, failure, always) {
             self.data[singular] = fields;
@@ -128,41 +72,37 @@
             return self;
         };
 
-        self.fromEnvelope = function(id) {
-            self.data.envelope_id = id;
-
-            return self;
-        };
-
-        self.unallocated = function() {
-            self.path += "/unallocated";
-
-            makeRequest();
-
-            return self;
-        };
-
-        self.retrieveDeleted = function() {
-            self.data.retrieveDeleted = true;
-
-            return self;
-        };
     };
 
-    window.Cashular = window.Cashular || function(query, callback) {
+    window.Cashular = window.Cashular || { };
+
+    window.Cashular.API = function(query, callback) {
         $.post("graphql", {query: query})
         .success(function(result) {
             callback.bind(result.data)();
         });
     };
 
-    window.Cashular.Transactions = function() {
+    window.Cashular.API.Transactions = function() {
         return new CashularRequest("transactions", "transaction");
     };
 
-    window.Cashular.Envelopes = function() {
-        return new CashularRequest("envelopes", "envelope");
+    window.Cashular.API.Transaction = { };
+
+    window.Cashular.API.Transaction.destroy = function(transactionId) {
+        return $.ajax({url: "/transactions/" + transactionId, method: "DELETE"});
     };
 
+    window.Cashular.API.Transaction.restore = function(transactionId) {
+        return $.ajax({url: "/transactions/" + transactionId + "/restore", method: "POST"});
+    };
+
+    window.Cashular.API.Transaction.organize = function(envelopeId, transactionId) {
+        return $.post("/envelopes/" + envelopeId + "/add_transaction/" + transactionId);
+    };
+
+    window.Cashular.API.Envelopes = function() {
+        return new CashularRequest("envelopes", "envelope");
+    };
 
 })();

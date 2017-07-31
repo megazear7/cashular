@@ -34,7 +34,7 @@ class Transaction extends React.Component {
     organize(envelope) {
         var self = this;
 
-        $.post("/envelopes/"+envelope.id+"/add_transaction/"+self.props.id)
+        Cashular.API.Transaction.organize(envelope.id, self.props.id)
         .success(function(transaction) {
             self.setState({envelope_id: transaction.envelope_id}, function() {
                 self.props.afterOrganize();
@@ -48,7 +48,7 @@ class Transaction extends React.Component {
     deleteTransaction() {
         var self = this;
 
-        $.ajax({url: "/transactions/"+this.props.id, method: "DELETE"})
+        Cashular.API.Transaction.destroy(this.props.id)
         .done(function() {
             self.props.transactionDeletedOrRestored();
         })
@@ -69,7 +69,7 @@ class Transaction extends React.Component {
     restoreTransaction() {
         var self = this;
 
-        $.ajax({url: "/transactions/"+this.props.id+"/restore", method: "POST"})
+        Cashular.API.Transaction.restore(this.props.id)
         .done(function() {
             self.props.transactionDeletedOrRestored();
         })

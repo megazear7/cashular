@@ -31,7 +31,7 @@ class App extends React.Component {
              daysAgo: self.state.dateRange.daysAgo
         });
 
-        Cashular(`{
+        Cashular.API(`{
         user(${args}) {
           gain
           loss
@@ -72,13 +72,14 @@ class App extends React.Component {
             args.deleted = true;
         }
 
-        Cashular(`{
+        Cashular.API(`{
         user(${Cashular.Utils.graphArgs(args)}) {
           transactions {
             id
             description
             amount
             post_date
+            deleted
           }
         }}`, function() {
             callback(this.user.transactions, this.user.net);
@@ -103,7 +104,7 @@ class App extends React.Component {
             args.deleted = false;
         }
 
-        Cashular(`{
+        Cashular.API(`{
         envelope(${Cashular.Utils.graphArgs(args)}) {
           transactions {
             id
@@ -195,7 +196,8 @@ class App extends React.Component {
             self.loadEnvelopeTransactions(options, function(envelope) {
                 self.setState({explorerNet: envelope.net,
                                explorerCount: envelope.count,
-                               explorerTransactions: envelope.transactions});
+                               explorerTransactions: envelope.transactions,
+                               explorerOptions: options});
             });
         }
     }
