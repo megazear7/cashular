@@ -14,7 +14,7 @@ class NewEnvelope extends React.Component {
         };
 
         Cashular.Queries.CreateEnvelope(variables, function() {
-            self.props.onCreate(this.user);
+            self.props.onCreate();
         });
     }
 

@@ -16,7 +16,7 @@ class Envelope extends React.Component {
         };
 
         Cashular.Queries.DeleteEnvelope(variables, function() {
-            self.props.onRemove(this.user);
+            self.props.onRemove();
         });
     }
 

@@ -4,15 +4,10 @@ class Transactions extends React.Component {
         this.state = { };
 
         this.loadMore = this.loadMore.bind(this);
-        this.load = this.load.bind(this);
-        this.resetAndLoad = this.resetAndLoad.bind(this);
-        this.showDeleted = this.showDeleted.bind(this);
 
         this.state.unique = Cashular.Utils.makeid();
         this.state.pageSize = 10;
         this.state.showingNonDeleted = true;
-
-        this.load();
     }
 
     loadMore() {
@@ -21,32 +16,6 @@ class Transactions extends React.Component {
         self.setState(function(prevState) {
             return { pageSize: prevState.pageSize + 10 };
         }, function() {
-            self.load();
-        });
-    }
-
-    load() {
-        var self = this;
-
-        self.props.setTransactions({
-            pageSize: self.state.pageSize,
-            showingNonDeleted: self.state.showingNonDeleted
-        });
-    }
-
-    showDeleted(e) {
-        var self = this;
-
-        self.setState(function(prevState) {
-            return { showingNonDeleted: ! prevState.showingNonDeleted };
-        }, function() {
-            self.load();
-        });
-    }
-
-    resetAndLoad() {
-        var self = this;
-        self.setState({ pageSize: 10 }, function() {
             self.load();
         });
     }
@@ -73,7 +42,7 @@ class Transactions extends React.Component {
                                id={self.state.unique+"-show-non-deleted"}
                                className="mdl-switch__input"
                                defaultChecked={self.state.showingNonDeleted}
-                               onChange={self.showDeleted} />
+                               onChange={self.props.load} />
                         <span className="mdl-switch__label"></span>
                     </label>
                 </Cell>
@@ -86,12 +55,11 @@ class Transactions extends React.Component {
                                             description={transaction.description}
                                             key={transaction.id}
                                             id={transaction.id}
-                                            organizer={self.props.onlyUnorganized}
                                             deleted={transaction.deleted}
                                             envelope_id={transaction.envelope_id}
-                                            transactionDeletedOrRestored={self.load}
+                                            load={self.props.load}
                                             envelopes={self.props.envelopes}
-                                            afterOrganize={self.load} />
+                                            afterOrganize={self.props.load} />
                     })}
                     {self.state.count > self.state.pageSize &&
                         <LoadMore action={self.loadMore} />}

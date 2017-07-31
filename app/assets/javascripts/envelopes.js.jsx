@@ -39,9 +39,9 @@ class Envelopes extends React.Component {
                         return <Envelope amount={self.perTimePeriod(envelope.net)}
                                          title={envelope.title}
                                          key={index}
-                                         onRemove={self.props.addOrRemovedEnvelope}
+                                         onRemove={self.props.load}
                                          id={envelope.id} /> }})}
-                <NewEnvelope onCreate={self.props.addOrRemovedEnvelope} />
+                <NewEnvelope onCreate={self.props.load} />
                 <Cell desktop={12} tablet={8} phone={4}>
                     <hr />
                 </Cell>
@@ -54,7 +54,7 @@ class Envelopes extends React.Component {
                                                  title={envelope.title}
                                                  dontShowAmount={true}
                                                  key={index}
-                                                 onRemove={self.props.addOrRemovedEnvelope}
+                                                 onRemove={self.props.load}
                                                  id={envelope.id}
                                                  size={4} /> }})}
                     </Grid>

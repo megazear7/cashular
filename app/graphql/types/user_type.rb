@@ -44,6 +44,11 @@ UserType = GraphQL::ObjectType.define do
     type types[TransactionType]
     argument :page, types.Int
     argument :perPage, types.Int
+    argument :daysAgo, types.Int
+    argument :from, types.String
+    argument :to, types.String
+    argument :organized, types.Boolean
+    argument :deleted, types.Boolean
     resolve -> (obj, args, ctx) {
       transactions = get_transactions(obj.transactions, args, ctx).order('post_date DESC, created_at DESC, id')
 
