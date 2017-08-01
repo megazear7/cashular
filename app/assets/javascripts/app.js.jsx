@@ -7,6 +7,7 @@ class App extends React.Component {
         this.load = this.load.bind(this);
         this.organizerLoadMore = this.organizerLoadMore.bind(this);
         this.fullTransactionsLoadMore = this.fullTransactionsLoadMore.bind(this);
+        this.explorerLoadMore = this.explorerLoadMore.bind(this);
         this.variables = this.variables.bind(this);
         this.onSwitchChange = this.onSwitchChange.bind(this);
 
@@ -43,7 +44,15 @@ class App extends React.Component {
 
         // TODO add loading indicator
         Cashular.Queries.CashApp(variables, function() {
-            self.setState({user: this.user});
+            var newState = {user: this.user};
+
+            $.each(this.user.envelopes, function() {
+                if (self.state.explorerEnvelope.id === this.id) {
+                    newState.explorerEnvelope = this;
+                }
+            });
+
+            self.setState(newState );
         });
     }
 
@@ -65,6 +74,23 @@ class App extends React.Component {
     }
 
     fullTransactionsLoadMore(page) {
+        var self = this;
+        var variables = self.variables();
+
+        variables.fullTransactionsPage = page;
+
+        // TODO Only request the needed data
+        Cashular.Queries.CashApp(variables, function() {
+            var user = this.user;
+            self.setState(function(prevState) {
+                var state = prevState;
+                state.user.fullTransactions = state.user.fullTransactions.concat(user.fullTransactions);
+                return state;
+            });
+        });
+    }
+
+    explorerLoadMore(page) {
         var self = this;
         var variables = self.variables();
 
@@ -207,9 +233,13 @@ class App extends React.Component {
                             </Cell>
                             <Cell desktop={4} tablet={3} phone={0}></Cell> 
                             <Cell desktop={3} tablet={0} phone={0}></Cell>
-                            <Explorer load={this.load}
-                                      envelope={this.state.explorerEnvelope}
-                                      envelopes={this.state.user.envelopes} />
+                            <Cell desktop={5} tablet={5} phone={4} className="centered">
+                                <Transactions load={this.load}
+                                              loadMore={this.explorerLoadMore}
+                                              count={this.state.explorerEnvelope.count}
+                                              transactions={this.state.explorerEnvelope.transactions}
+                                              envelopes={this.state.user.envelopes} />
+                            </Cell>
                             <Cell desktop={1} tablet={0} phone={0}></Cell>
                             <Cell desktop={0} tablet={0} phone={4} className="centered">
                                 <H5>Select Envelope:</H5>

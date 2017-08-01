@@ -40,6 +40,7 @@
         }
         fragment envelopeFields on Envelope {
           id
+          transactionCount
           title
           net
           gain
