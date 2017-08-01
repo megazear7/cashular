@@ -34,6 +34,8 @@ def get_transactions transactions, args, ctx
     transactions = transactions.where.not(envelope_id: nil)
   elsif not ctx[:organized].nil? and ctx[:organized]
     transactions = transactions.where.not(envelope_id: nil)
+  elsif not args[:organized].nil? and not args[:organized]
+    transactions.where!(envelope_id: nil)
   elsif not ctx[:organized].nil? and not ctx[:organized]
     transactions.where!(envelope_id: nil)
   end
@@ -45,10 +47,10 @@ EnvelopeType = GraphQL::ObjectType.define do
   name "Envelope"
   field :id, !types.ID
   field :title, types.String
-  field :transaction_count do
+  field :transactionCount do
     type types.Int
     resolve -> (obj, args, ctx) {
-      obj.transactions.count
+      get_transactions(obj.transactions, args, ctx).count
     }
   end
   field :transactions do

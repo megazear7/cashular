@@ -2,28 +2,41 @@ require_relative "./envelope_type"
 require_relative "./transaction_type"
 
 def get_transactions transactions, args, ctx
-  if not ctx[:daysAgo].nil? and ctx[:daysAgo] != "undefined"
+  if not args[:daysAgo].nil?
+    daysAgo = (Date.today - args[:daysAgo])
+    transactions.where!("post_date >= ?", daysAgo)
+  elsif not ctx[:daysAgo].nil?
     daysAgo = (Date.today - ctx[:daysAgo])
     transactions.where!("post_date >= ?", daysAgo)
   end
 
-  if not ctx[:from].nil? and ctx[:from] != "undefined"
+  if not args[:from].nil?
+    transactions.where!("post_date >= ?", args[:from])
+  elsif not ctx[:from].nil?
     transactions.where!("post_date >= ?", ctx[:from])
   end
 
-  if not ctx[:to].nil? and ctx[:to] != "undefined"
+  if not args[:to].nil?
+    transactions.where!("post_date <= ?", args[:to])
+  elsif not ctx[:to].nil?
     transactions.where!("post_date <= ?", ctx[:to])
   end
 
-  if not ctx[:deleted].nil? and ctx[:deleted] != "undefined"
+  if not args[:deleted].nil?
+    transactions.where!(deleted: args[:deleted])
+  elsif not ctx[:deleted].nil?
     transactions.where!(deleted: ctx[:deleted])
   else
     transactions.where!(deleted: false)
   end
 
-  if not ctx[:organized].nil? and ctx[:organized] != "undefined" and ctx[:organized]
+  if not args[:organized].nil? and args[:organized]
     transactions = transactions.where.not(envelope_id: nil)
-  elsif not ctx[:organized].nil? and ctx[:organized] != "undefined" and not ctx[:organized]
+  elsif not ctx[:organized].nil? and ctx[:organized]
+    transactions = transactions.where.not(envelope_id: nil)
+  elsif not args[:organized].nil? and not args[:organized]
+    transactions.where!(envelope_id: nil)
+  elsif not ctx[:organized].nil? and not ctx[:organized]
     transactions.where!(envelope_id: nil)
   end
 
@@ -34,10 +47,10 @@ UserType = GraphQL::ObjectType.define do
   name "User"
   field :id, !types.ID
   field :email, types.String
-  field :transaction_count do
+  field :transactionCount do
     type types.Int
     resolve -> (obj, args, ctx) {
-      obj.transactions.count
+      get_transactions(obj.transactions, args, ctx).count
     }
   end
   field :transactions do

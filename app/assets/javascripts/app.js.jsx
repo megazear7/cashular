@@ -3,10 +3,20 @@ class App extends React.Component {
         super(props);
 
         this.setDateRange = this.setDateRange.bind(this);
+        this.setExplorerEnvelope = this.setExplorerEnvelope.bind(this);
         this.load = this.load.bind(this);
+        this.onSwitchChange = this.onSwitchChange.bind(this);
 
         this.state = { user: this.props.user,
+                       unique: Cashular.Utils.makeid(),
+                       showingNonDeleted: true,
                        dateRange: {title: "Previous Week", key: "previous_week", daysAgo: 7} };
+
+        if (this.state.user.envelopes.length > 0) {
+            this.state.explorerEnvelope = this.state.user.envelopes[0];
+        } else {
+            // TODO What do we do here to avoid an error?
+        }
     }
 
     load() {
@@ -19,11 +29,11 @@ class App extends React.Component {
              daysAgo: self.state.dateRange.daysAgo
         };
 
-        // TODO re implement the deleted toggle
-        if (false && typeof options !== "undefined" && ! options.showingNonDeleted) {
+        if (! self.state.showingNonDeleted) {
             variables.deleted = true;
         }
 
+        // TODO add loading indicator
         Cashular.Queries.CashApp(variables, function() {
             self.setState({user: this.user});
         });
@@ -34,6 +44,21 @@ class App extends React.Component {
         self.setState({dateRange: dateRange}, function() {
             self.load();
         });
+    }
+
+    setExplorerEnvelope(envelope) {
+        this.setState({explorerEnvelope: envelope});
+    }
+
+    onSwitchChange(e) {
+        var self = this;
+        self.setState({showingNonDeleted: $(self.deletedSwitchInput).is(':checked')}, function() {
+            self.load();
+        });
+    }
+
+    componentDidMount() {
+        componentHandler.upgradeElement(this.deletedSwitch);
     }
 
     render() {
@@ -76,19 +101,81 @@ class App extends React.Component {
                                    unallocated={this.state.user.unallocated} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-2">
-                        <Transactions load={this.load}
-                                      transactions={this.state.user.organizerTransactions}
-                                      envelopes={this.state.user.envelopes} />
+                        <Grid>
+                            <Cell desktop={3} tablet={1} phone={0}></Cell>
+                            <Cell desktop={5} tablet={6} phone={3} className="centered">
+                                <H6>
+                                    {this.state.user.organizerTransactions.length > 0 &&
+                                        Cashular.Utils.prettyDate(new Date(this.state.user.organizerTransactions[0].post_date))}
+                                </H6>
+                            </Cell>
+                            <Cell desktop={4} tablet={1} phone={1}></Cell>
+                            <Cell desktop={3} tablet={1} phone={0}></Cell>
+                            <Cell desktop={5} tablet={6} phone={4}>
+                                <Transactions load={this.load}
+                                              count={this.state.user.organizerTransactionCount}
+                                              transactions={this.state.user.organizerTransactions}
+                                              envelopes={this.state.user.envelopes} />
+                            </Cell>
+                            <Cell desktop={4} tablet={1} phone={0}></Cell>
+                        </Grid>
                     </TabPanel>
                     <TabPanel id="scroll-tab-3">
-                        <Transactions load={this.load}
-                                      transactions={this.state.user.fullTransactions}
-                                      envelopes={this.state.user.envelopes} />
+                        <Grid>
+                            <Cell desktop={3} tablet={1} phone={0}></Cell>
+                            <Cell desktop={5} tablet={6} phone={3} className="centered">
+                                <H6>
+                                    {this.state.user.fullTransactions.length > 0 && this.state.showingNonDeleted &&
+                                        Cashular.Utils.prettyDate(new Date(this.state.user.fullTransactions[0].post_date))}
+                                    {this.state.user.fullTransactions.length > 0 && ! this.state.showingNonDeleted &&
+                                        "Deleted Transactions"}
+                                </H6>
+                            </Cell>
+                            <Cell desktop={4} tablet={1} phone={1}>
+                                <label className="mdl-switch mdl-js-switch mdl-js-ripple-effect transaction-switch"
+                                       htmlFor={this.state.unique+"-show-non-deleted"}
+                                       ref={(el) => { this.deletedSwitch = el}}>
+                                    <input type="checkbox"
+                                           id={this.state.unique+"-show-non-deleted"}
+                                           onChange={this.onSwitchChange}
+                                           className="mdl-switch__input"
+                                           defaultChecked={this.state.showingNonDeleted}
+                                       ref={(el) => { this.deletedSwitchInput = el}} />
+                                    <span className="mdl-switch__label"></span>
+                                </label>
+                            </Cell>
+                            <Cell desktop={3} tablet={1} phone={0}></Cell>
+                            <Cell desktop={5} tablet={6} phone={4}>
+                                <Transactions load={this.load}
+                                              count={this.state.user.fullTransactionCount}
+                                              transactions={this.state.user.fullTransactions}
+                                              envelopes={this.state.user.envelopes} />
+                            </Cell>
+                            <Cell desktop={4} tablet={1} phone={0}></Cell>
+                        </Grid>
                     </TabPanel>
                     <TabPanel id="scroll-tab-4">
-                        <Explorer load={this.load}
-                                  dateRange={this.state.dateRange}
-                                  envelopes={this.state.user.envelopes} />
+                        <Grid>
+                            <Cell desktop={3} tablet={0} phone={0}></Cell> 
+                            <Cell desktop={5} tablet={5} phone={4} className="centered">
+                                {typeof this.state.dateRange !== "undefined" && this.state.dateRange.title &&
+                                    <H6>{this.state.dateRange.title}</H6>}
+                            </Cell>
+                            <Cell desktop={4} tablet={3} phone={0}></Cell> 
+                            <Cell desktop={3} tablet={0} phone={0}></Cell>
+                            <Explorer load={this.load}
+                                      envelope={this.state.explorerEnvelope}
+                                      envelopes={this.state.user.envelopes} />
+                            <Cell desktop={1} tablet={0} phone={0}></Cell>
+                            <Cell desktop={0} tablet={0} phone={4} className="centered">
+                                <H5>Select Envelope:</H5>
+                            </Cell>
+                            <Cell desktop={3} tablet={3} phone={4}>
+                                <EnvelopePicker action={this.setExplorerEnvelope}
+                                                envelopes={this.state.user.envelopes}
+                                                envelope_id={this.state.explorerEnvelope && this.state.explorerEnvelope.id} />
+                            </Cell>
+                        </Grid>
                     </TabPanel>
                     <TabPanel id="scroll-tab-5">
                         <Uploader addedTransactions={this.load} />

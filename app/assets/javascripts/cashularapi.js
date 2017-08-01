@@ -14,9 +14,11 @@
         query CashApp($id: ID!, $from: String, $to: String, $daysAgo: Int, $deleted: Boolean) {
           user(id: $id, from: $from, to: $to, daysAgo: $daysAgo, deleted: $deleted) {
             ...userFields
+            fullTransactionCount: transactionCount
             fullTransactions: transactions {
               ...transactionFields
             }
+            organizerTransactionCount: transactionCount
             organizerTransactions: transactions(organized: false) {
               ...transactionFields
             }
