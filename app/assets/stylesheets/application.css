@@ -15,6 +15,24 @@
  *= require_self
  */
 
+.mdl-progress {
+    width: 100% !important;
+    position: fixed !important;
+    height: 7px;
+}
+
+.mdl-progress .progressbar {
+    background-color: #ffca28 !important;
+}
+
+.mdl-progress .bufferbar {
+    background: none !important;
+}
+
+.mdl-progress .auxbar {
+    background: none !important;
+}
+
 .mdl-layout__header-row {
     height: 36px !important;
 }

@@ -556,7 +556,11 @@ class Header extends React.Component {
 
 class TabPanel extends React.Component {
     render() {
-        var classes = this.props.className + " mdl-layout__tab-panel";
+        var classes = "mdl-layout__tab-panel";
+
+        if (this.props.className) {
+            classes += " " + this.props.className;
+        }
 
         return (
             <section className={classes} id={this.props.id}>

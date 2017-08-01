@@ -12,6 +12,7 @@ class App extends React.Component {
         this.onSwitchChange = this.onSwitchChange.bind(this);
 
         this.state = { user: this.props.user,
+                       loading: false,
                        unique: Cashular.Utils.makeid(),
                        showingNonDeleted: true,
                        dateRange: {title: "Previous Week", key: "previous_week", daysAgo: 7} };
@@ -38,11 +39,11 @@ class App extends React.Component {
         return variables;
     }
 
-    load(options) {
+    load() {
         var self = this;
         var variables = self.variables();
 
-        // TODO add loading indicator
+        self.setState({loading: true});
         Cashular.Queries.CashApp(variables, function() {
             var newState = {user: this.user};
 
@@ -52,8 +53,16 @@ class App extends React.Component {
                 }
             });
 
-            self.setState(newState );
+            self.setState(newState, function() {
+                self.setState({loading: false});
+            });
         });
+    }
+
+    componentDidUpdate() {
+        if (this.loadingBar) {
+            componentHandler.upgradeElement(this.loadingBar);
+        }
     }
 
     organizerLoadMore(page) {
@@ -62,13 +71,15 @@ class App extends React.Component {
 
         variables.organizerPage = page;
 
-        // TODO Only request the needed data
+        self.setState({loading: true});
         Cashular.Queries.CashApp(variables, function() {
             var user = this.user;
             self.setState(function(prevState) {
                 var state = prevState;
                 state.user.organizerTransactions = state.user.organizerTransactions.concat(user.organizerTransactions);
                 return state;
+            }, function() {
+                self.setState({loading: false});
             });
         });
     }
@@ -79,13 +90,15 @@ class App extends React.Component {
 
         variables.fullTransactionsPage = page;
 
-        // TODO Only request the needed data
+        self.setState({loading: true});
         Cashular.Queries.CashApp(variables, function() {
             var user = this.user;
             self.setState(function(prevState) {
                 var state = prevState;
                 state.user.fullTransactions = state.user.fullTransactions.concat(user.fullTransactions);
                 return state;
+            }, function() {
+                self.setState({loading: false});
             });
         });
     }
@@ -96,13 +109,15 @@ class App extends React.Component {
 
         variables.fullTransactionsPage = page;
 
-        // TODO Only request the needed data
+        self.setState({loading: true});
         Cashular.Queries.CashApp(variables, function() {
             var user = this.user;
             self.setState(function(prevState) {
                 var state = prevState;
                 state.user.fullTransactions = state.user.fullTransactions.concat(user.fullTransactions);
                 return state;
+            }, function() {
+                self.setState({loading: false});
             });
         });
     }
@@ -136,6 +151,10 @@ class App extends React.Component {
                     <TimeSelector onChange={this.setDateRange} />
                 </Drawer>
                 <Header >
+                    {this.state.loading &&
+                        <div id="p2" className="mdl-progress mdl-js-progress mdl-progress__indeterminate"
+                                     ref={(el) => { this.loadingBar = el; }}>
+                        </div>}
                     <TabBar>
                         <Tab href="#scroll-tab-1" className="is-active">
                             <BasicIcon icon="pie_chart" />
