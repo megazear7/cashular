@@ -5,6 +5,9 @@ class App extends React.Component {
         this.setDateRange = this.setDateRange.bind(this);
         this.setExplorerEnvelope = this.setExplorerEnvelope.bind(this);
         this.load = this.load.bind(this);
+        this.organizerLoadMore = this.organizerLoadMore.bind(this);
+        this.fullTransactionsLoadMore = this.fullTransactionsLoadMore.bind(this);
+        this.variables = this.variables.bind(this);
         this.onSwitchChange = this.onSwitchChange.bind(this);
 
         this.state = { user: this.props.user,
@@ -19,23 +22,62 @@ class App extends React.Component {
         }
     }
 
-    load() {
-        var self = this;
-
+    variables() {
         var variables = {
-             id: self.state.user.id,
-             from: self.state.dateRange.from,
-             to: self.state.dateRange.to,
-             daysAgo: self.state.dateRange.daysAgo
+             id: this.state.user.id,
+             from: this.state.dateRange.from,
+             to: this.state.dateRange.to,
+             daysAgo: this.state.dateRange.daysAgo
         };
 
-        if (! self.state.showingNonDeleted) {
+        if (! this.state.showingNonDeleted) {
             variables.deleted = true;
         }
+
+        return variables;
+    }
+
+    load(options) {
+        var self = this;
+        var variables = self.variables();
 
         // TODO add loading indicator
         Cashular.Queries.CashApp(variables, function() {
             self.setState({user: this.user});
+        });
+    }
+
+    organizerLoadMore(page) {
+        var self = this;
+        var variables = self.variables();
+
+        variables.organizerPage = page;
+
+        // TODO Only request the needed data
+        Cashular.Queries.CashApp(variables, function() {
+            var user = this.user;
+            self.setState(function(prevState) {
+                var state = prevState;
+                state.user.organizerTransactions = state.user.organizerTransactions.concat(user.organizerTransactions);
+                return state;
+            });
+        });
+    }
+
+    fullTransactionsLoadMore(page) {
+        var self = this;
+        var variables = self.variables();
+
+        variables.fullTransactionsPage = page;
+
+        // TODO Only request the needed data
+        Cashular.Queries.CashApp(variables, function() {
+            var user = this.user;
+            self.setState(function(prevState) {
+                var state = prevState;
+                state.user.fullTransactions = state.user.fullTransactions.concat(user.fullTransactions);
+                return state;
+            });
         });
     }
 
@@ -113,6 +155,7 @@ class App extends React.Component {
                             <Cell desktop={3} tablet={1} phone={0}></Cell>
                             <Cell desktop={5} tablet={6} phone={4}>
                                 <Transactions load={this.load}
+                                              loadMore={this.organizerLoadMore}
                                               count={this.state.user.organizerTransactionCount}
                                               transactions={this.state.user.organizerTransactions}
                                               envelopes={this.state.user.envelopes} />
@@ -147,6 +190,7 @@ class App extends React.Component {
                             <Cell desktop={3} tablet={1} phone={0}></Cell>
                             <Cell desktop={5} tablet={6} phone={4}>
                                 <Transactions load={this.load}
+                                              loadMore={this.fullTransactionsLoadMore}
                                               count={this.state.user.fullTransactionCount}
                                               transactions={this.state.user.fullTransactions}
                                               envelopes={this.state.user.envelopes} />

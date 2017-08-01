@@ -49,8 +49,13 @@ EnvelopeType = GraphQL::ObjectType.define do
   field :title, types.String
   field :transactionCount do
     type types.Int
+    argument :daysAgo, types.Int
+    argument :from, types.String
+    argument :to, types.String
+    argument :organized, types.Boolean
+    argument :deleted, types.Boolean
     resolve -> (obj, args, ctx) {
-      get_transactions(obj.transactions, args, ctx).count
+      get_transactions(obj.transactions, args, ctx).order('id').count
     }
   end
   field :transactions do

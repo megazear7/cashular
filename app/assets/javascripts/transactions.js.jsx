@@ -5,16 +5,16 @@ class Transactions extends React.Component {
 
         this.loadMore = this.loadMore.bind(this);
 
-        this.state.pageSize = 10;
+        this.state.page = 1;
     }
 
     loadMore() {
         var self = this;
 
         self.setState(function(prevState) {
-            return { pageSize: prevState.pageSize + 10 };
+            return { page: prevState.page + 1 };
         }, function() {
-            self.props.load();
+            self.props.loadMore(self.state.page);
         });
     }
 
@@ -35,7 +35,7 @@ class Transactions extends React.Component {
                                             envelopes={self.props.envelopes}
                                             afterOrganize={self.props.load} />
                     })}
-                    {self.props.count > self.state.pageSize &&
+                    {self.props.count > self.props.transactions.length &&
                         <LoadMore action={self.loadMore} />}
                 </Cell>
             </Grid>
