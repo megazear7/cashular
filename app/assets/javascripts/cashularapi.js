@@ -11,11 +11,11 @@
     window.Cashular.Queries = {
 
       CashApp: `
-        query CashApp($id: ID!, $from: String, $to: String, $daysAgo: Int, $deleted: Boolean, $organizerPage: Int, $fullTransactionsPage: Int, $explorerPage: Int) {
+        query CashApp($id: ID!, $from: String, $to: String, $daysAgo: Int, $deleted: Boolean, $organizerPage: Int, $arrangerPage: Int, $explorerPage: Int) {
           user(id: $id, from: $from, to: $to, daysAgo: $daysAgo, deleted: $deleted) {
             ...userFields
             fullTransactionCount: transactionCount
-            fullTransactions: transactions(page: $fullTransactionsPage) {
+            arrangerTransactions: transactions(page: $arrangerPage) {
               ...transactionFields
             }
             organizerTransactionCount: transactionCount(organized: false)
