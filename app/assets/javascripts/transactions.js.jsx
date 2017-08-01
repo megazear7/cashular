@@ -1,21 +1,6 @@
 class Transactions extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { };
-
-        this.loadMore = this.loadMore.bind(this);
-
-        this.state.page = 1;
-    }
-
-    loadMore() {
-        var self = this;
-
-        self.setState(function(prevState) {
-            return { page: prevState.page + 1 };
-        }, function() {
-            self.props.loadMore(self.state.page);
-        });
     }
 
     render() {
@@ -36,7 +21,7 @@ class Transactions extends React.Component {
                                             afterOrganize={self.props.load} />
                     })}
                     {self.props.count > self.props.transactions.length &&
-                        <LoadMore action={self.loadMore} />}
+                        <LoadMore action={self.props.loadMore} />}
                 </Cell>
             </Grid>
         );

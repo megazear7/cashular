@@ -13,6 +13,9 @@ class App extends React.Component {
 
         this.state = { user: this.props.user,
                        loading: false,
+                       organizerPage: 1,
+                       fullTransactionsPage: 1,
+                       explorerPage: 1,
                        unique: Cashular.Utils.makeid(),
                        showingNonDeleted: true,
                        dateRange: {title: "Previous Week", key: "previous_week", daysAgo: 7} };
@@ -43,9 +46,16 @@ class App extends React.Component {
         var self = this;
         var variables = self.variables();
 
+        variables.organizerPage = 1;
+        variables.fullTransactionsPage = 1;
+        variables.explorerPage = 1;
+
         self.setState({loading: true});
         Cashular.Queries.CashApp(variables, function() {
-            var newState = {user: this.user};
+            var newState = {user: this.user,
+                            organizerPage: 1,
+                            fullTransactionsPage: 1,
+                            explorerPage: 1};
 
             $.each(this.user.envelopes, function() {
                 if (self.state.explorerEnvelope.id === this.id) {
@@ -65,11 +75,11 @@ class App extends React.Component {
         }
     }
 
-    organizerLoadMore(page) {
+    organizerLoadMore() {
         var self = this;
         var variables = self.variables();
 
-        variables.organizerPage = page;
+        variables.organizerPage = self.state.organizerPage + 1;
 
         self.setState({loading: true});
         Cashular.Queries.CashApp(variables, function() {
@@ -77,6 +87,7 @@ class App extends React.Component {
             self.setState(function(prevState) {
                 var state = prevState;
                 state.user.organizerTransactions = state.user.organizerTransactions.concat(user.organizerTransactions);
+                state.organizerPage = prevState.organizerPage + 1;
                 return state;
             }, function() {
                 self.setState({loading: false});
@@ -84,11 +95,11 @@ class App extends React.Component {
         });
     }
 
-    fullTransactionsLoadMore(page) {
+    fullTransactionsLoadMore() {
         var self = this;
         var variables = self.variables();
 
-        variables.fullTransactionsPage = page;
+        variables.fullTransactionsPage = self.state.fullTransactionsPage + 1;
 
         self.setState({loading: true});
         Cashular.Queries.CashApp(variables, function() {
@@ -96,6 +107,7 @@ class App extends React.Component {
             self.setState(function(prevState) {
                 var state = prevState;
                 state.user.fullTransactions = state.user.fullTransactions.concat(user.fullTransactions);
+                state.fullTransactionsPage = prevState.fullTransactionsPage + 1;
                 return state;
             }, function() {
                 self.setState({loading: false});
@@ -103,11 +115,11 @@ class App extends React.Component {
         });
     }
 
-    explorerLoadMore(page) {
+    explorerLoadMore() {
         var self = this;
         var variables = self.variables();
 
-        variables.fullTransactionsPage = page;
+        variables.explorerPage = self.state.explorerPage + 1;
 
         self.setState({loading: true});
         Cashular.Queries.CashApp(variables, function() {
@@ -115,6 +127,7 @@ class App extends React.Component {
             self.setState(function(prevState) {
                 var state = prevState;
                 state.user.fullTransactions = state.user.fullTransactions.concat(user.fullTransactions);
+                state.explorerPage = prevState.explorerPage + 1;
                 return state;
             }, function() {
                 self.setState({loading: false});
@@ -188,25 +201,9 @@ class App extends React.Component {
                                    unallocated={this.state.user.unallocated} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-2">
-                        <Grid>
-                            <Cell desktop={3} tablet={1} phone={0}></Cell>
-                            <Cell desktop={5} tablet={6} phone={3} className="centered">
-                                <H6>
-                                    {this.state.user.organizerTransactions.length > 0 &&
-                                        Cashular.Utils.prettyDate(new Date(this.state.user.organizerTransactions[0].post_date))}
-                                </H6>
-                            </Cell>
-                            <Cell desktop={4} tablet={1} phone={1}></Cell>
-                            <Cell desktop={3} tablet={1} phone={0}></Cell>
-                            <Cell desktop={5} tablet={6} phone={4}>
-                                <Transactions load={this.load}
-                                              loadMore={this.organizerLoadMore}
-                                              count={this.state.user.organizerTransactionCount}
-                                              transactions={this.state.user.organizerTransactions}
-                                              envelopes={this.state.user.envelopes} />
-                            </Cell>
-                            <Cell desktop={4} tablet={1} phone={0}></Cell>
-                        </Grid>
+                        <Organizer user={this.state.user}
+                                   load={this.load}
+                                   loadMore={this.organizerLoadMore} />
                     </TabPanel>
                     <TabPanel id="scroll-tab-3">
                         <Grid>
